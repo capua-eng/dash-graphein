@@ -2,30 +2,61 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard Embutido</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dash-Unesp</title>
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <div class="header">
-  <h1>Dashboard Grafana</h1>
-  </div>
+  <header class="header">
+    <div class="logo-container">
+      <img src="assets/images/Logo_Unesp.svg" alt="Logo Unesp" class="logo">
+      <img src="assets/images/logo.png" alt="Logo Capua" class="logo">
+    </div>
+    <h1 class="titulo-site">UFV Rubião Junior</h1>
+    <nav class="nav-buttons">
+      <a href="index.html" class="nav-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 32 32">
+            <path fill="currentColor" d="M.034 16.668C.388 25.179 7.403 32 16 32s15.612-6.821 15.966-15.332A.5.5 0 0 0 32 16.5c0-.036-.013-.067-.02-.1c.003-.134.02-.265.02-.4c0-8.822-7.178-16-16-16S0 7.178 0 16c0 .135.017.266.02.4c-.007.033-.02.064-.02.1c0 .06.015.115.034.168m24.887 6.074a22 22 0 0 0-4.215-1.271c.158-1.453.251-2.962.28-4.47h4.98c-.091 2.054-.456 3.993-1.045 5.741M26.965 17h3.984a14.9 14.9 0 0 1-2.663 7.579a17 17 0 0 0-2.457-1.44c.645-1.869 1.042-3.943 1.136-6.139m-14.576 5.286A23.4 23.4 0 0 1 16 22c1.224 0 2.433.102 3.61.286C18.916 27.621 17.4 31 16 31s-2.916-3.379-3.611-8.714m1.519 8.378c-2.751-.882-5.078-3.471-6.482-6.984a21 21 0 0 1 3.99-1.217c.459 3.496 1.298 6.542 2.492 8.201m-1.634-19.955A24.4 24.4 0 0 0 16 11a24.4 24.4 0 0 0 3.726-.291c.172 1.62.274 3.388.274 5.291h-8c0-1.903.102-3.671.274-5.291M19.985 17a49 49 0 0 1-.26 4.291A24.4 24.4 0 0 0 16 21a24.4 24.4 0 0 0-3.726.291a49 49 0 0 1-.26-4.291zm.6 5.463c1.404.282 2.743.692 3.99 1.217c-1.404 3.513-3.731 6.102-6.482 6.984c1.193-1.659 2.032-4.705 2.492-8.201M21 16c0-1.836-.102-3.696-.294-5.47c1.48-.292 2.896-.72 4.215-1.271C25.605 11.288 26 13.574 26 16zm-.415-6.463c-.46-3.496-1.298-6.543-2.493-8.201c2.751.882 5.078 3.471 6.482 6.984a20.8 20.8 0 0 1-3.989 1.217m-.974.177C18.433 9.898 17.224 10 16 10s-2.433-.102-3.611-.286C13.084 4.379 14.6 1 16 1s2.916 3.379 3.611 8.714m-8.196-.177a21 21 0 0 1-3.99-1.217c1.404-3.513 3.731-6.102 6.482-6.984c-1.193 1.659-2.032 4.705-2.492 8.201m-.121.993A51 51 0 0 0 11 16H6c0-2.426.395-4.712 1.079-6.742c1.319.552 2.735.979 4.215 1.272m-.28 6.47c.029 1.508.122 3.017.28 4.471c-1.48.292-2.896.72-4.215 1.271c-.589-1.748-.954-3.687-1.045-5.742zM6.17 23.139a17 17 0 0 0-2.456 1.44A14.9 14.9 0 0 1 1.051 17h3.984c.094 2.196.491 4.27 1.135 6.139M4.313 25.38a16 16 0 0 1 2.207-1.305c1.004 2.485 2.449 4.548 4.186 5.943a15.05 15.05 0 0 1-6.393-4.638m16.981 4.637c1.738-1.394 3.182-3.458 4.186-5.943c.79.384 1.522.826 2.207 1.305a15.03 15.03 0 0 1-6.393 4.638M27 16c0-2.567-.428-4.987-1.17-7.139c.88-.422 1.698-.907 2.457-1.44A14.9 14.9 0 0 1 31 16zm.688-9.38c-.685.479-1.417.921-2.207 1.305c-1.004-2.485-2.449-4.549-4.186-5.943a15.06 15.06 0 0 1 6.393 4.638M10.706 1.983C8.968 3.377 7.524 5.441 6.52 7.926A16 16 0 0 1 4.313 6.62a15.04 15.04 0 0 1 6.393-4.637M3.714 7.421a17 17 0 0 0 2.456 1.44A22 22 0 0 0 5 16H1c0-3.19 1.009-6.145 2.714-8.579" />
+          </svg>
+          Página Inicial
+       </a>
+      <a href="pagina2.html" class="nav-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24">
+          <path fill="currentColor" d="m3.212 20.962l1.596-7.981h14.365l1.596 7.98zM3.692 4V3h2.712v1zm.758 15.962h7.05V17.5H4.946zM6.01 9.229l-.714-.688L7.21 6.627l.714.689zM5.154 16.5H11.5v-2.52H5.65zM12 7.02q-1.69 0-2.864-1.175T7.962 2.981h1q0 1.266.887 2.152q.886.886 2.153.886t2.152-.886t.885-2.152h1q0 1.69-1.174 2.864T12 7.02m-.5 4.173V8.481h1v2.711zm1 8.77h7.03l-.495-2.462H12.5zm0-3.462h6.327l-.496-2.52H12.5zm5.529-7.252l-1.927-1.932l.689-.689l1.951 1.908zM17.596 4V3h2.712v1z" />
+        </svg>
+        Inversores
+      </a>
+      <a href="#" class="nav-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="33" height="34" viewBox="0 0 24 24">
+          <path fill="currentColor" d="m8.28 5.45l-1.78-.9L7.76 2h8.47l1.27 2.55l-1.78.89L15 4H9zM18.62 8h-4.53l-.79-3h-2.6l-.79 3H5.38L4.1 10.55l1.79.89l.73-1.44h10.76l.72 1.45l1.79-.89zm-.85 14H15.7l-.24-.9L12 15.9l-3.47 5.2l-.23.9H6.23l2.89-11h2.07l-.36 1.35L12 14.1l1.16-1.75l-.35-1.35h2.07zm-6.37-7l-.9-1.35l-1.18 4.48zm3.28 3.12l-1.18-4.48l-.9 1.36z" />
+        </svg>
+        Unifilar
+      </a>
+      <a href="#" class="nav-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 32 32">
+          <g fill="none" stroke="currentColor" stroke-width="1">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9h4m-4 7h12m-12 4h12m-12 4h4m-6 5h16a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2" />
+            <circle cx="22" cy="9" r=".5" fill="currentColor" />
+          </g>
+        </svg>
+        Relatórios
+      </a>
+      <a href="#" class="nav-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 512 512">
+          <path fill="currentColor" fill-rule="evenodd" d="M170.667 42.667c70.692 0 128 57.308 128 128c0 12.931-1.918 25.414-5.484 37.181l133.484 133.486c23.564 23.564 23.564 61.769 0 85.333s-61.77 23.564-85.333 0L207.848 293.183c-11.767 3.566-24.25 5.484-37.181 5.484c-70.692 0-128-57.308-128-128c0-13.642 2.134-26.786 6.087-39.115L109.302 192l60.014-19.987l2.68-2.68L192 109.375L131.382 48.81c12.378-3.988 25.58-6.142 39.285-6.142" />
+        </svg>
+        Manutenção
+      </a>
+    </nav>
+  </header>
 
-  <main>
-    <iframe src="http://192.168.0.30:3000/d-solo/dej7q4k7aja4gd/top?orgId=1&from=1744880424000&to=1744918608000&timezone=browser&theme=dark&panelId=1&__feature.dashboardSceneSolo" width="100%" height="300" frameborder="0"></iframe>
+  <main class="graphs">
+    <div class="gauge">
+      <iframe src="http://192.168.0.30:3000/d-solo/dej7q4k7aja4gd/top?orgId=1&from=1745381685000&to=1745443221000&timezone=browser&tab=queries&theme=light&panelId=3&__feature.dashboardSceneSolo&refresh=5s" width="450" height="200" frameborder="0"></iframe>
+    </div>
+    <div class="graph">
+    <iframe src="http://192.168.0.30:3000/d-solo/dej7q4k7aja4gd/top?orgId=1&from=1744880424000&to=1744918608000&timezone=browser&theme=dark&panelId=1&__feature.dashboardSceneSolo&refresh=5s" width="100%" height="300" frameborder="0"></iframe>
+    </div>
   </main>
-  
-  <div class="gauges">
-    <div class="gauge1">
-      <iframe src="http://192.168.0.30:3000/d-solo/dej7q4k7aja4gd/top?orgId=1&from=1745404761000&to=1745417555000&timezone=browser&panelId=2&__feature.dashboardSceneSolo" width="500" height="200" frameborder="0"></iframe>
-    </div>
-    <div class="gauge2">
-      <iframe src="http://localhost:3000/d-solo/dej7q4k7aja4gd/top?orgId=1&from=1745381685000&to=1745443221000&timezone=browser&tab=queries&theme=light&panelId=3&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
-    </div>
-    <div class="gauge3">
-      <iframe src="http://192.168.0.30:3000/d-solo/dej7q4k7aja4gd/top?orgId=1&from=1745404761000&to=1745410331000&timezone=browser&showCategory=Text%20size&panelId=4&__feature.dashboardSceneSolo" width="500" height="200" frameborder="0"></iframe>
-    </div>
-
-  </div>
-
 </body>
 </html>
