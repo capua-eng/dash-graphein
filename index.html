@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dash-Unesp</title>
   <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
 </head>
 <body>
   <header class="header">
@@ -50,7 +54,17 @@
     </nav>
   </header>
 
-  <main class="graphs">
+  <div class="menu container-fluid px-0" style="width: 99%;">
+    <div class="sol_bussola_temp_umidade"></div>
+    <div class="producao"></div>
+    <div class="fig"></div>
+  </div>
+
+
+
+
+
+  <main class="graphs container-fluid" style="width:99%">
     <div class="gauge">
       <iframe src="http://192.168.0.30:3000/d-solo/dej7q4k7aja4gd/top?orgId=1&from=1745381685000&to=1745443221000&timezone=browser&tab=queries&theme=light&panelId=3&__feature.dashboardSceneSolo&refresh=5s" width="450" height="200" frameborder="0"></iframe>
     </div>
