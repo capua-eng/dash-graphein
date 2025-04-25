@@ -46,3 +46,49 @@ document.addEventListener('DOMContentLoaded', function() {
       }
   });
 });
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  const gerarRelatorioBtn = document.getElementById('gerarRelatorioBtn');
+
+  gerarRelatorioBtn.addEventListener('click', function () {
+    // Exibe o spinner
+    const spinner = document.getElementById('loadingSpinner');
+    if (spinner) spinner.style.display = 'block';
+
+    // Captura os valores dos inputs (ajuste os IDs conforme necessário)
+    const startDate = document.getElementById('dataInicio').value;
+    const endDate = document.getElementById('dataFim').value;
+    const groupBy = document.getElementById('intervalo').value;
+    console.log(`Data de inicio: ${startDate}, Data de fim: ${endDate},  asdasda: ${groupBy}`)
+
+    // Monta a URL da API
+    const url = `http://100.103.146.42:1880/admin/gerar-relatorio?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&groupBy=${groupBy}`;
+
+    // Faz a requisição
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erro na resposta da API');
+        }
+        return response.blob(); // Espera um PDF
+      })
+      .then(blob => {
+        if (spinner) spinner.style.display = 'none';
+
+        // Cria um link temporário para download
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'relatorio.pdf';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(error => {
+        if (spinner) spinner.style.display = 'none';
+        alert('Erro ao gerar relatório: ' + error.message);
+      });
+  });
+});
