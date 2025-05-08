@@ -1,0 +1,286 @@
+// ==================== SERVIÇO CENTRAL DE DADOS ====================
+const DataService = {
+    dados: null,
+    callbacks: [],
+    intervalo: null,
+
+    iniciar: function() {
+        this.atualizarDados();
+        this.intervalo = setInterval(() => this.atualizarDados(), 5000);
+    },
+
+    parar: function() {
+        clearInterval(this.intervalo);
+    },
+
+    atualizarDados: async function() {
+        try {
+            const response = await fetch('http://192.168.0.252:8080/api/tela_inicial');
+            if (!response.ok) throw new Error('Erro na API');
+            this.dados = await response.json();
+            this.notificarTodos();
+            this.atualizarTodosInversores();
+            console.log('Dados atualizados:', this.dados); // Para debug
+        } catch (error) {
+            console.error('Falha ao atualizar dados:', error);
+        }
+    },
+
+    atualizarTodosInversores: function() {
+        if (!this.dados) return;
+
+        // Pega todos os itens de inversor
+        const inversorItems = document.querySelectorAll('.inversor-item');
+        
+        inversorItems.forEach((item, index) => {
+            const inversorNum = index + 1; // Inversor 1, 2, 3...
+            const inversorKey = `Inversor${inversorNum}`;
+            const inversorData = this.dados[inversorKey];
+            
+            if (!inversorData) return;
+
+            // Atualiza valores PAC e PDC
+            const pacValue = inversorData[`INV${inversorNum}_PAC`];
+            const pdcValue = inversorData[`INV${inversorNum}_PDC`];
+            
+            const pacElement = item.querySelector('.value-pac');
+            const pdcElement = item.querySelector('.value-pdc');
+            
+            if (pacElement) pacElement.textContent = `${pacValue?.toFixed(1) || '0.00'} kW`;
+            if (pdcElement) pdcElement.textContent = `${pdcValue?.toFixed(1) || '0.00'} kW`;
+
+            // Atualiza status (opcional)
+            const arrowIcon = item.querySelector('.arrow-icon');
+            if (arrowIcon) {
+                arrowIcon.className = 'arrow-icon'; // Limpa classes
+                arrowIcon.classList.add(`status-${inversorData._Status}`);
+            }
+        });
+    },
+
+    registrar: function(callback) {
+        this.callbacks.push(callback);
+        if (this.dados) callback(this.dados);
+    },
+
+    notificarTodos: function() {
+        this.callbacks.forEach(cb => cb(this.dados));
+    }
+};
+
+// ==================== CONTROLE DO DROPDOWN ====================
+function configurarDropdown() {
+    const dropdownBtn = document.getElementById('relatorioDropdown');
+    if (!dropdownBtn) return;
+
+    const dropdown = dropdownBtn.closest('.dropdown');
+
+    dropdownBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('active');
+    });
+
+    document.addEventListener('click', function() {
+        dropdown.classList.remove('active');
+    });
+
+    dropdown.querySelector('.dropdown-content')?.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+}
+
+// ==================== CONTROLE DO MODAL ====================
+function configurarModalRelatorio() {
+    const modal = document.getElementById('modalRelatorio');
+    if (!modal) return;
+
+    const closeModal = document.querySelector('.modal .close');
+    const relatorioLinks = document.querySelectorAll('.dropdown-content a');
+
+    relatorioLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            modal.style.display = 'block';
+        });
+    });
+
+    closeModal.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function(e) {
+        if (e.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
+}
+
+// ==================== GERADOR DE RELATÓRIO ====================
+function configurarGeradorRelatorio() {
+    const gerarRelatorioBtn = document.getElementById('gerarRelatorioBtn');
+    if (!gerarRelatorioBtn) return;
+
+    gerarRelatorioBtn.addEventListener('click', function() {
+        const spinner = document.getElementById('loadingSpinner');
+        if (spinner) spinner.style.display = 'block';
+
+        const startDate = document.getElementById('dataInicio').value;
+        const endDate = document.getElementById('dataFim').value;
+        const groupBy = document.getElementById('intervalo').value;
+
+        const url = `http://100.83.80.13:1880/gerar-relatorio?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&groupBy=${groupBy}`;
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) throw new Error('Erro na resposta da API');
+                alert('Relatório gerado com sucesso!');
+                return response.blob();
+            })
+            .then(blob => {
+                if (spinner) spinner.style.display = 'none';
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'relatorio.pdf';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                if (spinner) spinner.style.display = 'none';
+                alert('Erro ao gerar relatório: ' + error.message);
+            });
+    });
+}
+
+// ==================== CONTROLE DOS INVERSORES (STATUS + LABELS) ====================
+function configurarInversores() {
+    const arrowIcons = document.querySelectorAll('.arrow-icon');
+    if (arrowIcons.length === 0) return;
+
+    DataService.registrar((dados) => {
+        const statusInversores = Array(18).fill(-1);
+
+        for (let i = 1; i <= 18; i++) {
+            const inversorKey = `Inversor${i}`;
+            if (dados[inversorKey]) {
+                statusInversores[i-1] = dados[inversorKey]._Status;
+            }
+        }
+
+        arrowIcons.forEach((icon, index) => {
+            const status = statusInversores[index];
+            icon.classList.remove('status-1', 'status--1', 'status-0', 'status-2');
+            
+            switch(status) {
+                case 1: icon.classList.add('status-1'); break;
+                case -1: icon.classList.add('status--1'); break;
+                case 0: icon.classList.add('status-0'); break;
+                case 2: icon.classList.add('status-2'); break;
+                default: icon.style.backgroundColor = '#000';
+            }
+            
+            const label = icon.closest('.inversor-item')?.querySelector('.inversor-label');
+            if (label) label.textContent = `Inversor ${index + 1}`;
+        });
+    });
+}
+
+// ==================== CONTROLE DOS CARDS DE INVERSORES ====================
+function configurarCardsInversores() {
+    DataService.registrar((dados) => {
+        for (let i = 1; i <= 8; i++) {
+            const card = document.getElementById(`card${i}`);
+            if (!card) continue;
+
+            const inversorData = dados[`Inversor${i}`];
+            if (inversorData) {
+                // Atualiza os dados visíveis nos cards
+                const potenciaElement = card.querySelector('.card-potenica');
+                if (potenciaElement) {
+                    potenciaElement.textContent = `${inversorData.INV1_PAC?.toFixed(2) || '0'} kW`;
+                }
+            }
+        }
+    });
+
+    // Configura eventos de clique nos cards
+    for (let i = 1; i <= 8; i++) {
+        const card = document.getElementById(`card${i}`);
+        if (!card) continue;
+
+        card.addEventListener('click', function() {
+            abrirModalInversor(i);
+        });
+    }
+}
+
+function abrirModalInversor(inversorNum) {
+    DataService.registrar((dados) => {
+        const inversorData = dados[`Inversor${inversorNum}`];
+        fecharTodosModais();
+
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Inversor ${inversorNum}</h2>
+                <div class="modal-data">
+                    <p>Potência AC: <span class="pac-value">${inversorData?.INV1_PAC?.toFixed(2) || 'N/A'} kW</span></p>
+                    <p>Potência DC: <span class="pdc-value">${inversorData?.INV1_PDC?.toFixed(2) || 'N/A'} kW</span></p>
+                    <p>Status: <span class="status-value">${getStatusText(inversorData?._Status)}</span></p>
+                </div>
+            </div>
+        `;
+
+        modal.querySelector('.close-modal').addEventListener('click', function() {
+            modal.remove();
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+
+        document.body.appendChild(modal);
+    });
+}
+
+function getStatusText(status) {
+    switch(status) {
+        case 0: return 'Operando';
+        case 1: return 'Atenção';
+        case -1: return 'Offline';
+        case 2: return 'Crítico';
+        default: return 'Desconhecido';
+    }
+}
+
+function fecharTodosModais() {
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.remove();
+    });
+}
+
+// ==================== INICIALIZAÇÃO ====================
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Inicia o serviço de dados PRIMEIRO (ele já atualiza os inversores)
+    DataService.iniciar();
+    
+    // 2. Configurações complementares (sem duplicar atualizações)
+    configurarDropdown();
+    configurarModalRelatorio();
+    configurarGeradorRelatorio();
+    
+    // 3. Date Pickers (mantido igual)
+    document.querySelectorAll('label[for="dataInicio"], label[for="dataFim"]').forEach(label => {
+        label.addEventListener('click', () => {
+            document.getElementById(label.getAttribute('for')).showPicker();
+        });
+    });
+});
+
+window.addEventListener('beforeunload', () => DataService.parar());
