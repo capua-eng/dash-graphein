@@ -210,8 +210,8 @@ nav button {
 
 /* -----------------------------------------------MENU */
 .menu {
-  border: 1px solid red;
-  height: 120px;
+  /* border: 1px solid red; */
+  height: 100px;
   display: flex;
 }
 .grid-layout {
@@ -227,8 +227,10 @@ nav button {
   /* background-color: #ccc; */
   padding: 5px;
   border: none; 
-  border: 1px solid red;
+  border: 1px solid blue;
   display: flex;
+  height: auto;
+  height: 100px;
 }
 .icon{
     /* padding-top: 20px; */
