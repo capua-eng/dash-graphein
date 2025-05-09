@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="assets/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="script2teste.js" defer></script>
+    <script src="scriptjs" defer></script>
 </head>
 
 <body>
@@ -72,149 +72,31 @@
     </header>
 
     <!-- Container do Bootstrap -->
-    <div class="menu container-fluid px-0 mb-3" style="width:99%">
-        <div class="sol">
-            <div class="icone_sol">
-                <i class="fa-regular fa-sun" style="font-size: 50px; color: rgb(233, 233, 0);"></i>
-            </div>
-
-            <div class="valores_sol">
-                <iframe
-                    src="http://localhost:3000/d-solo/eejp5qhynzh1cc/new-dashboard-top?orgId=1&from=1745284939208&to=1745325063954&timezone=browser&refresh=1m&theme=light&panelId=20&__feature.dashboardSceneSolo"
-                    width="110" height="40" frameborder="0"
-                    style="border: 1px solid rgb(8, 11, 141); border-radius:4px;"></iframe>
-                <!--  -->
-                <iframe
-                    src="http://localhost:3000/d-solo/eejp5qhynzh1cc/new-dashboard-top?orgId=1&from=1745284939208&to=1745325063954&timezone=browser&refresh=1m&theme=light&panelId=21&__feature.dashboardSceneSolo"
-                    width="110" height="40" frameborder="0"
-                    style="border: 1px solid rgb(8, 11, 141); border-radius:4px;"></iframe>
-            </div>
-        </div>
-
-        <div class="bussola">
-            <div class="icone_bussola">
-                <i class="fa-regular fa-compass" style="font-size: 50px; color: rgb(228, 228, 228);"></i>
-            </div>
-            <div class="valores_bussola">
-                <iframe
-                    src="http://localhost:3000/d-solo/eejp5qhynzh1cc/new-dashboard-top?orgId=1&from=1745284939208&to=1745325063954&timezone=browser&refresh=1m&theme=light&panelId=22&__feature.dashboardSceneSolo"
-                    width="110" height="40" frameborder="0"
-                    style="border: 1px solid rgb(8, 11, 141); border-radius:4px;"></iframe>
-                <!--  -->
-                <iframe
-                    src="http://localhost:3000/d-solo/eejp5qhynzh1cc/new-dashboard-top?orgId=1&from=1745284939208&to=1745325063954&timezone=browser&refresh=1m&theme=light&panelId=23&__feature.dashboardSceneSolo"
-                    width="110" height="40" frameborder="0"
-                    style="border: 1px solid rgb(8, 11, 141); border-radius:4px;"></iframe>
-            </div>
-        </div>
-
-        <div class="temp">
-            <div class="icone_temp">
-                <i class="fa-solid fa-temperature-high" style="font-size: 50px; color: rgb(207, 0, 0);"></i>
-            </div>
-            <div class="valores_temp">
-                <iframe
-                    src="http://localhost:3000/d-solo/eejp5qhynzh1cc/new-dashboard-top?orgId=1&from=1745284939208&to=1745325063954&timezone=browser&refresh=1m&theme=light&panelId=22&__feature.dashboardSceneSolo"
-                    width="110" height="40" frameborder="0"
-                    style="border: 1px solid rgb(8, 11, 141); border-radius:4px;"></iframe>
-                <!--  -->
-                <iframe
-                    src="http://localhost:3000/d-solo/eejp5qhynzh1cc/new-dashboard-top?orgId=1&from=1745284939208&to=1745325063954&timezone=browser&refresh=1m&theme=light&panelId=23&__feature.dashboardSceneSolo"
-                    width="110" height="40" frameborder="0"
-                    style="border: 1px solid rgb(8, 11, 141); border-radius:4px;"></iframe>
-            </div>
-        </div>
-
-        <div class="umidade">
-            <div class="icone_umidade">
-                <i class="fa-solid fa-water" style="font-size: 50px; color: black;"></i>
-            </div>
-
-            <div class="valores_umidade">
-                <iframe
-                    src="http://localhost:3000/d-solo/eejp5qhynzh1cc/new-dashboard-top?orgId=1&from=1745284939208&to=1745325063954&timezone=browser&refresh=1m&theme=light&panelId=22&__feature.dashboardSceneSolo"
-                    width="110" height="40" frameborder="0"
-                    style="border: 1px solid rgb(8, 11, 141); border-radius:4px;"></iframe>
-            </div>
-        </div>
-
-
-        <!-- <div class="produsina">
-            <div class="title">
-                <p>Produção Usina</p>
-            </div>
-            <div class="valores_geracao">
-                <div class="input-group">
-                    <p class="input-text">Diária</p>
-                    <input type="text" class="dado-geracao" value="0 kW" readonly>
+    <div class=" menu container-fluid px-0 mb-3" style="width: 99%;">
+        <div class="grid-layout">
+            <div class="box">
+                <div class="icon">
+                    <i class="fa-solid fa-sun" style="font-size: 40px; color: rgb(228, 228, 0);"></i>
                 </div>
-                
-                <div class="input-group">
-                    <p class="input-text">Mensal</p>
-                    <input type="text" class="dado-geracao" value="0 kW" readonly>
-                </div>
-
-                <div class="input-group">
-                    <p class="input-text">Instantânea</p>
-                    <input type="text" class="dado-geracao" value="0 kW" readonly>
-                </div>
-            </div>
-        </div> -->
-        <div class="produsina">
-            <p>Produção Usina</p>
-            <div class="values_prod">
                 <div class="value">
-                    <p>Diária</p>
-                    <iframe
-                        src="http://localhost:3000/d-solo/eejp5qhynzh1cc/new-dashboard-top?orgId=1&from=1087901163117&to=2402708840045&timezone=browser&refresh=1m&theme=light&panelId=23&__feature.dashboardSceneSolo"
-                        width="260" height="40" frameborder="0"
-                        style="border: 1px solid rgb(8, 11, 141); border-radius:4px; width: 220px;"></iframe>
+                    <p>DADO</p>
+                    <p>DADO</p>
                 </div>
-
+            </div>
+            <div class="box">
+                <div class="icon">
+                    <i class="fa-solid fa-sun" style="font-size: 40px; color: rgb(228, 228, 0);"></i>
+                </div>
                 <div class="value">
-                    <p>Mensal</p>
-                    <iframe
-                        src="http://localhost:3000/d-solo/eejp5qhynzh1cc/new-dashboard-top?orgId=1&from=1087901163117&to=2402708840045&timezone=browser&refresh=1m&theme=light&panelId=23&__feature.dashboardSceneSolo"
-                        width="260" height="40" frameborder="0"
-                        style="border: 1px solid rgb(8, 11, 141); border-radius:4px; width: 220px;"></iframe>
-                </div>
-
-                <div class="value">
-                    <p>Instantânea</p>
-                    <iframe
-                        src="http://localhost:3000/d-solo/eejp5qhynzh1cc/new-dashboard-top?orgId=1&from=1087901163117&to=2402708840045&timezone=browser&refresh=1m&theme=light&panelId=23&__feature.dashboardSceneSolo"
-                        width="260" height="40" frameborder="0"
-                        style="border: 1px solid rgb(8, 11, 141); border-radius:4px; width: 220px;"></iframe>
+                    <p>DADO</p>
+                    <p>DADO</p>
                 </div>
             </div>
-        </div>
-
-        <div class="concessionaria">
-            <p>Concessionária</p>
-            <div class="values_concessionaria">
-                <div class="value_">
-                    <p>Energia Consumida</p>
-                    <iframe
-                        src="http://localhost:3000/d-solo/eejp5qhynzh1cc/new-dashboard-top?orgId=1&from=1087901163117&to=2402708840045&timezone=browser&refresh=1m&theme=light&panelId=23&__feature.dashboardSceneSolo"
-                        width="180" height="40" frameborder="0"
-                        style="border: 1px solid rgb(8, 11, 141); border-radius:4px; width: 160px;"></iframe>
-                </div>
-
-                <div class="value_">
-                    <p>Energia Fornecida</p>
-                    <iframe
-                        src="http://localhost:3000/d-solo/eejp5qhynzh1cc/new-dashboard-top?orgId=1&from=1087901163117&to=2402708840045&timezone=browser&refresh=1m&theme=light&panelId=23&__feature.dashboardSceneSolo"
-                        width="180" height="40" frameborder="0"
-                        style="border: 1px solid rgb(8, 11, 141); border-radius:4px; width: 160px;"></iframe>
-                </div>
-            </div>
-        </div>
-
-        <!-- <div class="concessionaria">
-            <div class="valores_geracao">
-                <iframe src="http://localhost:3000/d-solo/eejp5qhynzh1cc/new-dashboard-top?orgId=1&from=1745305001581&to=1745345126327&timezone=browser&refresh=1m&showCategory=Stat%20styles&panelId=32&__feature.dashboardSceneSolo" width="550" height="120" frameborder="0" style="border: 1px solid rgb(8, 11, 141); border-radius:4px;"></iframe>
-            </div>
-        </div> -->
+            <div class="box">10%</div>
+            <div class="box">10%</div>
+            <div class="box">30%</div>
+            <div class="box">30%</div>
+          </div>
     </div>
 
 
@@ -222,9 +104,7 @@
 
     <main class="graphs container-fluid mb-3" style="width:99%">
         <div class="gauge">
-            <iframe
-                src="http://192.168.0.30:3000/d-solo/dej7q4k7aja4gd/top?orgId=1&from=1745381685000&to=1745443221000&timezone=browser&tab=queries&theme=light&panelId=3&__feature.dashboardSceneSolo&refresh=5s"
-                width="450" height="200" frameborder="0"></iframe>
+            <iframe src="http://192.168.0.252:3000/d-solo/5a622c37-3d06-401a-b0e8-7fa5892bd210/gauge-potencia?orgId=1&from=1746778453215&to=1746800053215&timezone=browser&showCategory=Standard%20options&panelId=1&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
         </div>
         <div class="graph">
             <iframe
