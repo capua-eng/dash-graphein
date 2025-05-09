@@ -266,54 +266,66 @@ article{
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 /* --------------------MODAL INVERSORES */
+
+/* 🪟 MODAL (ESTILO MODERNO) */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    animation: fadeIn 0.3s;
+    backdrop-filter: blur(3px);
+    animation: fadeIn 0.3s ease-out;
     /* border: 1px solid red; */
 }
 
 .modal-container {
-    background-color: #fff;
-    border-radius: 8px;
+    background: linear-gradient(145deg, #ffffff, #f8fafc);
+    border-radius: 16px;
+    padding: 25px;
     width: 100%;
     max-width: 80%;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    animation: slideIn 0.3s;
-    padding: 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    animation: slideUp 0.4s ease-out;
     /* border: 1px solid red; */
 }
 
 .modal-header {
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .modal-title {
+    color: #1e40af;
     margin: 0;
-    color: #13354A;
-    font-weight: bold;
+    font-size: 1.5rem;
 }
 
 .close-modal {
-    font-size: 24px;
+    color: #64748b;
+    font-size: 1.8rem;
     cursor: pointer;
-    color: #777;
+    transition: all 0.2s;
+    background: none;
+    border: none;
+    padding: 0 10px;
 }
 
 .close-modal:hover {
-    color: #ff0000;
+    color: #ef4444;
+    transform: rotate(90deg);
 }
 
 .modal-body {
@@ -322,7 +334,7 @@ article{
 
 .modal-section {
     margin-bottom: 20px;
-    border: 1px solid red;
+    /* border: 1px solid red; */
 }
 .modal-mppt{
     display: flex;
@@ -339,6 +351,7 @@ article{
     line-height: 0.4;
     color: #13354A;
     padding: 10px;
+    /* border: 1px solid red; */
 }
 .values_mppts{
     /* border: 1px solid red; */

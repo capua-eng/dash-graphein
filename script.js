@@ -160,121 +160,165 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 
+const DataService = {
+    dados: null,
+    callbacks: [],
+    intervalo: null,
+    modalAberto: null, // Guarda referência do modal aberto
 
 
-// Variável global para armazenar os dados atuais
-let dadosAtuais = [];
-let intervaloConexao = null;
+    atualizarDados: async function() {
+        try {
+            const response = await fetch('http://192.168.0.252:8080/api/inversores');
+            if (!response.ok) throw new Error('Erro na API');
+            this.dados = await response.json();
+            this.notificarTodos();
+            console.log('Dados atualizados:', this.dados);
+        } catch (error) {
+            console.error('Falha ao atualizar dados:', error);
+        }
+    },
 
-// Função principal que carrega e atualiza os dados
-function carregarEAtualizarDados() {
-    // Primeira carga dos dados
-    atualizarDados();
-    
-    // Configura a atualização periódica (a cada 60 segundos)
-    intervaloConexao = setInterval(atualizarDados, 60000);
-    
-    // Configura os eventos dos cards
-    configurarCards();
-}
+    iniciar: function() {
+        this.atualizarDados(); // Primeira carga
+        this.intervalo = setInterval(() => this.atualizarDados(), 60000);
+    },
 
-// Função para buscar e atualizar os dados do JSON
-function atualizarDados() {
-    fetch('dados_inversores.json')
-        .then(response => response.json())
-        .then(data => {
-            console.log('Dados atualizados em:', new Date().toLocaleTimeString());
-            dadosAtuais = data;
-            
-            // Atualiza os cards visíveis na tela
-            atualizarCardsVisiveis();
-        })
-        .catch(error => console.error('Erro ao carregar dados:', error));
-}
+    // ✅ 3. Método notificarTodos
+    notificarTodos: function() {
+        this.callbacks.forEach(cb => cb(this.dados));
+    },
+    parar: function() {
+        clearInterval(this.intervalo);
+    },
 
-// Função para configurar os eventos de clique nos cards
-function configurarCards() {
-    for (let i = 1; i <= 8; i++) {
-        const card = document.getElementById(`card${i}`);
-        if (!card) continue;
-
-        card.addEventListener('click', function() {
-            abrirModal(i, dadosAtuais);
-        });
-    }
-}
-
-// Função para atualizar os cards visíveis na tela
-function atualizarCardsVisiveis() {
-    // Aqui você pode adicionar lógica para atualizar elementos visíveis
-    // Exemplo: se tiver algum resumo na tela principal
-    console.log('Dados atualizados:', dadosAtuais);
-}
-
-// Função para abrir o modal (atualizada para usar dadosAtuais)
-function abrirModal(inversorNum) {
-    // Encontra os dados do inversor específico
-    const inversorData = dadosAtuais.find(item => item[`Inversor${inversorNum}`])?.[`Inversor${inversorNum}`];
-    
-    // Fecha qualquer modal aberto anteriormente
-    fecharTodosModais();
-    
-    // Cria um novo modal baseado no template
-    const template = document.getElementById('modal-template');
-    const modalClone = template.cloneNode(true);
-    modalClone.id = `modal-inversor-${inversorNum}`;
-    modalClone.style.display = 'block';
-    
-    // Preenche os dados do modal
-    const modalElement = modalClone.querySelector('.modal-overlay');
-    modalElement.querySelector('.inversor-number').textContent = inversorNum;
-    
-    if (inversorData) {
-        modalElement.querySelector('.adc-value').textContent = inversorData.ADC?.toFixed(2) + ' A';
-        modalElement.querySelector('.udc-value').textContent = inversorData.UDC?.toFixed(2) + ' V';
-        modalElement.querySelector('.pdc-value').textContent = inversorData.PDC?.toFixed(3) + ' kW';
+    // ✅ **NOVO: Abrir Modal do Inversor**
+    abrirModal: function(inversorNum) {
+        if (!this.dados) {
+            console.error("Dados não carregados!");
+            return;
+        }
         
-        // Atualiza o timestamp se existir no JSON
-        if (inversorData.ultima_atualizacao) {
+    
+        // Fecha modal anterior
+        this.fecharModal();
+    
+        // Obtém o template (ajustado para sua estrutura)
+        const template = document.getElementById('modal-template');
+        const modalClone = template.cloneNode(true);
+        modalClone.id = `modal-inversor-${inversorNum}`;
+        modalClone.style.display = 'block'; // Remove o display:none
+    
+        // Preenche os dados
+        const inversorKey = `Inversor${inversorNum}`;
+        const inversorData = this.dados[inversorKey];
+        const modalElement = modalClone.querySelector('.modal-overlay');
+        
+        if (inversorData) {
+            // Preenche os dados básicos
+            modalElement.querySelector('.inversor-number').textContent = inversorNum;
             modalElement.querySelector('.timestamp').textContent = 
-                `Última atualização: ${inversorData.ultima_atualizacao}`;
+                `Última atualização: ${new Date().toLocaleTimeString()}`;
+    
+            const mppts = inversorData.MPPTS;
+
+            if (mppts) {
+                for (let i = 1; i <= 12; i++) {
+                    const mpptKey = `MPPT${i}`;
+                    const mpptData = mppts[mpptKey];
+            
+                    const mpptDiv = modalElement.querySelector(`.mppts[data-mppt="${i}"]`);
+                    if (mpptDiv && mpptData) {
+                        const vSpan = mpptDiv.querySelector('.value-v');
+                        const aSpan = mpptDiv.querySelector('.value-a');
+            
+                        if (vSpan) vSpan.textContent = `${mpptData.V.toFixed(2)} V`;
+                        if (aSpan) aSpan.textContent = `${mpptData.A.toFixed(2)} A`;
+                    }
+                }
+            }
+            // Adicione aqui outros campos que precisam ser preenchidos
+            // Corrente Fase
+            const correntePA = inversorData.Corrente_Fase?.PA?.toFixed(2) || '0.00';
+            const correntePB = inversorData.Corrente_Fase?.PB?.toFixed(2) || '0.00';
+            const correntePC = inversorData.Corrente_Fase?.PC?.toFixed(2) || '0.00';
+            modalElement.querySelector('.corrente-pa').textContent = `${correntePA} A`;
+            modalElement.querySelector('.corrente-pb').textContent = `${correntePB} A`;
+            modalElement.querySelector('.corrente-pc').textContent = `${correntePC} A`;
+
+            // PAC
+            const pacValue = inversorData.PAC?.toFixed(2) || '0.00';
+            modalElement.querySelector('.pac-value').textContent = `${pacValue} kW`;
+
+            // Tensão Fase
+            const tensaoPAB = inversorData.Tensao_Fase?.PAB?.toFixed(2) || '0.00';
+            const tensaoPBC = inversorData.Tensao_Fase?.PBC?.toFixed(2) || '0.00';
+            const tensaoPCA = inversorData.Tensao_Fase?.PCA?.toFixed(2) || '0.00';
+            modalElement.querySelector('.tensao-pab').textContent = `${tensaoPAB} V`;
+            modalElement.querySelector('.tensao-pbc').textContent = `${tensaoPBC} V`;
+            modalElement.querySelector('.tensao-pca').textContent = `${tensaoPCA} V`;
         }
-    } else {
-        modalElement.querySelector('.adc-value').textContent = 'N/A';
-        modalElement.querySelector('.udc-value').textContent = 'N/A';
-        modalElement.querySelector('.pdc-value').textContent = 'N/A';
-    }
     
-    // Adiciona evento para fechar o modal
-    modalElement.querySelector('.close-modal').addEventListener('click', function() {
-        fecharModal(`modal-inversor-${inversorNum}`);
-    });
+        // Configura eventos de fechar
+        modalElement.querySelector('.close-modal').addEventListener('click', () => {
+            this.fecharModal();
+        });
     
-    // Adiciona o modal ao body e exibe
-    document.body.appendChild(modalClone);
+        modalElement.addEventListener('click', (e) => {
+            if (e.target === modalElement) {
+                this.fecharModal();
+            }
+        });
     
-    // Fecha o modal ao clicar fora do conteúdo
-    modalElement.addEventListener('click', function(e) {
-        if (e.target === modalElement) {
-            fecharModal(`modal-inversor-${inversorNum}`);
+        document.body.appendChild(modalClone);
+        this.modalAberto = modalClone;
+        
+        console.log(`Modal do inversor ${inversorNum} aberto!`); // Para debug
+    },
+    // ✅ **NOVO: Fechar Modal**
+    fecharModal: function() {
+        if (this.modalAberto) {
+            this.modalAberto.remove();
+            this.modalAberto = null;
         }
-    });
-}
+    },
 
-function fecharModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = 'none';
-        setTimeout(() => modal.remove(), 300);
+    // ✅ **NOVO: Atualizar Modal Aberto (se houver)**
+    atualizarModalAberto: function() {
+        if (!this.modalAberto || !this.dados) return;
+
+        const inversorNum = this.modalAberto.id.split('-')[2]; // Pega o número do modal (ex: "modal-inversor-1" → "1")
+        this.abrirModal(inversorNum); // Reabre com dados atualizados
+    },
+
+    // ✅ **Modificar notificarTodos() para atualizar modais**
+    notificarTodos: function() {
+        this.callbacks.forEach(cb => cb(this.dados));
+        this.atualizarModalAberto(); // Atualiza o modal se estiver aberto
     }
-}
+};
 
-function fecharTodosModais() {
-    document.querySelectorAll('[id^="modal-inversor-"]').forEach(modal => {
-        modal.style.display = 'none';
-        setTimeout(() => modal.remove(), 300);
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // 👇🏽 ADICIONE AQUI O SEU CÓDIGO DE CLIQUE NOS CARDS
+    document.querySelectorAll('[id^="card"]').forEach(card => {
+        card.addEventListener('click', function() {
+            const inversorNum = parseInt(this.id.replace('card', ''));
+            
+            if (!DataService.dados) {
+                console.warn("Dados ainda não carregados. Aguarde...");
+                return;
+            }
+            
+            DataService.abrirModal(inversorNum);
+        });
     });
-}
+    
+    // 3. SÓ DEPOIS INICIE O SERVICO
+    DataService.iniciar(); 
+});
 
-// Inicia o sistema quando a página carrega
-document.addEventListener('DOMContentLoaded', carregarEAtualizarDados);
+console.log("DataService:", DataService);
+console.log("Dados carregados:", DataService.dados);
+console.log("Elementos .inversor-item:", document.querySelectorAll('.inversor-item').length);
+console.log("Card encontrado:", card.id); // Verifica se está achando seus cards
