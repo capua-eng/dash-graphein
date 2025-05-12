@@ -262,9 +262,9 @@ nav button {
   background-color: white;
   border-radius: 8px;
   padding: 0rem;
-  margin-top: 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border: 1px solid red;
+  /* margin-top: 2rem; */
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  /* border: 1px solid red; */
 }
 
 .arrows-container {
@@ -285,6 +285,12 @@ nav button {
   gap: 0.5rem; /* espaço entre ícone e label */
   /* border: 1px solid blue; */
 }
+.items_inversores_icone_valores{
+  /* border: 1px solid deeppink; */
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
 
 .arrow-icon {
   width: 50px;
@@ -298,7 +304,7 @@ nav button {
   font-size: 1.5rem; /* tamanho do ícone */
   cursor: pointer;
   transition: all 0.2s ease;
-  /* border: 1px solid black; */
+  border: 1px solid black;
 }
 
 .inversor-label {
@@ -306,14 +312,18 @@ nav button {
   font-weight: 500;
   color: #333;
   text-align: center;
+  /* border: 1px solid red; */
 }
 
 .value_inver {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5px;
+  flex-direction: column;
+  gap: 40px;
   font-size: 15px;
+  padding-top: 20px;
+  /* border: 1px solid red; */
 }
 .arrow-icon:hover {
   transform: scale(1.15);
