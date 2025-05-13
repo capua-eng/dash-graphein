@@ -410,7 +410,6 @@ nav button {
 .linha {
   position: relative;
   margin-left: 25%;
-  /* margin-bottom: -20px; */
   width: 2px;
   height: 35px;
   background-color: #ca1205;
@@ -421,18 +420,83 @@ nav button {
 
 .interligation {
   display: flex;
-  align-items: start;
+  align-items: end;
   width: auto;
   height: auto;
-  /* background-color: blue; */
 }
 
-.teste {
+.energ {
+  display: flex;
+  /* flex-direction: column; */
   width: 300px;
-  height: 50.5%;
-  background-color: purple;
-  border-bottom: 2px solid red;
+  height: 50.25%;
+  /* background-color: purple; */
+  border-top: 2px solid red;
 }
+
+.carga {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  /* height: 50.25%; */
+}
+
+.label-carga {
+  font-size: 14px;
+  font-weight: 600;
+  padding-top: 6px;
+}
+
+.linha-carga {
+  position: relative;
+  width: 2px;
+  height: 65px;
+  background-color: #ca1205;
+  transform: translateX(-50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.icon-carga {
+  width: 44px;
+  height: 44px;
+  background-color: transparent;
+  border-radius: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(116, 107, 107);
+  font-size: 1.5rem; /* tamanho do ícone */
+  transition: all 0.2s ease;
+  border: 2px solid rgb(49, 49, 49);
+}
+
+.rede {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  width: 300px;
+  /* height: 50.25%; */
+}
+
+.linha-rede {
+  position: relative;
+  width: 2px;
+  height: 55px;
+  background-color: #ca1205;
+  transform: translateX(-50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* .icon-rede {
+  width: 600px;
+  height: 300px;
+  transition: all 0.2s ease;
+} */
 
 .arrow-icon:hover {
   transform: scale(1.15);
