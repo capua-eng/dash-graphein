@@ -105,6 +105,7 @@ async function atualizarInversores() {
         const label = item.querySelector('.inversor-label');
         const pacValue = item.querySelector('.value-pac');
         const pdcValue = item.querySelector('.value-pdc');
+        const tempValue = item.querySelector('.temp-int');
   
         // Atualiza os valores
         if (inversorData) {
@@ -121,11 +122,13 @@ async function atualizarInversores() {
           // Adapte estas linhas conforme os nomes no seu JSON:
           pacValue.textContent = `${inversorData.PAC?.toFixed(1) ?? inversorData.InvPAC?.toFixed(1) ?? inversorData[`INV${inversorNum}_PAC`]?.toFixed(1) ?? '0.00'}`;
           pdcValue.textContent = `${inversorData.PDC?.toFixed(1) ?? inversorData.InvPDC?.toFixed(1) ?? inversorData[`INV${inversorNum}_PDC`]?.toFixed(1) ?? '0.00'}`;
+          tempValue.textContent = `${inversorData.TI?.toFixed(1) ?? inversorData.InvTI?.toFixed(1) ?? inversorData[`INV${inversorNum}_TI`]?.toFixed(1) ?? '0.0'}°C`;
         } else {
           // Fallback para dados ausentes
           arrowIcon.className = 'arrow-icon status--1';
         //   pacValue.textContent = 'N/A';
         //   pdcValue.textContent = 'N/A';
+        //   tempValue.textContent = 'N/A°C';
         }
       });
     } catch (error) {
@@ -133,6 +136,9 @@ async function atualizarInversores() {
       // Fallback visual para erro
       document.querySelectorAll('.arrow-icon').forEach(icon => {
         icon.className = 'arrow-icon status--1';
+      document.querySelectorAll('.value-temp').forEach(temp => {
+        temp.textContent = 'N/A°C';
+      });
       });
     }
   }
