@@ -109,18 +109,18 @@ async function atualizarInversores() {
         // Atualiza os valores
         if (inversorData) {
           // Status (cor do ícone)
-          // const status = inversorData._Status ?? -1;
-          const status = `status-${status}`;
+          const status = inversorData._Status ?? -1;
+          // const status = `status-${status}`;
           arrowIcon.className = 'arrow-icon';
-          // arrowIcon.classList.add(`status-${status}`);
-          arrowIcon.classList.add({status})
+          arrowIcon.classList.add(`status-${status}`);
+          // arrowIcon.classList.add({status})
           
           // Valores - Verifique no console os nomes exatos das propriedades
           label.textContent = `Inversor ${inversorNum}`;
           
           // Adapte estas linhas conforme os nomes no seu JSON:
-          pacValue.textContent = `${inversorData.PAC?.toFixed(2) ?? inversorData.InvPAC?.toFixed(2) ?? inversorData[`INV${inversorNum}_PAC`]?.toFixed(2) ?? '0.00'}`;
-          pdcValue.textContent = `${inversorData.PDC?.toFixed(2) ?? inversorData.InvPDC?.toFixed(2) ?? inversorData[`INV${inversorNum}_PDC`]?.toFixed(2) ?? '0.00'}`;
+          pacValue.textContent = `${inversorData.PAC?.toFixed(1) ?? inversorData.InvPAC?.toFixed(1) ?? inversorData[`INV${inversorNum}_PAC`]?.toFixed(1) ?? '0.00'}`;
+          pdcValue.textContent = `${inversorData.PDC?.toFixed(1) ?? inversorData.InvPDC?.toFixed(1) ?? inversorData[`INV${inversorNum}_PDC`]?.toFixed(1) ?? '0.00'}`;
         } else {
           // Fallback para dados ausentes
           arrowIcon.className = 'arrow-icon status--1';
@@ -258,3 +258,6 @@ document.querySelectorAll('[id^="card"]').forEach(card => {
   DataService.iniciar();
   atualizarInversores();
   setInterval(atualizarInversores, 100);
+
+
+

@@ -226,36 +226,85 @@ nav button {
 .box {
   /* background-color: #ccc; */
   padding: 5px;
-  border: none; 
+  border: none;
   border: 1px solid blue;
   display: flex;
   height: auto;
   height: 100px;
 }
-.icon{
-    /* padding-top: 20px; */
-    border: 1px solid white;
-    width: 40%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.icon {
+  /* padding-top: 20px; */
+  border: 1px solid white;
+  width: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.value{
-    padding-top: 15px;
-    width:60%;
-    /* border: 1px solid blue; */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+.value {
+  padding-top: 15px;
+  width: 60%;
+  /* border: 1px solid blue; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
-.value p{
+.value p {
   border: 1px solid #13354a;
   width: 90%;
   text-align: center;
   border-radius: 4px;
 }
-/* ----------------------------------- */
+.box-producao {
+  padding: 5px;
+  border: none;
+  border: 1px solid blue;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  height: 100px;
+}
+.title_prod {
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 20px;
+  padding-top: 20px;
+  margin-bottom: 15px;
+}
+.values_prod {
+  /* border: 1px solid blue; */
+  height: 80px;
+  display: flex;
+  gap: 5%;
+}
+.value_prod_usina {
+  /* border: 1px solid red; */
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  line-height: 0.1;
+}
+.box-concessionaria {
+  padding: 5px;
+  border: none;
+  border: 1px solid blue;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  height: 100px;
+}
+.box-concessionaria .values_prod{
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: center;
+}
+
+/* ----------------------------------------------- */
 
 /* invers icons */
 .invers-section {
@@ -289,7 +338,10 @@ nav button {
   /* border: 1px solid deeppink; */
   display: flex;
   align-items: center;
+  flex-direction: column;
   gap: 1px;
+  position: relative;
+  width: 100%;
 }
 
 .arrow-icon {
@@ -307,6 +359,7 @@ nav button {
   border: 1px solid black;
 }
 
+
 .inversor-label {
   font-size: 0.9rem;
   font-weight: 500;
@@ -317,14 +370,61 @@ nav button {
 
 .value_inver {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  gap: 40px;
+  justify-content: end;
+  align-items: end;
   font-size: 15px;
-  padding-top: 20px;
-  /* border: 1px solid red; */
+  width: 100%;
+  position: relative;
+  overflow: visible;
 }
+
+.value_inver::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -20px;
+  bottom: -20px;
+  width: 2;
+  background-color: black;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.value-pac, .value-pdc {
+  margin: 0;
+  /* text-align: right; */
+  width: 100%;
+  /* border: 1px solid red; */
+  padding-right: 32px;
+}
+
+.linha-superior {
+  /* position: absolute; */
+  /* background-color: red; */
+  /* top: 650px; */
+  margin-left: 320px;
+  margin-right: 220px;
+  /* left: 320px;
+  right: 60px; */
+  /* width: 10; */
+  border-top: 2px dashed red;
+  height: 2px;
+  /* z-index: 3; */
+}
+
+.linha {
+  position: relative;
+  margin-left: 25%;
+  margin-bottom: -20px;
+  width: 2px;
+  height: 65px;
+  background-color: #ca1205;
+  transform: translateX(-50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
 .arrow-icon:hover {
   transform: scale(1.15);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
