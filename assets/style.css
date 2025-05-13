@@ -305,9 +305,22 @@ nav button {
 }
 
 /* ----------------------------------------------- */
+.full_inver{
+  border: 1px solid brown;
+  display: flex;
+  flex-direction: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.teste {
+  width: 100px;
+  height: 100px;
+  background-color: blue;
+}
 
 /* invers icons */
-.invers-section {
+.invers-list {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -315,7 +328,8 @@ nav button {
   border-radius: 8px;
   padding: 0rem;
   flex-direction: column;
-
+  border-bottom: 2px solid red;
+  /* border: 1px solid red; */
   /* margin-top: 2rem; */
   /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
   /* border: 1px solid red; */
@@ -326,30 +340,32 @@ nav button {
   flex-wrap: wrap;
   gap: 2.5rem;
   /* padding: 1.1rem; */
-  padding-bottom: 3.1rem;
+  /* padding-bottom: 3.1rem; */
   background-color: #ffffff;
   border-radius: 6px;
   justify-content: center; /* centraliza os ícones */
   align-items: center;
+  /* border: 1px solid blue; */
   /* border-top: 2px dashed red; */
   /* width: 40%; */
 }
 
 .inversor-item {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   align-items: center;
   gap: 0.5rem; /* espaço entre ícone e label */
   /* border: 1px solid blue; */
+  /* border: 1px solid purple; */
 }
 .items_inversores_icone_valores{
-  /* border: 1px solid deeppink; */
   display: flex;
   align-items: center;
   flex-direction: column;
   gap: 1px;
   position: relative;
   width: 100%;
+  /* border: 1px solid black; */
 }
 
 .arrow-icon {
@@ -408,9 +424,9 @@ nav button {
 }
 
 .linha-superior {
-  width: 72%;
+  width: 80%;
   border-top: 2px dashed blue;
-  margin-left: 28%;
+  margin-left: 5.7%;
   /* margin-left: 9.5rem; */
   pointer-events: none;
   height: 2px;

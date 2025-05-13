@@ -188,7 +188,7 @@ const DataService = {
         
         if (inversorData) {
             modalElement.querySelector('.inversor-number').textContent = inversorNum;
-            modalElement.querySelector('.timestamp').textContent = `Última atualização: ${new Date().toLocaleTimeString()}`;
+            modalElement.querySelector('.timestamp').textContent = `Atualizado em: ${new Date().toLocaleTimeString()}`;
     
             const mppts = inversorData.MPPTS;
             if (mppts) {
@@ -282,7 +282,7 @@ document.querySelectorAll('[id^="card"]').forEach(card => {
   DataService.iniciar();
   atualizarInversores();
   atualizarMeteorologia();
-  setInterval(atualizarInversores, 3000);
+  setInterval(atualizarInversores, 100);
   setInterval(atualizarMeteorologia, 3000);
 
 
