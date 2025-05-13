@@ -310,13 +310,7 @@ nav button {
   display: flex;
   flex-direction: flex;
   justify-content: center;
-  align-items: center;
-}
-
-.teste {
-  width: 100px;
-  height: 100px;
-  background-color: blue;
+  /* align-items: end; */
 }
 
 /* invers icons */
@@ -325,29 +319,19 @@ nav button {
   justify-content: center;
   align-items: center;
   background-color: white;
-  border-radius: 8px;
   padding: 0rem;
   flex-direction: column;
   border-bottom: 2px solid red;
-  /* border: 1px solid red; */
-  /* margin-top: 2rem; */
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
-  /* border: 1px solid red; */
 }
 
 .arrows-container {
   display: flex;
   flex-wrap: wrap;
   gap: 2.5rem;
-  /* padding: 1.1rem; */
-  /* padding-bottom: 3.1rem; */
   background-color: #ffffff;
   border-radius: 6px;
-  justify-content: center; /* centraliza os ícones */
+  justify-content: center;
   align-items: center;
-  /* border: 1px solid blue; */
-  /* border-top: 2px dashed red; */
-  /* width: 40%; */
 }
 
 .inversor-item {
@@ -423,25 +407,31 @@ nav button {
   padding-right: 32px;
 }
 
-.linha-superior {
-  width: 80%;
-  border-top: 2px dashed blue;
-  margin-left: 5.7%;
-  /* margin-left: 9.5rem; */
-  pointer-events: none;
-  height: 2px;
-}
-
 .linha {
   position: relative;
   margin-left: 25%;
-  margin-bottom: -20px;
+  /* margin-bottom: -20px; */
   width: 2px;
-  height: 65px;
+  height: 35px;
   background-color: #ca1205;
   transform: translateX(-50%);
   z-index: 1;
   pointer-events: none;
+}
+
+.interligation {
+  display: flex;
+  align-items: start;
+  width: auto;
+  height: auto;
+  /* background-color: blue; */
+}
+
+.teste {
+  width: 300px;
+  height: 50.5%;
+  background-color: purple;
+  border-bottom: 2px solid red;
 }
 
 .arrow-icon:hover {
