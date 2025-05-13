@@ -308,9 +308,14 @@ nav button {
 
 /* invers icons */
 .invers-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: white;
   border-radius: 8px;
   padding: 0rem;
+  flex-direction: column;
+
   /* margin-top: 2rem; */
   /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
   /* border: 1px solid red; */
@@ -319,12 +324,15 @@ nav button {
 .arrows-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
-  padding: 1.1rem;
+  gap: 2.5rem;
+  /* padding: 1.1rem; */
+  padding-bottom: 3.1rem;
   background-color: #ffffff;
   border-radius: 6px;
   justify-content: center; /* centraliza os ícones */
   align-items: center;
+  /* border-top: 2px dashed red; */
+  /* width: 40%; */
 }
 
 .inversor-item {
@@ -400,17 +408,12 @@ nav button {
 }
 
 .linha-superior {
-  /* position: absolute; */
-  /* background-color: red; */
-  /* top: 650px; */
-  margin-left: 320px;
-  margin-right: 220px;
-  /* left: 320px;
-  right: 60px; */
-  /* width: 10; */
-  border-top: 2px dashed red;
+  width: 72%;
+  border-top: 2px dashed blue;
+  margin-left: 28%;
+  /* margin-left: 9.5rem; */
+  pointer-events: none;
   height: 2px;
-  /* z-index: 3; */
 }
 
 .linha {
