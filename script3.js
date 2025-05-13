@@ -157,7 +157,7 @@ const DataService = {
 
     iniciar: function() {
         this.atualizarDados();
-        this.intervalo = setInterval(() => this.atualizarDados(), 60000);
+        this.intervalo = setInterval(() => this.atualizarDados(), 3000);
     },
 
     notificarTodos: function() {
@@ -242,6 +242,30 @@ const DataService = {
     }
 };
 
+async function atualizarMeteorologia() {
+  try {
+    const response = await fetch('http://192.168.0.252:8080/api/tela_inicial'); // Coloque o mesmo endpoint que retorna o JSON
+    if (!response.ok) throw new Error('Erro ao buscar dados meteorológicos');
+    const data = await response.json();
+
+    const meteorologia = data.central_meteorologica;
+
+    if (meteorologia) {
+      document.getElementById('velocidade-vento').textContent = `${meteorologia.VelocidadeVento.toFixed(1)} m/s`;
+      document.getElementById('direcao-vento').textContent = `${meteorologia.DirecaoVento.toFixed(1)}°`;
+      document.getElementById('irradiancia-inclinada').textContent = `${meteorologia.IrrSInclin.toFixed(1)} W/m²`;
+      document.getElementById('irradiancia-horizontal').textContent = `${meteorologia.IrrSHoriz.toFixed(1)} W/m²`;
+      document.getElementById('umidade-ar').textContent = `${meteorologia.UmidRelAr.toFixed(1)}%`;
+      document.getElementById('temperatura-ambiente').textContent = `${meteorologia.TempAmb.toFixed(1)} °C`;
+      document.getElementById('temperatura-placa').textContent = `${meteorologia.TempPlac.toFixed(1)} °C`;
+    } else {
+      console.warn('Dados da central meteorológica ausentes.');
+    }
+  } catch (error) {
+    console.error('Erro ao atualizar dados meteorológicos:', error);
+  }
+}
+
 // ========== INICIALIZAÇÃO DOS CARDS ==========
 document.querySelectorAll('[id^="card"]').forEach(card => {
     card.addEventListener('click', function() {
@@ -257,7 +281,9 @@ document.querySelectorAll('[id^="card"]').forEach(card => {
   // Inicia serviços
   DataService.iniciar();
   atualizarInversores();
-  setInterval(atualizarInversores, 100);
+  atualizarMeteorologia();
+  setInterval(atualizarInversores, 3000);
+  setInterval(atualizarMeteorologia, 3000);
 
 
-
+// =-=-=-=-=-=-==-=-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-==-=-=-=-=-=-=
