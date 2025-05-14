@@ -298,199 +298,172 @@ nav button {
   height: auto;
   height: 100px;
 }
-.box-concessionaria .values_prod{
+.box-concessionaria .values_prod {
   /* border: 1px solid red; */
   display: flex;
   justify-content: center;
 }
 
 /* ----------------------------------------------- */
-.full_inver{
-  border: 1px solid brown;
+.full_inver {
   display: flex;
-  flex-direction: flex;
+  /* flex-direction: column; */
+  align-items: center;
   justify-content: center;
-  /* align-items: end; */
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  /* border: 1px solid black; */
+}
+/* Container dos dois grupos de inversores */
+.invers-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1100px;
+  /* margin: 0 auto; */
+  /* border: 1px solid black; */
 }
 
-/* invers icons */
+
+/* Linha de cima (Inversores 1-9) */
 .invers-list {
   display: flex;
   justify-content: center;
-  align-items: center;
-  background-color: white;
-  padding: 0rem;
-  flex-direction: column;
-  border-bottom: 2px solid red;
+  padding-bottom: 15px;
 }
 
-.arrows-container {
+/* Linha de baixo (Inversores 1-9 invertidos) */
+.invers-list2 {
   display: flex;
-  flex-wrap: wrap;
-  gap: 2.5rem;
-  background-color: #ffffff;
-  border-radius: 6px;
   justify-content: center;
-  align-items: center;
+  padding-top: 15px;
+  border-top: 2px solid #ca1205; /* Linha divisória */
 }
-
+/* Cada inversor individual */
 .inversor-item {
   display: flex;
   /* flex-direction: column; */
   align-items: center;
-  gap: 0.5rem; /* espaço entre ícone e label */
-  /* border: 1px solid blue; */
-  /* border: 1px solid purple; */
+  min-width: 80px;
+  /* flex-shrink: 0; */
 }
-.items_inversores_icone_valores{
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 1px;
-  position: relative;
-  width: 100%;
+.inversor-label {
+  font-size: 0.9rem;
+  font-weight: bold;
+  white-space: nowrap; /* SEM QUEBRA */
+  /* margin-bottom: 5px; */
+}
+.value_inver{
   /* border: 1px solid black; */
+  padding: 0;
+  width: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+.value-pdc, .value-pac{
+  /* border: 1px solid red; */
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  width: 100%;
+  text-align: left;
+
+}
+/* Estilo dos valores (PDC/PAC) */
+.items_inversores_icone_valores {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  /* border: 1px solid red; */
 }
 
+.arrows-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 25px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 20px;
+}
+.arrows-container::-webkit-scrollbar {
+  display: none;
+}
 .arrow-icon {
-  width: 50px;
-  height: 50px;
-  background-color: #000;
+  width: 40px;
+  height: 40px;
+  background: #000;
+  color: white;
   border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
-  font-size: 1.5rem; /* tamanho do ícone */
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 1px solid black;
-}
-
-
-.inversor-label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #333;
-  text-align: center;
-  /* border: 1px solid red; */
-}
-
-.value_inver {
-  display: flex;
-  flex-direction: column;
-  justify-content: end;
-  align-items: end;
-  font-size: 15px;
-  width: 100%;
-  position: relative;
-  overflow: visible;
-}
-
-.value_inver::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: -20px;
-  bottom: -20px;
-  width: 2;
-  background-color: black;
-  transform: translateX(-50%);
-  z-index: 1;
-}
-
-.value-pac, .value-pdc {
-  margin: 0;
-  /* text-align: right; */
-  width: 100%;
-  /* border: 1px solid red; */
-  padding-right: 32px;
+  font-size: 1rem;
 }
 
 .linha {
-  position: relative;
-  margin-left: 25%;
   width: 2px;
-  height: 35px;
-  background-color: #ca1205;
-  transform: translateX(-50%);
-  z-index: 1;
-  pointer-events: none;
+  height: 30px;
+  background: #ca1205;
 }
 
+/* Seção da carga e rede no meio */
 .interligation {
   display: flex;
-  align-items: end;
+  justify-content: center;
   width: auto;
-  height: auto;
+  /* margin: -10px 0; Ajuste fino de posição */
+  /* border: 1px solid black;; */
 }
+
 
 .energ {
   display: flex;
-  /* flex-direction: column; */
-  width: 300px;
-  height: 50.25%;
-  /* background-color: purple; */
-  border-top: 2px solid red;
+  /* gap: 100px; Espaço entre ícones */
+  transform: translateY(49%);
+  border-top: 2px solid #ca1205;
+  /* width: 400px; */
+  padding-left: 40px;
+  gap: 50px;
+  
 }
 
-.carga {
+.carga, .rede {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 300px;
-  /* height: 50.25%; */
 }
 
-.label-carga {
-  font-size: 14px;
-  font-weight: 600;
-  padding-top: 6px;
-}
 
-.linha-carga {
-  position: relative;
+.linha-carga, .linha-rede {
   width: 2px;
-  height: 65px;
-  background-color: #ca1205;
-  transform: translateX(-50%);
-  z-index: 1;
-  pointer-events: none;
+  height: 50px;
+  background: #ca1205;
 }
 
 .icon-carga {
-  width: 44px;
-  height: 44px;
-  background-color: transparent;
-  border-radius: 100px;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #333;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: rgb(116, 107, 107);
-  font-size: 1.5rem; /* tamanho do ícone */
-  transition: all 0.2s ease;
-  border: 2px solid rgb(49, 49, 49);
 }
 
-.rede {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* justify-content: center; */
-  width: 300px;
-  /* height: 50.25%; */
+/* Ajustes para telas menores */
+@media (max-width: 768px) {
+  .arrows-container {
+    gap: 15px;
+    justify-content: flex-start;
+  }
+  .inversor-item {
+    min-width: 80px;
+  }
 }
 
-.linha-rede {
-  position: relative;
-  width: 2px;
-  height: 55px;
-  background-color: #ca1205;
-  transform: translateX(-50%);
-  z-index: 1;
-  pointer-events: none;
-}
 
 /* .icon-rede {
   width: 600px;
