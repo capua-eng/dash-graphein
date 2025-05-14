@@ -207,11 +207,17 @@ nav button {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-
+.grafico, .gauge {
+  position: relative;
+  z-index: 1;
+}
 /* -----------------------------------------------MENU */
 .menu {
-  /* border: 1px solid red; */
-  height: 100px;
+  position: relative;  /* ou sticky/fixed */
+  z-index: 10;
+  background-color: white;
+  min-height: 100px;
+  height: auto;
   display: flex;
 }
 .grid-layout {
@@ -276,10 +282,10 @@ nav button {
   margin-bottom: 15px;
 }
 .values_prod {
-  /* border: 1px solid blue; */
-  height: 80px;
   display: flex;
-  gap: 5%;
+  flex-wrap: wrap; /* permite quebra de linha */
+  gap: 10px;
+  justify-content: space-between;
 }
 .value_prod_usina {
   /* border: 1px solid red; */
@@ -303,6 +309,71 @@ nav button {
   /* border: 1px solid red; */
   display: flex;
   justify-content: center;
+}
+@media (max-width: 1200px) {
+  .grid-layout {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .box, .box-producao, .box-concessionaria {
+    height: auto;
+  }
+
+  .values_prod {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .value_prod_usina {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .value p {
+    width: 100%;
+  }
+
+  .values_prod {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .value_prod_usina {
+    width: 100%;
+  }
+
+  .box, .box-producao, .box-concessionaria {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .icon {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .value {
+    width: 100%;
+    padding-top: 5px;
+  }
+}
+@media (max-width: 768px) {
+  .values_prod {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .value_prod_usina {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 /* ----------------------------------------------- */
