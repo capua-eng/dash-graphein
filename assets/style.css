@@ -310,6 +310,12 @@ nav button {
   display: flex;
   justify-content: center;
 }
+.value_prod_usina p {
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word;
+  text-align: center;
+}
 @media (max-width: 1200px) {
   .grid-layout {
     grid-template-columns: repeat(2, 1fr);
@@ -373,6 +379,33 @@ nav button {
   .value_prod_usina {
     width: 100%;
     max-width: 100%;
+  }
+}
+@media (max-width: 1400px) and (min-width: 1200px) {
+  /* PRODUÇÃO USINA - 3 itens */
+  .box-producao .value_prod_usina {
+    flex: 1 1 28%; /* forçamos caber 3 lado a lado */
+    min-width: 120px;
+  }
+
+  /* CONCESSIONÁRIA - 2 itens */
+  .box-concessionaria .value_prod_usina {
+    flex: 1 1 45%;
+    min-width: 150px;
+  }
+
+  .value_prod_usina p {
+    font-size: 12px;
+    padding: 4px 6px;
+    white-space: normal;
+    word-break: break-word;
+    text-align: center;
+  }
+
+  .values_prod {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
   }
 }
 
