@@ -149,12 +149,15 @@ const DataService = {
     callbacks: [],
     intervalo: null,
     modalAberto: null,
+    ultimaAtualizacao: null,
+
 
     atualizarDados: async function() {
         try {
             const response = await fetch('http://192.168.0.252:8080/api/inversores');
             if (!response.ok) throw new Error('Erro na API');
             this.dados = await response.json();
+            this.ultimaAtualizacao = new Date();
             this.notificarTodos();
         } catch (error) {
             console.error('Falha ao atualizar dados:', error);
@@ -194,8 +197,10 @@ const DataService = {
         
         if (inversorData) {
             modalElement.querySelector('.inversor-number').textContent = inversorNum;
-            modalElement.querySelector('.timestamp').textContent = `Atualizado em: ${new Date().toLocaleTimeString()}`;
-    
+            if (this.ultimaAtualizacao) {
+              modalElement.querySelector('.timestamp').textContent =
+                  `Atualizado em: ${this.ultimaAtualizacao.toLocaleTimeString()}`;
+            }
             const mppts = inversorData.MPPTS;
             if (mppts) {
                 for (let i = 1; i <= 12; i++) {
@@ -293,3 +298,6 @@ document.querySelectorAll('[id^="card"]').forEach(card => {
 
 
 // =-=-=-=-=-=-==-=-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-==-=-=-=-=-=-=
+console.log("Buscando dados...");
+const response = await fetch('http://192.168.0.252/api/inversores');
+console.log("Resposta recebida.");
