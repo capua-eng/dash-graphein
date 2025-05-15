@@ -298,6 +298,3 @@ document.querySelectorAll('[id^="card"]').forEach(card => {
 
 
 // =-=-=-=-=-=-==-=-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-==-=-=-=-=-=-=
-console.log("Buscando dados...");
-const response = await fetch('http://192.168.0.252/api/inversores');
-console.log("Resposta recebida.");
