@@ -13,7 +13,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 10px;
+  padding: 5px 5px;
   background-color: #13354a;
   /* ou sua cor desejada */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -48,7 +48,7 @@ body {
   align-items: flex-start;
   padding: 20px;
   flex-wrap: wrap;
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 .graph {
@@ -233,7 +233,7 @@ nav button {
   /* background-color: #ccc; */
   padding: 5px;
   border: none;
-  border: 1px solid blue;
+  border: 1px dashed blue;
   display: flex;
   height: auto;
   height: 100px;
@@ -265,7 +265,7 @@ nav button {
 .box-producao {
   padding: 5px;
   border: none;
-  border: 1px solid blue;
+  border: 1px dashed blue;
   display: flex;
   flex-direction: column;
   height: auto;
@@ -283,9 +283,9 @@ nav button {
 }
 .values_prod {
   display: flex;
-  flex-wrap: wrap; /* permite quebra de linha */
-  gap: 10px;
+  flex-wrap: wrap;
   justify-content: space-between;
+  gap: 10px;
 }
 .value_prod_usina {
   /* border: 1px solid red; */
@@ -299,7 +299,7 @@ nav button {
 .box-concessionaria {
   padding: 5px;
   border: none;
-  border: 1px solid blue;
+  border: 1px dashed blue;
   display: flex;
   flex-direction: column;
   height: auto;
@@ -309,12 +309,6 @@ nav button {
   /* border: 1px solid red; */
   display: flex;
   justify-content: center;
-}
-.value_prod_usina p {
-  white-space: normal !important;
-  word-break: break-word !important;
-  overflow-wrap: break-word;
-  text-align: center;
 }
 @media (max-width: 1200px) {
   .grid-layout {
@@ -416,7 +410,7 @@ nav button {
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 20px;
+  /* padding: 20px; */
   box-sizing: border-box;
   /* border: 1px solid black; */
 }
@@ -487,7 +481,7 @@ nav button {
 }
 .temp-int {
   position: relative;
-  left: -10px; /* Move 10px para a direita */
+  left: -10px;
   font-size: 14px;
 }
 .arrows-container {
