@@ -298,6 +298,71 @@ const DataService = {
     }
 };
 
+async function carregarInfoInversores() {
+  console.log('Iniciando carregamento...'); // Deve aparecer no console
+  const response = await fetch('http://192.168.0.252:8080/api/inversores');
+  console.log('Resposta recebida:', response); // Deve mostrar o objeto Response
+  const data = await response.json();
+  console.log('Dados JSON:', JSON.stringify(data)); // Mostra o conteúdo completo
+  try {
+    const response = await fetch('http://192.168.0.252:8080/api/inversores');
+    if (!response.ok) throw new Error(`Erro na requisição: ${response.status}`);
+
+    const data = await response.json();
+    console.log('Dados completos:', data); // Verifique isso no console
+
+    // Verifica quantos inversores existem realmente nos dados
+    const inversoresPresentes = Object.keys(data).filter(key => key.startsWith('Inversor'));
+    console.log(`Inversores encontrados: ${inversoresPresentes.length}`);
+
+    for (let i = 1; i <= 18; i++) {
+      const inversorKey = `Inversor${i}`;
+      const inversorData = data[inversorKey];
+
+      const updateField = (field, unit = '') => {
+        const element = document.getElementById(`inv${i}-${field.toLowerCase()}`);
+        if (!element) {
+          console.error(`Elemento inv${i}-${field.toLowerCase()} não encontrado`);
+          return;
+        }
+
+        if (inversorData && inversorData[field] !== undefined) {
+          const value = inversorData[field];
+          element.textContent = `${value.toFixed(2)} ${unit}`;
+          element.style.color = ''; // Resetar cor se havia erro antes
+        } else {
+          element.textContent = '--';
+          element.style.color = '#999'; // Cinza para valores ausentes
+        }
+      };
+
+      // Atualizar campos
+      updateField('ADC', 'A');
+      updateField('UDC', 'V');
+      updateField('PDC', 'W');
+      updateField('AAC', 'A');
+      updateField('UAC', 'V');
+      updateField('PAC', 'W');
+    }
+  } catch (error) {
+    console.error('Erro ao carregar dados:', error);
+    // Atualizar todos os campos com 'Erro'
+    for (let i = 1; i <= 18; i++) {
+      ['adc', 'udc', 'pdc', 'aac', 'uac', 'pac'].forEach(suffix => {
+        const element = document.getElementById(`inv${i}-${suffix}`);
+        if (element) {
+          element.textContent = 'Erro';
+          element.style.color = 'red';
+        }
+      });
+    }
+  }
+}
+
+// Chamar a função inicialmente e definir intervalo de atualização
+carregarInfoInversores();
+const intervaloAtualizacao = setInterval(carregarInfoInversores, 5000);
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // 👇🏽 ADICIONE AQUI O SEU CÓDIGO DE CLIQUE NOS CARDS

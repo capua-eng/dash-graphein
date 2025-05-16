@@ -277,6 +277,8 @@ async function atualizarMeteorologia() {
   }
 }
 
+// --------------------------------------------------------------------------------DADOS INVERSORES
+
 // ========== INICIALIZAÇÃO DOS CARDS ==========
 document.querySelectorAll('[id^="card"]').forEach(card => {
     card.addEventListener('click', function() {
