@@ -201,6 +201,7 @@ nav a{
     gap: 20px;
     max-width: 100%;
     width: 100%;
+    /* border: 1px solid red; */
 }
 
 .card {
@@ -209,13 +210,13 @@ nav a{
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     font-size: 16px;
     width: 100%;
-    max-width: 450px;
+    max-width: 96%;
     height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    border: 2px dashed rgb(206, 204, 204);
+    border: 2px dashed rgb(255, 255, 255);
     
 }
 
@@ -232,6 +233,7 @@ article{
 }
 .dados_entrada_saida{
     /* border-bottom: 2px dashed rgb(206, 204, 204); */
+    /* border: 1px solid red; */
     width: 100%;
     flex-direction: column;
     justify-content: center;
@@ -246,13 +248,17 @@ article{
     justify-content: center;
     text-align: center;
     gap: 10px;
+    /* border: 1px solid blue; */
 }
-.values_entrada_saida p{
+.post{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+}
+.post p{
     border: 1px solid #13354A;
-    width: 100%;
-    padding: 5px;
     border-radius: 4px;
-    
+    padding: 5px;
 }
 .dados_estado_equi{
     display: flex;
