@@ -60,7 +60,7 @@ body {
 .gauge {
   flex: 1;
   min-width: 300px;
-  height: 200px;
+  height: 300px;
 }
 
 .graph iframe,
