@@ -402,6 +402,60 @@ async function carregarGenDiaInversores() {
 carregarGenDiaInversores(); 
 setInterval(carregarGenDiaInversores, 5000); 
 
+// Objeto para armazenar o último status de cada inversor
+const statusAnterior = {};
+
+async function carregarStatusInversores() {
+  console.log('Verificando status...');
+  
+  try {
+    const response = await fetch('http://192.168.0.252:8080/api/tela_inicial');
+    if (!response.ok) throw new Error(`Erro: ${response.status}`);
+
+    const data = await response.json();
+
+    for (let i = 1; i <= 18; i++) {
+      const inversorKey = `Inversor${i}`;
+      const inversorData = data[inversorKey];
+      const statusElement = document.getElementById(`inv${i}-status`);
+
+      if (!statusElement || !inversorData || inversorData._Status === undefined) {
+        continue; // Pula se não houver dados ou elemento
+      }
+
+      const statusAtual = inversorData._Status;
+
+      // Só atualiza se o status mudou em relação ao anterior
+      if (statusAnterior[i] !== statusAtual) {
+        let statusTexto;
+        switch (statusAtual) {
+          case 0: statusTexto = "🟡 Espera"; break;
+          case 1: statusTexto = "🟢 Gerando"; break;
+          case 2: statusTexto = "🔴 Falha"; break;
+          case 3: statusTexto = "⚫ Falha Permanente"; break;
+          default: statusTexto = "Desconhecido";
+        }
+
+        statusElement.textContent = statusTexto;
+        statusElement.style.color = 
+          statusAtual === 1 ? '#2ecc71' : 
+          statusAtual === 0 ? '#f39c12' : 
+          '#e74c3c';
+
+        // Atualiza o status anterior
+        statusAnterior[i] = statusAtual;
+        console.log(`Inversor ${i} atualizado para: ${statusTexto}`);
+      }
+    }
+  } catch (error) {
+    console.error('Erro ao carregar status:', error);
+  }
+}
+
+// Atualiza a cada 5 segundos (sem piscar desnecessariamente)
+carregarStatusInversores(); // Primeira carga
+setInterval(carregarStatusInversores, 5000);
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // 👇🏽 ADICIONE AQUI O SEU CÓDIGO DE CLIQUE NOS CARDS
