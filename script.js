@@ -363,6 +363,45 @@ async function carregarInfoInversores() {
 carregarInfoInversores();
 const intervaloAtualizacao = setInterval(carregarInfoInversores, 5000);
 
+async function carregarGenDiaInversores() {
+  console.log('Atualizando dados...');
+  try {
+    const response = await fetch('http://192.168.0.252:8080/api/inversores');
+    if (!response.ok) throw new Error(`Erro: ${response.status}`);
+    
+    const data = await response.json();
+    console.log('Dados recebidos:', data);
+
+    for (let i = 1; i <= 18; i++) {
+      const inversorKey = `Inversor${i}`;
+      const genDiaElement = document.getElementById(`inv${i}-gen_dia`);
+      
+      if (!genDiaElement) continue;
+
+      if (data[inversorKey]?.GEN_DIA !== undefined) {
+        genDiaElement.textContent = `${data[inversorKey].GEN_DIA.toFixed(2)} kWh`;
+        genDiaElement.style.color = ''; // Cor normal
+      } else {
+        genDiaElement.textContent = '--';
+        genDiaElement.style.color = '#999'; // Cinza
+      }
+    }
+  } catch (error) {
+    console.error('Falha na atualização:', error);
+    for (let i = 1; i <= 18; i++) {
+      const element = document.getElementById(`inv${i}-gen_dia`);
+      if (element) {
+        element.textContent = 'Erro';
+        element.style.color = 'red';
+      }
+    }
+  }
+}
+
+// Primeira carga + atualização a cada 5 segundos
+carregarGenDiaInversores(); 
+setInterval(carregarGenDiaInversores, 5000); 
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // 👇🏽 ADICIONE AQUI O SEU CÓDIGO DE CLIQUE NOS CARDS

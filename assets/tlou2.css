@@ -250,6 +250,14 @@ article{
     gap: 10px;
     /* border: 1px solid blue; */
 }
+values_entrada_saida_energia{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+}
 .post{
     width: 30%;
     display: flex;
