@@ -60,7 +60,7 @@ if (gerarRelatorioBtn) {
     const endDate = document.getElementById('dataFim').value;
     const groupBy = document.getElementById('intervalo').value;
 
-    const url = `http://100.83.80.13:1880/gerar-relatorio?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&groupBy=${groupBy}`;
+    const url = `http://192.168.0.252:1880/gerar-relatorio?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&groupBy=${groupBy}`;
 
     fetch(url)
       .then(response => {
