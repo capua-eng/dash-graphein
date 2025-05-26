@@ -299,4 +299,243 @@ document.querySelectorAll('[id^="card"]').forEach(card => {
   setInterval(atualizarMeteorologia, 3000);
 
 
+
+// #ALARMES----------------------------------------------------
+document.addEventListener('DOMContentLoaded', function () {
+            // Variáveis globais
+            const contextMenu = document.getElementById('contextMenu');
+            const recognitionModal = document.getElementById('recognitionModal');
+            const modalErrorDetails = document.getElementById('modalErrorDetails');
+            const alarmsList = document.getElementById('alarmsList');
+            let selectedAlarm = null;
+            let currentAlarms = [];
+
+            // Função para buscar dados da API
+            async function fetchAlarmsData() {
+                try {
+                    const response = await fetch('http://192.168.0.252:8080/api/tela_inicial');
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar dados da API');
+                    }
+                    const data = await response.json();
+
+                    // Transforma os dados da API no formato que precisamos
+                    const formattedAlarms = data.alarmes_erros.map((alarme, index) => ({
+                        id: index + 1,
+                        datetimeIn: formatDateTime(alarme.DataErroIni),
+                        datetimeOut: alarme.DataErroFim ? formatDateTime(alarme.DataErroFim) : '',
+                        operator: alarme.Operador || '',
+                        tag: `TAG-${index.toString().padStart(3, '0')}`,
+                        message: `${alarme.Equipamento}: ${alarme.Erro}`,
+                        equipment: alarme.Equipamento,
+                        originalData: alarme,
+                        isActive: alarme.DataErroFim === null
+                    }));
+
+                    currentAlarms = formattedAlarms;
+                    renderAlarms();
+
+                    // Atualiza a cada 30 segundos
+                    setTimeout(fetchAlarmsData, 30000);
+
+                } catch (error) {
+                    console.error('Erro ao buscar alarmes:', error);
+                    showToast('Erro ao carregar alarmes. Tentando novamente...', 'error');
+                    setTimeout(fetchAlarmsData, 5000);
+                }
+            }
+
+            // Função auxiliar para formatar data/hora
+            function formatDateTime(dateTimeString) {
+                if (!dateTimeString) return '';
+                const date = new Date(dateTimeString);
+                return date.toLocaleString('pt-BR');
+            }
+
+            // Renderiza os alarmes
+            function renderAlarms() {
+                alarmsList.innerHTML = '';
+
+                currentAlarms.forEach(alarm => {
+                    const alarmElement = document.createElement('div');
+
+                    // Determina a classe com base no status
+                    const isActive = alarm.originalData.DataErroFim === null;
+                    alarmElement.className = `alarm-item ${isActive ? 'active' : 'resolved'}`;
+                    alarmElement.dataset.id = alarm.id;
+
+                    alarmElement.innerHTML = `
+                        <div class="datetime_in" style="width:15%">
+                            <p>${alarm.datetimeIn}</p>
+                        </div>
+                        <div class="datetime_out" style="width:15%">
+                            <p>${alarm.datetimeOut || '--'}</p>
+                        </div>
+                        <div class="operator" style="width:12%">
+                            <p>${alarm.operator}</p>
+                        </div>
+                        <div class="tag" style="width:15%">
+                            <p>${alarm.tag}</p>
+                        </div>
+                        <div class="message" style="width:33%">
+                            <p>${alarm.message}</p>
+                        </div>
+                    `;
+
+                    alarmsList.appendChild(alarmElement);
+                });
+
+                // Adiciona eventos de clique direito
+                document.querySelectorAll('.alarm-item').forEach(item => {
+                    item.addEventListener('contextmenu', function (e) {
+                        e.preventDefault();
+                        selectedAlarm = this;
+
+                        // Posiciona o menu
+                        const x = Math.min(e.pageX, window.innerWidth - 230);
+                        const y = Math.min(e.pageY, window.innerHeight - 150);
+
+                        contextMenu.style.display = 'block';
+                        contextMenu.style.left = `${x}px`;
+                        contextMenu.style.top = `${y}px`;
+                    });
+                });
+            }
+
+            // Mostra detalhes do alarme no modal
+            window.showAlarmDetails = function (alarmId) {
+                const alarm = currentAlarms.find(a => a.id === alarmId);
+                if (!alarm) return;
+
+                modalErrorDetails.innerHTML = `
+                    <div class="error-detail">
+                        <label>Data/Hora de Entrada</label>
+                        <span>${alarm.datetimeIn}</span>
+                    </div>
+                    <div class="error-detail">
+                        <label>Data/Hora de Saída</label>
+                        <span>${alarm.datetimeOut || '--'}</span>
+                    </div>
+                    <div class="error-detail">
+                        <label>Operador</label>
+                        <span>${alarm.operator}</span>
+                    </div>
+                    <div class="error-detail">
+                        <label>Tag</label>
+                        <span>${alarm.tag}</span>
+                    </div>
+                    <div class="error-detail">
+                        <label>Equipamento</label>
+                        <span>${alarm.equipment}</span>
+                    </div>
+                    <div class="error-detail">
+                        <label>Mensagem</label>
+                        <span>${alarm.message}</span>
+                    </div>
+                    <div class="error-detail">
+                        <label>Status</label>
+                        <span>${alarm.isActive ? 'Ativo' : 'Resolvido'}</span>
+                    </div>
+                `;
+
+                recognitionModal.style.display = 'flex';
+            };
+
+            // Menu de contexto - Reconhecer este erro
+            document.getElementById('recognizeThisError').addEventListener('click', function () {
+                const alarmId = parseInt(selectedAlarm.dataset.id);
+                const alarmIndex = currentAlarms.findIndex(a => a.id === alarmId);
+
+                if (alarmIndex !== -1) {
+                    currentAlarms[alarmIndex].originalData.DataErroFim = new Date().toISOString();
+                    currentAlarms[alarmIndex].datetimeOut = formatDateTime(currentAlarms[alarmIndex].originalData.DataErroFim);
+                    currentAlarms[alarmIndex].isActive = false;
+                    renderAlarms();
+                    showToast(`Erro #${alarmId} reconhecido com sucesso!`, 'success');
+                }
+            });
+
+            // Menu de contexto - Reconhecer todos os erros
+            document.getElementById('recognizeAllErrors').addEventListener('click', function () {
+                const currentTime = new Date().toISOString();
+
+                currentAlarms = currentAlarms.map(alarm => {
+                    if (alarm.isActive) {
+                        return {
+                            ...alarm,
+                            originalData: {
+                                ...alarm.originalData,
+                                DataErroFim: currentTime
+                            },
+                            datetimeOut: formatDateTime(currentTime),
+                            isActive: false
+                        };
+                    }
+                    return alarm;
+                });
+
+                renderAlarms();
+                showToast('Todos os erros foram reconhecidos!', 'success');
+            });
+
+            // Menu de contexto - Ver detalhes
+            document.getElementById('viewDetails').addEventListener('click', function () {
+                const alarmId = parseInt(selectedAlarm.dataset.id);
+                showAlarmDetails(alarmId);
+            });
+
+            // Fecha o menu de contexto ao clicar fora
+            document.addEventListener('click', function (e) {
+                if (e.target.closest('.context-menu') === null) {
+                    contextMenu.style.display = 'none';
+                }
+            });
+
+            // Fecha o modal
+            document.querySelector('.close').addEventListener('click', function () {
+                recognitionModal.style.display = 'none';
+            });
+
+            document.getElementById('cancelRecognition').addEventListener('click', function () {
+                recognitionModal.style.display = 'none';
+            });
+
+            // Botão Confirmar no modal
+            document.getElementById('confirmRecognition').addEventListener('click', function () {
+                if (selectedAlarm) {
+                    const alarmId = parseInt(selectedAlarm.dataset.id);
+                    const alarmIndex = currentAlarms.findIndex(a => a.id === alarmId);
+
+                    if (alarmIndex !== -1) {
+                        currentAlarms[alarmIndex].originalData.DataErroFim = new Date().toISOString();
+                        currentAlarms[alarmIndex].datetimeOut = formatDateTime(currentAlarms[alarmIndex].originalData.DataErroFim);
+                        currentAlarms[alarmIndex].isActive = false;
+                        renderAlarms();
+                        showToast(`Erro #${alarmId} reconhecido via modal!`, 'success');
+                    }
+                }
+                recognitionModal.style.display = 'none';
+            });
+
+            // Mostra notificação
+            function showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                toast.className = `toast-notification toast-${type}`;
+                toast.innerHTML = `
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i>
+                    <span>${message}</span>
+                `;
+                document.body.appendChild(toast);
+
+                setTimeout(() => toast.classList.add('show'), 10);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+
+            // Inicializa buscando os dados da API
+            fetchAlarmsData();
+        });
+
 // =-=-=-=-=-=-==-=-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-==-=-=-=-=-=-=

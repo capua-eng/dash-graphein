@@ -158,7 +158,7 @@
                 width="450" height="200"></iframe>
         </div>
         <div class="graph">
-            <iframe 
+            <iframe
                 src="http://192.168.0.252:3000/d-solo/5a622c37-3d06-401a-b0e8-7fa5892bd210/gauge-potencia?orgId=1&from=1747649599502&to=1747691574271&timezone=browser&theme=light&panelId=3&__feature.dashboardSceneSolo"
                 width="450" height="200" frameborder="0"></iframe>
         </div>
@@ -408,7 +408,7 @@
                     <div class="icon-torre">
                         <svg xmlns="http://www.w3.org/2000/svg" width="73" height="74" viewBox="0 0 24 24">
                             <path fill="currentColor"
-                            d="m8.28 5.45l-1.78-.9L7.76 2h8.47l1.27 2.55l-1.78.89L15 4H9zM18.62 8h-4.53l-.79-3h-2.6l-.79 3H5.38L4.1 10.55l1.79.89l.73-1.44h10.76l.72 1.45l1.79-.89zm-.85 14H15.7l-.24-.9L12 15.9l-3.47 5.2l-.23.9H6.23l2.89-11h2.07l-.36 1.35L12 14.1l1.16-1.75l-.35-1.35h2.07zm-6.37-7l-.9-1.35l-1.18 4.48zm3.28 3.12l-1.18-4.48l-.9 1.36z" />
+                                d="m8.28 5.45l-1.78-.9L7.76 2h8.47l1.27 2.55l-1.78.89L15 4H9zM18.62 8h-4.53l-.79-3h-2.6l-.79 3H5.38L4.1 10.55l1.79.89l.73-1.44h10.76l.72 1.45l1.79-.89zm-.85 14H15.7l-.24-.9L12 15.9l-3.47 5.2l-.23.9H6.23l2.89-11h2.07l-.36 1.35L12 14.1l1.16-1.75l-.35-1.35h2.07zm-6.37-7l-.9-1.35l-1.18 4.48zm3.28 3.12l-1.18-4.48l-.9 1.36z" />
                         </svg>
                     </div>
                 </div>
@@ -417,29 +417,63 @@
     </div>
     <!-- ----------------------------------------------------- -->
     <article style="height: 140px"></article>
-    <footer class="alerts container-fluid px-0">
-        <div class="log">
-            <img src="assets/images/logo.png" width="100%" height="70%">
+    <header class="alarm-header">
+        <div class="datetime_in">
+            <p>Data/Hora (Entrada)</p>
         </div>
-        <div class="alarms">
-            <div class="datetime_in">
-                <p style="padding-left: 10px;box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">DateTime (in)</p>
-            </div>
-            <div class="datetime_out">
-                <p style="padding-left: 10px;box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">DateTime (out)</p>
-            </div>
+        <div class="datetime_out">
+            <p>Data/Hora (Saída)</p>
         </div>
         <div class="operator">
-            <p style="padding-left: 10px;box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">Operator</p>
+            <p>Operador</p>
         </div>
         <div class="tag">
-            <p style="padding-left: 10px;box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">Tag</p>
+            <p>Tag</p>
         </div>
         <div class="message">
-            <p style="padding-left: 10px;box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">Message</p>
+            <p>Mensagem</p>
         </div>
+    </header>
+    <main class="alarms-container " id="alarmsList">
+        <!-- Os erros serão inseridos aqui via JavaScript -->
+    </main>
+
+    <div id="recognitionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h2>Reconhecimento de Erro</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body" id="modalErrorDetails">
+                <!-- Detalhes serão inseridos aqui -->
+            </div>
+            <div class="modal-footer">
+                <button id="confirmRecognition" class="btn btn-confirm">
+                    <i class="fas fa-check"></i> Confirmar Reconhecimento
+                </button>
+                <button id="cancelRecognition" class="btn btn-cancel">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+            </div>
         </div>
-    </footer>
+    </div>
+
+    <!-- Menu de contexto -->
+    <div id="contextMenu" class="context-menu">
+        <div class="context-item" id="recognizeThisError">
+            <i class="fas fa-check-circle"></i> Reconhecer este erro
+        </div>
+        <div class="context-item" id="recognizeAllErrors">
+            <i class="fas fa-check-double"></i> Reconhecer todos
+        </div>
+        <div class="context-divider"></div>
+        <div class="context-item" id="viewDetails">
+            <i class="fas fa-search"></i> Ver detalhes
+        </div>
+    </div>
 
 
 
