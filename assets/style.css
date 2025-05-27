@@ -719,24 +719,25 @@ nav button {
 
 /* Cores dos alarmes por status */
 .alarm-item.active {
-  background-color: #ffebee;
+  background-color: #c4001d;
   /* Vermelho claro */
   border-left: 4px solid #f44336;
 }
 
 .alarm-item.resolved {
-  background-color: #fff8e1;
+  background-color: #ffc400;
   /* Amarelo claro */
   border-left: 4px solid #ffc107;
 }
 
 .alarm-item.active .message {
-  color: #d32f2f;
+  color: #ffffff;
   font-weight: bold;
 }
 
 .alarm-item.resolved .message {
-  color: #ff8f00;
+  color: #000000;
+  font-weight: bold;
 }
 
 /* Menu de Contexto */
