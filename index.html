@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <header class="header">
+    <header class="header mb-1">
         <div class="logo-container">
             <img src="assets/images/Logo_Unesp.svg" alt="Logo Unesp" class="logo">
             <img src="assets/images/logo.png" alt="Logo Capua" class="logo">
@@ -55,20 +55,15 @@
                     <i class="fas fa=chevron-down" style="margin-left: 5px; font-size: 12px;"></i>
                 </button>
                 <div class="dropdown-content">
-                    <a href="#"><i class="fas fa-file-alt" style="margin-right: 8px;"></i> Relatório Diário</a>
+                    <a href="#"><i class="fas fa-chart-line" style="margin-right: 8px;"></i> Irradiação</a>
+                    <a href="#"><i class="fas fa-chart-pie" style="margin-right: 8px;"></i> IDGT</a>
+                    <a href="#"><i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i> Energia</a>
+                    <!-- <a href="#"><i class="fas fa-file-alt" style="margin-right: 8px;"></i> Relatório Diário</a>
                     <a href="#"><i class="fas fa-chart-line" style="margin-right: 8px;"></i> Relatório Mensal</a>
                     <a href="#"><i class="fas fa-chart-pie" style="margin-right: 8px;"></i> Relatório Anual</a>
-                    <a href="#"><i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i> Relatório de
-                        Falhas</a>
+                    <a href="#"><i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i> Relatório de Falhas</a> -->
                 </div>
             </div>
-            <button class="manutencao-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 512 512">
-                    <path fill="currentColor" fill-rule="evenodd"
-                        d="M170.667 42.667c70.692 0 128 57.308 128 128c0 12.931-1.918 25.414-5.484 37.181l133.484 133.486c23.564 23.564 23.564 61.769 0 85.333s-61.77 23.564-85.333 0L207.848 293.183c-11.767 3.566-24.25 5.484-37.181 5.484c-70.692 0-128-57.308-128-128c0-13.642 2.134-26.786 6.087-39.115L109.302 192l60.014-19.987l2.68-2.68L192 109.375L131.382 48.81c12.378-3.988 25.58-6.142 39.285-6.142" />
-                </svg>
-                Manutenção
-            </button>
         </nav>
     </header>
 
@@ -153,9 +148,9 @@
 
     <main class="graphs container-fluid" style="width:99%">
         <div class="gauge">
-            <iframe
-                src="http://192.168.0.252:3000/d-solo/5a622c37-3d06-401a-b0e8-7fa5892bd210/gauge-potencia?orgId=1&from=1747228052325&to=1747249652325&timezone=browser&theme=light&panelId=1&__feature.dashboardSceneSolo"
-                width="450" height="200"></iframe>
+            <iframe 
+                src="http://192.168.0.252:3000/d-solo/5a622c37-3d06-401a-b0e8-7fa5892bd210/gauge-potencia?orgId=1&from=1747617162307&to=1747703562307&timezone=browser&theme=light&panelId=4&__feature.dashboardSceneSolo" 
+                width="450" height="200" frameborder="0"></iframe>  
         </div>
         <div class="graph">
             <iframe
@@ -416,7 +411,7 @@
         </div>
     </div>
     <!-- ----------------------------------------------------- -->
-    <article style="height: 140px"></article>
+    <article style="height: 50px"></article>
     <header class="alarm-header">
         <div class="datetime_in">
             <p>Data/Hora (Entrada)</p>
