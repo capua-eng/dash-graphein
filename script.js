@@ -192,6 +192,7 @@ const HomePageModule = {
         alarmsList.innerHTML = '';
         currentAlarms.forEach(alarm => {
             if (!alarm.isActive && alarm.originalData.Reconhecimento === 'Reconhecido') return;
+            // if (alarm.originalData.Status_ === 1) return;
             const el = document.createElement('div');
             el.className = `alarm-item ${alarm.isActive ? 'active' : 'resolved'}`;
             el.dataset.id = alarm.id;
@@ -229,6 +230,12 @@ const HomePageModule = {
     async function recognizeSelected() {
         const id = parseInt(selectedAlarm.dataset.id);
         const alarm = currentAlarms.find(a => a.id === id);
+        if(!alarm) return;
+        if (alarm.originalData.Status_ === 1) {
+          alert("Este alarme está ativo e não pode ser reconhecido.");
+          contextMenu.style.display = "none";
+          return;
+        }
         if (alarm && await sendToAPI(alarm)) {
             alarm.originalData.Reconhecimento = 'Reconhecido';
             renderAlarms();
@@ -237,7 +244,7 @@ const HomePageModule = {
     }
 
     async function recognizeAll() {
-        const resolved = currentAlarms.filter(a => !a.isActive && !a.originalData.Reconhecimento);
+        const resolved = currentAlarms.filter(a => !a.isActive && !a.originalData.Reconhecimento && a.originalData.Status_ !== 1);
         for (const a of resolved) await sendToAPI(a);
         renderAlarms();
         contextMenu.style.display = 'none';
