@@ -1,482 +1,366 @@
-// JavaScript para controle do dropdown por clique
-document.addEventListener('DOMContentLoaded', function () {
-    const dropdownBtn = document.getElementById('relatorioDropdown');
-    const dropdown = dropdownBtn.closest('.dropdown');
+// ========== VERIFICAÇÃO DE PÁGINA ATIVA ==========
+const currentPage = window.location.pathname;
 
-    dropdownBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        dropdown.classList.toggle('active');
-    });
-
-    // Fechar o dropdown ao clicar em qualquer lugar fora dele
-    document.addEventListener('click', function () {
-        dropdown.classList.remove('active');
-    });
-
-    // Prevenir que o dropdown feche ao clicar dentro dele
-    dropdown.querySelector('.dropdown-content').addEventListener('click', function (e) {
-        e.stopPropagation();
-    });
-});
-
-// Modal
-document.addEventListener('DOMContentLoaded', function () {
-    const modal = document.getElementById('modalRelatorio');
-    const closeModal = document.querySelector('.modal .close');
-
-    // Pegando todos os links do dropdown de relatórios
-    const relatorioLinks = document.querySelectorAll('.dropdown-content a');
-
-    relatorioLinks.forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault(); // Evita o comportamento padrão do link
-            modal.style.display = 'block'; // Mostra o modal
-        });
-    });
-
-    // Fechar o modal quando clicar no botão de fechar (X)
-    closeModal.addEventListener('click', function () {
-        modal.style.display = 'none';
-    });
-
-    // Fechar o modal se clicar fora do conteúdo do modal
-    window.addEventListener('click', function (e) {
-        if (e.target == modal) {
-            modal.style.display = 'none';
-        }
-    });
-});
+const isIndexPage = currentPage.includes("index.html") || currentPage === "/" || currentPage === "/index";
+const isInversoresPage = currentPage.includes("inversores.html");
 
 
-// --- ADICIONE AQUI O NOVO CÓDIGO ---
-document.querySelectorAll('label[for="dataInicio"], label[for="dataFim"]').forEach(label => {
-    label.addEventListener('click', () => {
-        document.getElementById(label.getAttribute('for')).showPicker();
-    });
-});
-// -----------------------------------
+// ========== MÓDULO DE FUNÇÕES GERAIS (compartilhadas) ==========
+const GeneralModule = {
+    init: function() {
+        this.setupDropdowns();
+        this.setupModals();
+        this.setupDatePickers();
+    },
 
+    setupDropdowns: function() {
+        const dropdownBtn = document.getElementById('relatorioDropdown');
+        const dropdown = dropdownBtn?.closest('.dropdown');
 
-
-document.addEventListener('DOMContentLoaded', function () {
-    const gerarRelatorioBtn = document.getElementById('gerarRelatorioBtn');
-
-    gerarRelatorioBtn.addEventListener('click', function () {
-        // Exibe o spinner
-        const spinner = document.getElementById('loadingSpinner');
-        if (spinner) spinner.style.display = 'block';
-
-        // Captura os valores dos inputs (ajuste os IDs conforme necessário)
-        const startDate = document.getElementById('dataInicio').value;
-        const endDate = document.getElementById('dataFim').value;
-        const groupBy = document.getElementById('intervalo').value;
-        console.log(`Data de inicio: ${startDate}, Data de fim: ${endDate},  asdasda: ${groupBy}`)
-
-        // Monta a URL da API
-        const url = `http://100.83.80.13:1880/gerar-relatorio?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&groupBy=${groupBy}`;
-
-        // Faz a requisição
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro na resposta da API');
-                }
-                else {
-                    alert('Relatório gerado com sucesso!')
-                }
-                return response.blob(); // Espera um PDF
-            })
-            .then(blob => {
-                if (spinner) spinner.style.display = 'none';
-
-                // Cria um link temporário para download
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'relatorio.pdf';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
-            })
-            .catch(error => {
-                if (spinner) spinner.style.display = 'none';
-                alert('Erro ao gerar relatório: ' + error.message);
+        if (dropdownBtn && dropdown) {
+            dropdownBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('active');
             });
-    });
-});
 
+            document.addEventListener('click', function() {
+                dropdown.classList.remove('active');
+            });
 
-document.addEventListener('DOMContentLoaded', async function() {
-    const arrowIcons = document.querySelectorAll('.arrow-icon');
-    
-    try {
-        // 1. Busca os dados reais da API
-        const response = await fetch('http://192.168.0.252:8080/api/tela_inicial');
-        if (!response.ok) throw new Error('Erro ao buscar dados');
-        
-        const data = await response.json();
-        
-        // 2. Converte os dados da API para o formato de array que você usava
-        const statusInversores = Array(18).fill(-1); // Default (0 = operando)
-        
-        // Preenche com os valores reais da API
-        for (let i = 1; i <= 18; i++) {
-            const inversorKey = `Inversor${i}`;
-            if (data[inversorKey]) {
-                statusInversores[i-1] = data[inversorKey]._Status;
-            }
-        }
-        
-        // 3. Atualiza a interface (igual ao seu código original)
-        arrowIcons.forEach((icon, index) => {
-            const status = statusInversores[index];
-            icon.classList.remove('status-1', 'status--1', 'status-0', 'status-2');
-            
-            switch(status) {
-                case 1: icon.classList.add('status-1'); break;
-                case -1: icon.classList.add('status--1'); break;
-                case 0: icon.classList.add('status-0'); break;
-                case 2: icon.classList.add('status-2'); break;
-                default: icon.style.backgroundColor = '#000';
-            }
-            
-            const label = icon.closest('.inversor-item').querySelector('.inversor-label');
-            label.textContent = `Inversor ${index + 1}`;
-        });
-        
-        console.log('Status atualizados com dados reais:', statusInversores);
-        
-    } catch (error) {
-        console.error('Erro ao atualizar interface:', error);
-        
-        // Fallback: mostra mensagem de erro (opcional)
-        arrowIcons.forEach(icon => {
-            icon.style.backgroundColor = '#ccc';
-            const label = icon.closest('.inversor-item').querySelector('.inversor-label');
-            label.textContent = 'Erro';
-        });
-    }
-});
-
-
-const DataService = {
-    dados: null,
-    callbacks: [],
-    intervalo: null,
-    modalAberto: null, // Guarda referência do modal aberto
-
-
-    atualizarDados: async function() {
-        try {
-            const response = await fetch('http://192.168.0.252:8080/api/inversores');
-            if (!response.ok) throw new Error('Erro na API');
-            this.dados = await response.json();
-            this.notificarTodos();
-            console.log('Dados atualizados:', this.dados);
-        } catch (error) {
-            console.error('Falha ao atualizar dados:', error);
+            dropdown.querySelector('.dropdown-content')?.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
         }
     },
 
-    iniciar: function() {
-        this.atualizarDados(); // Primeira carga
-        this.intervalo = setInterval(() => this.atualizarDados(), 60000);
-    },
+    setupModals: function() {
+        const modal = document.getElementById('modalRelatorio');
+        const closeModal = document.querySelector('.modal .close');
+        const relatorioLinks = document.querySelectorAll('.dropdown-content a');
 
-    // ✅ 3. Método notificarTodos
-    notificarTodos: function() {
-        this.callbacks.forEach(cb => cb(this.dados));
-    },
-    parar: function() {
-        clearInterval(this.intervalo);
-    },
+        if (modal && closeModal) {
+            relatorioLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    modal.style.display = 'block';
+                });
+            });
 
-    // ✅ **NOVO: Abrir Modal do Inversor**
-    abrirModal: function(inversorNum) {
-        if (!this.dados) {
-            console.error("Dados não carregados!");
-            return;
-        }
-        
-    
-        // Fecha modal anterior
-        this.fecharModal();
-    
-        // Obtém o template (ajustado para sua estrutura)
-        const template = document.getElementById('modal-template');
-        const modalClone = template.cloneNode(true);
-        modalClone.id = `modal-inversor-${inversorNum}`;
-        modalClone.style.display = 'block'; // Remove o display:none
-    
-        // Preenche os dados
-        const inversorKey = `Inversor${inversorNum}`;
-        const inversorData = this.dados[inversorKey];
-        const modalElement = modalClone.querySelector('.modal-overlay');
-        
-        if (inversorData) {
-            // Preenche os dados básicos
-            modalElement.querySelector('.inversor-number').textContent = inversorNum;
-            modalElement.querySelector('.timestamp').textContent = 
-                `Última atualização: ${new Date().toLocaleTimeString()}`;
-    
-            const mppts = inversorData.MPPTS;
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
 
-            if (mppts) {
-                for (let i = 1; i <= 12; i++) {
-                    const mpptKey = `MPPT${i}`;
-                    const mpptData = mppts[mpptKey];
-            
-                    const mpptDiv = modalElement.querySelector(`.mppts[data-mppt="${i}"]`);
-                    if (mpptDiv && mpptData) {
-                        const vSpan = mpptDiv.querySelector('.value-v');
-                        const aSpan = mpptDiv.querySelector('.value-a');
-            
-                        if (vSpan) vSpan.textContent = `${mpptData.V.toFixed(2)} V`;
-                        if (aSpan) aSpan.textContent = `${mpptData.A.toFixed(2)} A`;
-                    }
+            window.addEventListener('click', function(e) {
+                if (e.target == modal) {
+                    modal.style.display = 'none';
                 }
-            }
-            // Adicione aqui outros campos que precisam ser preenchidos
-            // Corrente Fase
-            const correntePA = inversorData.Corrente_Fase?.PA?.toFixed(2) || '0.00';
-            const correntePB = inversorData.Corrente_Fase?.PB?.toFixed(2) || '0.00';
-            const correntePC = inversorData.Corrente_Fase?.PC?.toFixed(2) || '0.00';
-            modalElement.querySelector('.corrente-pa').textContent = `${correntePA} A`;
-            modalElement.querySelector('.corrente-pb').textContent = `${correntePB} A`;
-            modalElement.querySelector('.corrente-pc').textContent = `${correntePC} A`;
-
-            // PAC
-            const pacValue = inversorData.PAC?.toFixed(2) || '0.00';
-            modalElement.querySelector('.pac-value').textContent = `${pacValue} kW`;
-
-            // Tensão Fase
-            const tensaoPAB = inversorData.Tensao_Fase?.PAB?.toFixed(2) || '0.00';
-            const tensaoPBC = inversorData.Tensao_Fase?.PBC?.toFixed(2) || '0.00';
-            const tensaoPCA = inversorData.Tensao_Fase?.PCA?.toFixed(2) || '0.00';
-            modalElement.querySelector('.tensao-pab').textContent = `${tensaoPAB} V`;
-            modalElement.querySelector('.tensao-pbc').textContent = `${tensaoPBC} V`;
-            modalElement.querySelector('.tensao-pca').textContent = `${tensaoPCA} V`;
-        }
-    
-        // Configura eventos de fechar
-        modalElement.querySelector('.close-modal').addEventListener('click', () => {
-            this.fecharModal();
-        });
-    
-        modalElement.addEventListener('click', (e) => {
-            if (e.target === modalElement) {
-                this.fecharModal();
-            }
-        });
-    
-        document.body.appendChild(modalClone);
-        this.modalAberto = modalClone;
-        
-        console.log(`Modal do inversor ${inversorNum} aberto!`); // Para debug
-    },
-    // ✅ **NOVO: Fechar Modal**
-    fecharModal: function() {
-        if (this.modalAberto) {
-            this.modalAberto.remove();
-            this.modalAberto = null;
+            });
         }
     },
 
-    // ✅ **NOVO: Atualizar Modal Aberto (se houver)**
-    atualizarModalAberto: function() {
-        if (!this.modalAberto || !this.dados) return;
-
-        const inversorNum = this.modalAberto.id.split('-')[2]; // Pega o número do modal (ex: "modal-inversor-1" → "1")
-        this.abrirModal(inversorNum); // Reabre com dados atualizados
+    setupDatePickers: function() {
+        document.querySelectorAll('label[for="dataInicio"], label[for="dataFim"]').forEach(label => {
+            label.addEventListener('click', () => {
+                const input = document.getElementById(label.getAttribute('for'));
+                input?.showPicker();
+            });
+        });
     },
 
-    // ✅ **Modificar notificarTodos() para atualizar modais**
-    notificarTodos: function() {
-        this.callbacks.forEach(cb => cb(this.dados));
-        this.atualizarModalAberto(); // Atualiza o modal se estiver aberto
+    setupReportGeneration: function() {
+        const gerarRelatorioBtn = document.getElementById('gerarRelatorioBtn');
+
+        if (gerarRelatorioBtn) {
+            gerarRelatorioBtn.addEventListener('click', function() {
+                const spinner = document.getElementById('loadingSpinner');
+                if (spinner) spinner.style.display = 'block';
+
+                const startDate = document.getElementById('dataInicio').value;
+                const endDate = document.getElementById('dataFim').value;
+                const groupBy = document.getElementById('intervalo').value;
+
+                const url = `http://192.168.0.252:1880/gerar-relatorio?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&groupBy=${groupBy}`;
+
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Erro na resposta da API');
+                        alert('Relatório gerado com sucesso!');
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        if (spinner) spinner.style.display = 'none';
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'relatorio.pdf';
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                    })
+                    .catch(error => {
+                        if (spinner) spinner.style.display = 'none';
+                        alert('Erro ao gerar relatório: ' + error.message);
+                    });
+            });
+        }
     }
 };
 
-async function carregarInfoInversores() {
-  console.log('Iniciando carregamento...'); // Deve aparecer no console
-  const response = await fetch('http://192.168.0.252:8080/api/inversores');
-  console.log('Resposta recebida:', response); // Deve mostrar o objeto Response
-  const data = await response.json();
-  console.log('Dados JSON:', JSON.stringify(data)); // Mostra o conteúdo completo
-  try {
-    const response = await fetch('http://192.168.0.252:8080/api/inversores');
-    if (!response.ok) throw new Error(`Erro na requisição: ${response.status}`);
+// ========== MÓDULO DA TELA INICIAL ==========
+const HomePageModule = {
+    init: function() {
+        if (!isIndexPage) return;
+        
+        this.setupHomeData();
+    },
 
-    const data = await response.json();
-    console.log('Dados completos:', data); // Verifique isso no console
+    setupHomeData: function () {
+    let currentAlarms = [];
+    const alarmsList = document.getElementById('alarmsList');
+    const contextMenu = document.getElementById('contextMenu');
+    const recognitionModal = document.getElementById('recognitionModal');
+    const modalErrorDetails = document.getElementById('modalErrorDetails');
+    let selectedAlarm = null;
 
-    // Verifica quantos inversores existem realmente nos dados
-    const inversoresPresentes = Object.keys(data).filter(key => key.startsWith('Inversor'));
-    console.log(`Inversores encontrados: ${inversoresPresentes.length}`);
-
-    for (let i = 1; i <= 18; i++) {
-      const inversorKey = `Inversor${i}`;
-      const inversorData = data[inversorKey];
-
-      const updateField = (field, unit = '') => {
-        const element = document.getElementById(`inv${i}-${field.toLowerCase()}`);
-        if (!element) {
-          console.error(`Elemento inv${i}-${field.toLowerCase()} não encontrado`);
-          return;
-        }
-
-        if (inversorData && inversorData[field] !== undefined) {
-          const value = inversorData[field];
-          element.textContent = `${value.toFixed(2)} ${unit}`;
-          element.style.color = ''; // Resetar cor se havia erro antes
-        } else {
-          element.textContent = '--';
-          element.style.color = '#999'; // Cinza para valores ausentes
-        }
-      };
-
-      // Atualizar campos
-      updateField('ADC', 'A');
-      updateField('UDC', 'V');
-      updateField('PDC', 'W');
-      updateField('AAC', 'A');
-      updateField('UAC', 'V');
-      updateField('PAC', 'W');
-    }
-  } catch (error) {
-    console.error('Erro ao carregar dados:', error);
-    // Atualizar todos os campos com 'Erro'
-    for (let i = 1; i <= 18; i++) {
-      ['adc', 'udc', 'pdc', 'aac', 'uac', 'pac'].forEach(suffix => {
-        const element = document.getElementById(`inv${i}-${suffix}`);
-        if (element) {
-          element.textContent = 'Erro';
-          element.style.color = 'red';
-        }
-      });
-    }
-  }
-}
-
-// Chamar a função inicialmente e definir intervalo de atualização
-carregarInfoInversores();
-const intervaloAtualizacao = setInterval(carregarInfoInversores, 5000);
-
-async function carregarGenDiaInversores() {
-  console.log('Atualizando dados...');
-  try {
-    const response = await fetch('http://192.168.0.252:8080/api/inversores');
-    if (!response.ok) throw new Error(`Erro: ${response.status}`);
-    
-    const data = await response.json();
-    console.log('Dados recebidos:', data);
-
-    for (let i = 1; i <= 18; i++) {
-      const inversorKey = `Inversor${i}`;
-      const genDiaElement = document.getElementById(`inv${i}-gen_dia`);
-      
-      if (!genDiaElement) continue;
-
-      if (data[inversorKey]?.GEN_DIA !== undefined) {
-        genDiaElement.textContent = `${data[inversorKey].GEN_DIA.toFixed(2)} kWh`;
-        genDiaElement.style.color = ''; // Cor normal
-      } else {
-        genDiaElement.textContent = '--';
-        genDiaElement.style.color = '#999'; // Cinza
-      }
-    }
-  } catch (error) {
-    console.error('Falha na atualização:', error);
-    for (let i = 1; i <= 18; i++) {
-      const element = document.getElementById(`inv${i}-gen_dia`);
-      if (element) {
-        element.textContent = 'Erro';
-        element.style.color = 'red';
-      }
-    }
-  }
-}
-
-// Primeira carga + atualização a cada 5 segundos
-carregarGenDiaInversores(); 
-setInterval(carregarGenDiaInversores, 5000); 
-
-// Objeto para armazenar o último status de cada inversor
-const statusAnterior = {};
-
-async function carregarStatusInversores() {
-  console.log('Verificando status...');
-  
-  try {
-    const response = await fetch('http://192.168.0.252:8080/api/tela_inicial');
-    if (!response.ok) throw new Error(`Erro: ${response.status}`);
-
-    const data = await response.json();
-
-    for (let i = 1; i <= 18; i++) {
-      const inversorKey = `Inversor${i}`;
-      const inversorData = data[inversorKey];
-      const statusElement = document.getElementById(`inv${i}-status`);
-
-      if (!statusElement || !inversorData || inversorData._Status === undefined) {
-        continue; // Pula se não houver dados ou elemento
-      }
-
-      const statusAtual = inversorData._Status;
-
-      // Só atualiza se o status mudou em relação ao anterior
-      if (statusAnterior[i] !== statusAtual) {
-        let statusTexto;
-        switch (statusAtual) {
-          case 0: statusTexto = "🟡 Espera"; break;
-          case 1: statusTexto = "🟢 Gerando"; break;
-          case 2: statusTexto = "🔴 Falha"; break;
-          case 3: statusTexto = "⚫ Falha Permanente"; break;
-          default: statusTexto = "Desconhecido";
-        }
-
-        statusElement.textContent = statusTexto;
-        statusElement.style.color = 
-          statusAtual === 1 ? '#2ecc71' : 
-          statusAtual === 0 ? '#f39c12' : 
-          '#e74c3c';
-
-        // Atualiza o status anterior
-        statusAnterior[i] = statusAtual;
-        console.log(`Inversor ${i} atualizado para: ${statusTexto}`);
-      }
-    }
-  } catch (error) {
-    console.error('Erro ao carregar status:', error);
-  }
-}
-
-// Atualiza a cada 5 segundos (sem piscar desnecessariamente)
-carregarStatusInversores(); // Primeira carga
-setInterval(carregarStatusInversores, 5000);
-
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // 👇🏽 ADICIONE AQUI O SEU CÓDIGO DE CLIQUE NOS CARDS
-    document.querySelectorAll('[id^="card"]').forEach(card => {
-        card.addEventListener('click', function() {
-            const inversorNum = parseInt(this.id.replace('card', ''));
-            
-            if (!DataService.dados) {
-                console.warn("Dados ainda não carregados. Aguarde...");
-                return;
+    async function fetchAndUpdateAll() {
+        try {
+            const response = await fetch('http://192.168.0.252:8080/api/tela_inicial');
+            if (!response.ok) {
+                alert("Falha ao conectar à API.");
+                throw new Error('Erro na API');
             }
-            
-            DataService.abrirModal(inversorNum);
-        });
-    });
-    
-    // 3. SÓ DEPOIS INICIE O SERVICO
-    DataService.iniciar(); 
-});
+            const data = await response.json();
 
-console.log("DataService:", DataService);
-console.log("Dados carregados:", DataService.dados);
-console.log("Elementos .inversor-item:", document.querySelectorAll('.inversor-item').length);
-console.log("Card encontrado:", card.id); // Verifica se está achando seus cards
+
+            // === Atualizar inversores ===
+            document.querySelectorAll('.inversor-item').forEach((item, index) => {
+                const num = index + 1;
+                const invKey = `Inversor${num}`;
+                const inv = data[invKey];
+                const arrow = item.querySelector('.arrow-icon');
+                const label = item.querySelector('.inversor-label');
+                const pac = item.querySelector('.value-pac');
+                const pdc = item.querySelector('.value-pdc');
+                const temp = item.querySelector('.temp-int');
+
+                if (inv) {
+                    const status = inv._Status ?? -1;
+                    arrow.className = 'arrow-icon';
+                    arrow.classList.add(`status-${status}`);
+                    label.textContent = `Inversor ${num}`;
+                    pac.textContent = `${inv[`INV${num}_PAC`]?.toFixed(1) ?? '0.00'}`;
+                    pdc.textContent = `${inv[`INV${num}_PDC`]?.toFixed(1) ?? '0.00'}`;
+                    temp.textContent = `${inv[`INV${num}_TI`]?.toFixed(1) ?? '0.0'}°C`;
+                } else {
+                    arrow.className = 'arrow-icon status--1';
+                }
+            });
+
+            // === Atualizar meteorologia ===
+            const met = data.central_meteorologica;
+            if (met) {
+                document.getElementById('velocidade-vento').textContent = `${met.VelocidadeVento.toFixed(1)} m/s`;
+                document.getElementById('direcao-vento').textContent = `${met.DirecaoVento.toFixed(1)}°`;
+                document.getElementById('irradiancia-inclinada').textContent = `${met.IrrSInclin.toFixed(1)} W/m²`;
+                document.getElementById('irradiancia-horizontal').textContent = `${met.IrrSHoriz.toFixed(1)} W/m²`;
+                document.getElementById('umidade-ar').textContent = `${met.UmidRelAr.toFixed(1)}%`;
+                document.getElementById('temperatura-ambiente').textContent = `${met.TempAmb.toFixed(1)} °C`;
+                document.getElementById('temperatura-placa').textContent = `${met.TempPlac.toFixed(1)} °C`;
+            }
+
+            // === Atualizar alarmes ===
+            currentAlarms = (data.alarmes_erros || []).map((a, i) => ({
+                id: i + 1,
+                datetimeIn: new Date(a.DataErroIni).toLocaleString('pt-BR'),
+                equipment: a.Equipamento,
+                message: `${a.Equipamento}: ${a.Erro}`,
+                isActive: a.DataErroFim === null,
+                bits: a.BITS,
+                originalData: a
+            }));
+
+            renderAlarms();
+
+        } catch (err) {
+            console.error('Erro ao buscar/atualizar dados:', err);
+        }
+    }
+
+    function renderAlarms() {
+        if (!alarmsList) return;
+        alarmsList.innerHTML = '';
+        currentAlarms.forEach(alarm => {
+            if (!alarm.isActive && alarm.originalData.Reconhecimento === 'Reconhecido') return;
+            const el = document.createElement('div');
+            el.className = `alarm-item ${alarm.isActive ? 'active' : 'resolved'}`;
+            el.dataset.id = alarm.id;
+            el.innerHTML = `
+                <div class="message">${alarm.message}</div>
+                <div class="datetime">${alarm.datetimeIn}</div>
+            `;
+            alarmsList.appendChild(el);
+        });
+    }
+
+    function setupAlarmEvents() {
+        alarmsList.addEventListener('contextmenu', function (e) {
+            if (e.target.closest('.alarm-item')) {
+                e.preventDefault();
+                selectedAlarm = e.target.closest('.alarm-item');
+                showContextMenu(e.clientX, e.clientY);
+            }
+        });
+
+        document.addEventListener('click', () => contextMenu.style.display = 'none');
+
+        document.getElementById('recognizeThisError').addEventListener('click', recognizeSelected);
+        document.getElementById('recognizeAllErrors').addEventListener('click', recognizeAll);
+    }
+
+    function showContextMenu(x, y) {
+        const isActive = selectedAlarm.classList.contains('active');
+        document.getElementById('recognizeThisError').disabled = isActive;
+        contextMenu.style.display = 'block';
+        contextMenu.style.left = `${x}px`;
+        contextMenu.style.top = `${y}px`;
+    }
+
+    async function recognizeSelected() {
+        const id = parseInt(selectedAlarm.dataset.id);
+        const alarm = currentAlarms.find(a => a.id === id);
+        if (alarm && await sendToAPI(alarm)) {
+            alarm.originalData.Reconhecimento = 'Reconhecido';
+            renderAlarms();
+        }
+        contextMenu.style.display = 'none';
+    }
+
+    async function recognizeAll() {
+        const resolved = currentAlarms.filter(a => !a.isActive && !a.originalData.Reconhecimento);
+        for (const a of resolved) await sendToAPI(a);
+        renderAlarms();
+        contextMenu.style.display = 'none';
+    }
+
+    async function sendToAPI(alarm) {
+        try {
+            const payload = {
+                BITS: Number(alarm.bits),
+                Equipamento: alarm.equipment,
+                DataErroIni: new Date(alarm.originalData.DataErroIni)
+            };
+            const resp = await fetch('http://192.168.0.252:8080/api/recAlarmes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            return resp.ok;
+        } catch (e) {
+            console.error('Erro ao enviar reconhecimento:', e);
+            return false;
+        }
+    }
+
+    fetchAndUpdateAll();
+    setupAlarmEvents();
+    setInterval(fetchAndUpdateAll, 3000);
+}
+
+
+};
+
+// ========== MÓDULO DA PÁGINA DE INVERSORES ==========
+const InvertersPageModule = {
+    init: function() {
+        if (!isInversoresPage) return;
+        
+        this.setupDataService();
+        this.setupCardClickHandlers();
+    },
+
+    setupDataService: function() {
+        const DataService = {
+            dados: null,
+            intervalo: null,
+            modalAberto: null,
+
+            atualizarDados: async function() {
+                try {
+                    const response = await fetch('http://192.168.0.252:8080/api/inversores');
+                    if (!response.ok) throw new Error('Erro na API');
+                    this.dados = await response.json();
+                    this.atualizarModalAberto();
+                } catch (error) {
+                    console.error('Falha ao atualizar dados:', error);
+                }
+            },
+
+            iniciar: function() {
+                this.atualizarDados();
+                this.intervalo = setInterval(() => this.atualizarDados(), 3000);
+            },
+
+            parar: function() {
+                clearInterval(this.intervalo);
+            },
+
+            abrirModal: function(inversorNum) {
+                // Implementação simplificada do modal
+                if (!this.dados) return;
+
+                this.fecharModal();
+                const modal = document.createElement('div');
+                modal.className = 'modal-overlay';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <h2>Inversor ${inversorNum}</h2>
+                        <!-- Conteúdo do modal aqui -->
+                    </div>
+                `;
+
+                modal.querySelector('.close-modal').addEventListener('click', () => {
+                    this.fecharModal();
+                });
+
+                document.body.appendChild(modal);
+                this.modalAberto = modal;
+            },
+
+            fecharModal: function() {
+                if (this.modalAberto) {
+                    this.modalAberto.remove();
+                    this.modalAberto = null;
+                }
+            },
+
+            atualizarModalAberto: function() {
+                if (!this.modalAberto || !this.dados) return;
+                const inversorNum = this.modalAberto.querySelector('h2').textContent.split(' ')[1];
+                this.abrirModal(inversorNum);
+            }
+        };
+
+        DataService.iniciar();
+        window.DataService = DataService; // Torna acessível globalmente se necessário
+    },
+
+    setupCardClickHandlers: function() {
+        document.querySelectorAll('[id^="card"]').forEach(card => {
+            card.addEventListener('click', function() {
+                const inversorNum = parseInt(this.id.replace('card', ''));
+                if (window.DataService && window.DataService.dados) {
+                    window.DataService.abrirModal(inversorNum);
+                }
+            });
+        });
+    }
+};
+
+// ========== INICIALIZAÇÃO DOS MÓDULOS ==========
+document.addEventListener('DOMContentLoaded', function() {
+    GeneralModule.init();
+    HomePageModule.init();
+    InvertersPageModule.init();
+});
