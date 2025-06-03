@@ -281,7 +281,6 @@ const HomePageModule = {
 const InvertersPageModule = {
     init: function() {
         if (!isInversoresPage) return;
-        
         this.setupDataService();
         this.setupCardClickHandlers();
     },
@@ -291,12 +290,14 @@ const InvertersPageModule = {
             dados: null,
             intervalo: null,
             modalAberto: null,
+            ultimaAtualizacao: null,
 
             atualizarDados: async function() {
                 try {
                     const response = await fetch('http://192.168.0.252:8080/api/inversores');
                     if (!response.ok) throw new Error('Erro na API');
                     this.dados = await response.json();
+                    this.ultimaAtualizacao = new Date();
                     this.atualizarModalAberto();
                 } catch (error) {
                     console.error('Falha ao atualizar dados:', error);
@@ -313,26 +314,62 @@ const InvertersPageModule = {
             },
 
             abrirModal: function(inversorNum) {
-                // Implementação simplificada do modal
                 if (!this.dados) return;
 
                 this.fecharModal();
-                const modal = document.createElement('div');
-                modal.className = 'modal-overlay';
-                modal.innerHTML = `
-                    <div class="modal-content">
-                        <span class="close-modal">&times;</span>
-                        <h2>Inversor ${inversorNum}</h2>
-                        <!-- Conteúdo do modal aqui -->
-                    </div>
-                `;
 
-                modal.querySelector('.close-modal').addEventListener('click', () => {
+                const template = document.getElementById('modal-template');
+                const modalClone = template.cloneNode(true);
+                modalClone.id = `modal-inversor-${inversorNum}`;
+                modalClone.style.display = 'block';
+
+                const inversorKey = `Inversor${inversorNum}`;
+                const inversorData = this.dados[inversorKey];
+                const modalElement = modalClone.querySelector('.modal-overlay');
+
+                if (inversorData) {
+                    modalElement.querySelector('.inversor-number').textContent = inversorNum;
+                    if (this.ultimaAtualizacao) {
+                        modalElement.querySelector('.timestamp').textContent =
+                            `Atualizado em: ${this.ultimaAtualizacao.toLocaleTimeString()}`;
+                    }
+
+                    const mppts = inversorData.MPPTS;
+                    if (mppts) {
+                        for (let i = 1; i <= 12; i++) {
+                            const mpptKey = `MPPT${i}`;
+                            const mpptData = mppts[mpptKey];
+                            const mpptDiv = modalElement.querySelector(`.mppts[data-mppt="${i}"]`);
+                            if (mpptDiv && mpptData) {
+                                const vSpan = mpptDiv.querySelector('.value-v');
+                                const aSpan = mpptDiv.querySelector('.value-a');
+                                if (vSpan) vSpan.textContent = `${mpptData.V.toFixed(2)} V`;
+                                if (aSpan) aSpan.textContent = `${mpptData.A.toFixed(2)} A`;
+                            }
+                        }
+                    }
+
+                    modalElement.querySelector('.corrente-pa').textContent = `${inversorData.Corrente_Fase?.PA?.toFixed(2) || '0.00'} A`;
+                    modalElement.querySelector('.corrente-pb').textContent = `${inversorData.Corrente_Fase?.PB?.toFixed(2) || '0.00'} A`;
+                    modalElement.querySelector('.corrente-pc').textContent = `${inversorData.Corrente_Fase?.PC?.toFixed(2) || '0.00'} A`;
+                    modalElement.querySelector('.pac-value').textContent = `${inversorData.PAC?.toFixed(2) || '0.00'} kW`;
+                    modalElement.querySelector('.tensao-pab').textContent = `${inversorData.Tensao_Fase?.PAB?.toFixed(2) || '0.00'} V`;
+                    modalElement.querySelector('.tensao-pbc').textContent = `${inversorData.Tensao_Fase?.PBC?.toFixed(2) || '0.00'} V`;
+                    modalElement.querySelector('.tensao-pca').textContent = `${inversorData.Tensao_Fase?.PCA?.toFixed(2) || '0.00'} V`;
+                }
+
+                modalElement.querySelector('.close-modal').addEventListener('click', () => {
                     this.fecharModal();
                 });
 
-                document.body.appendChild(modal);
-                this.modalAberto = modal;
+                modalElement.addEventListener('click', (e) => {
+                    if (e.target === modalElement) {
+                        this.fecharModal();
+                    }
+                });
+
+                document.body.appendChild(modalClone);
+                this.modalAberto = modalClone;
             },
 
             fecharModal: function() {
@@ -344,13 +381,13 @@ const InvertersPageModule = {
 
             atualizarModalAberto: function() {
                 if (!this.modalAberto || !this.dados) return;
-                const inversorNum = this.modalAberto.querySelector('h2').textContent.split(' ')[1];
+                const inversorNum = this.modalAberto.id.split('-')[2];
                 this.abrirModal(inversorNum);
             }
         };
 
         DataService.iniciar();
-        window.DataService = DataService; // Torna acessível globalmente se necessário
+        window.DataService = DataService;
     },
 
     setupCardClickHandlers: function() {
@@ -365,9 +402,14 @@ const InvertersPageModule = {
     }
 };
 
+
 // ========== INICIALIZAÇÃO DOS MÓDULOS ==========
-document.addEventListener('DOMContentLoaded', function() {
-    GeneralModule.init();
-    HomePageModule.init();
-    InvertersPageModule.init();
-});
+// document.addEventListener('DOMContentLoaded', function() {
+//     GeneralModule.init();
+//     HomePageModule.init();
+//     InvertersPageModule.init();
+// });
+// ========== INICIALIZAÇÃO DOS MÓDULOS ==========
+GeneralModule.init();
+HomePageModule.init();
+InvertersPageModule.init();
