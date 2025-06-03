@@ -213,6 +213,15 @@ nav button {
   position: relative;
   z-index: 1;
 }
+
+.link-header:hover{
+  opacity: 0.7;
+}
+
+.home-btn:hover{
+  opacity: 0.7;
+}
+
 /* -----------------------------------------------MENU */
 .menu {
   position: relative; /* ou sticky/fixed */
@@ -912,6 +921,7 @@ nav button {
 .btn-cancel:hover {
   background: #95a5a6;
 }
+
 
 /* Animações */
 @keyframes fadeIn {

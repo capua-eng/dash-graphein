@@ -1,8 +1,9 @@
-*{
+* {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -34,6 +35,7 @@
     height: 50px;
     max-width: 100%;
 }
+
 .nav-buttons {
     display: flex;
     gap: 20px;
@@ -54,7 +56,8 @@
     padding: 15px 10px;
     border-radius: 4px;
 }
-nav button{
+
+nav button {
     padding: 10px;
     border-radius: 4px;
     border: none;
@@ -65,11 +68,13 @@ nav button{
 .nav-btn:hover {
     background-color: #e0e0e0;
 }
-nav a{
+
+nav a {
     color: white;
     text-decoration: none;
     text-align: center;
 }
+
 .dropdown {
     position: relative;
     display: inline-block;
@@ -174,6 +179,10 @@ nav a{
     border-radius: 4px;
 }
 
+.link-header:hover {
+    opacity: 0.7;
+}
+
 
 /* ---------------------------------------------------------------------- */
 
@@ -197,7 +206,8 @@ nav a{
 /* -------------------------------------------------------------- */
 .card-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 cards por linha */
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 cards por linha */
     gap: 20px;
     max-width: 100%;
     width: 100%;
@@ -217,10 +227,10 @@ nav a{
     align-items: center;
     justify-content: start;
     border: 2px dashed rgb(255, 255, 255);
-    
+
 }
 
-article{
+article {
     /* border: 1px solid red; */
     width: 100%;
     display: flex;
@@ -231,7 +241,8 @@ article{
     margin-bottom: 5px;
     color: #13354A;
 }
-.dados_entrada_saida{
+
+.dados_entrada_saida {
     /* border-bottom: 2px dashed rgb(206, 204, 204); */
     /* border: 1px solid red; */
     width: 100%;
@@ -241,7 +252,8 @@ article{
     padding: 10px;
     line-height: 1;
 }
-.values_entrada_saida{
+
+.values_entrada_saida {
     width: 100%;
     display: flex;
     align-items: center;
@@ -250,7 +262,8 @@ article{
     gap: 10px;
     /* border: 1px solid blue; */
 }
-values_entrada_saida_energia{
+
+.values_entrada_saida_energia {
     width: 100%;
     display: flex;
     align-items: center;
@@ -258,30 +271,35 @@ values_entrada_saida_energia{
     text-align: center;
     gap: 10px;
 }
-.post{
+
+.post {
     width: 30%;
     display: flex;
     flex-direction: column;
 }
-.post p{
+
+.post p {
     border: 1px solid #13354A;
     border-radius: 4px;
     padding: 5px;
 }
-.dados_estado_equi{
+
+.dados_estado_equi {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
 }
-.ger_dados{
+
+.ger_dados {
     width: 90%;
     border: 1px solid #13354A;
     border-radius: 4px;
     text-align: center;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
+
 /* --------------------MODAL INVERSORES */
 
 /* 🪟 MODAL (ESTILO MODERNO) */
@@ -353,11 +371,13 @@ values_entrada_saida_energia{
     margin-bottom: 20px;
     /* border: 1px solid red; */
 }
-.modal-mppt{
+
+.modal-mppt {
     display: flex;
     gap: 5px;
 }
-.mppts{
+
+.mppts {
     width: 25%;
     border: 1px solid #13354A;
     height: 100px;
@@ -370,7 +390,8 @@ values_entrada_saida_energia{
     padding: 10px;
     /* border: 1px solid red; */
 }
-.values_mppts{
+
+.values_mppts {
     /* border: 1px solid red; */
     display: flex;
     justify-content: center;
@@ -379,7 +400,8 @@ values_entrada_saida_energia{
     width: 100%;
     line-height: 0.4;
 }
-aside{
+
+aside {
     /* border: 1px solid red; */
     width: 50%;
     display: flex;
@@ -388,7 +410,8 @@ aside{
     align-items: center;
     line-height: 0.1;
 }
-.tensao_value_{
+
+.tensao_value_ {
     border: 1px solid #13354A;
     width: 100%;
     height: 30px;
@@ -398,7 +421,8 @@ aside{
     align-items: center;
     border-radius: 4px;
 }
-.corrente_value_{
+
+.corrente_value_ {
     border: 1px solid #13354A;
     width: 100%;
     height: 30px;
@@ -408,7 +432,8 @@ aside{
     align-items: center;
     border-radius: 4px;
 }
-.modal-corrente{
+
+.modal-corrente {
     border: 1px solid #13354A;
     height: auto;
     display: flex;
@@ -418,7 +443,8 @@ aside{
     border-radius: 4px;
 
 }
-.corrent__{
+
+.corrent__ {
     /* border: 1px solid #13354A; */
     /* padding: 10px; */
     width: 35%;
@@ -430,7 +456,8 @@ aside{
     line-height: 0;
     height: 100px;
 }
-.values_corrent{
+
+.values_corrent {
     /* border: 1px solid red; */
     display: flex;
     justify-content: center;
@@ -440,6 +467,7 @@ aside{
     line-height: 0.4;
     padding: 10px;
 }
+
 .modal-section h4 {
     margin-top: 0;
     color: #444;
@@ -451,34 +479,48 @@ aside{
 /* Ajuste para telas menores */
 @media (max-width: 1200px) {
     .card-container {
-        grid-template-columns: repeat(2, 1fr); /* 2 cards por linha em telas menores */
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 cards por linha em telas menores */
     }
 
     .card {
-        max-width: 500px; /* Ajustando o tamanho do card para 500px */
+        max-width: 500px;
+        /* Ajustando o tamanho do card para 500px */
     }
 }
 
 @media (max-width: 768px) {
     .card-container {
-        grid-template-columns: 1fr; /* 1 card por linha em telas ainda menores */
+        grid-template-columns: 1fr;
+        /* 1 card por linha em telas ainda menores */
     }
 
     .card {
-        max-width: 100%; /* Garante que o card ocupe 100% da largura */
+        max-width: 100%;
+        /* Garante que o card ocupe 100% da largura */
     }
 }
 
 
 /* Animações */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideIn {
-    from { transform: translateY(-20px); }
-    to { transform: translateY(0); }
+    from {
+        transform: translateY(-20px);
+    }
+
+    to {
+        transform: translateY(0);
+    }
 }
 
 /* Estilo para os cards clicáveis */
