@@ -291,6 +291,7 @@ const InvertersPageModule = {
         intervalo: null,
         modalAberto: null,
         ultimaAtualizacao: null,
+        statusAnterior: {},
 
         atualizarDados: async function () {
             try {
@@ -335,21 +336,39 @@ const InvertersPageModule = {
                     uac: dados.UAC,
                     pac: dados.PAC,
                     gen_dia: dados.GEN_DIA,
-                    status: dados.Status || "-"
+                    gen_mes: dados.GEN_MES // <-- incluído aqui
                 };
 
                 for (const [sufixo, valor] of Object.entries(campos)) {
                     const span = document.getElementById(`inv${i}-${sufixo}`);
                     if (span) {
-                        if (sufixo === 'status') {
-                            span.textContent = valor;
-                        } else {
-                            const unidade = sufixo.includes('p') ? 'kW' :
-                                            sufixo.includes('u') ? 'V' :
-                                            sufixo.includes('a') ? 'A' : 'kWh';
-                            span.textContent = `${valor?.toFixed(2) || '0.00'} ${unidade}`;
-                        }
+                        const unidade = sufixo.includes('p') ? 'kW' :
+                                        sufixo.includes('u') ? 'V' :
+                                        sufixo.includes('a') ? 'A' : 'kWh';
+                        span.textContent = `${valor?.toFixed(2) || '0.00'} ${unidade}`;
                     }
+                }
+
+                const statusElement = document.getElementById(`inv${i}-status`);
+                const statusAtual = dados.Status;
+
+                if (statusElement && statusAtual !== undefined && this.statusAnterior[i] !== statusAtual) {
+                    let statusTexto;
+                    switch (statusAtual) {
+                        case 0: statusTexto = "🟡 Espera"; break;
+                        case 1: statusTexto = "🟢 Gerando"; break;
+                        case 2: statusTexto = "🔴 Falha"; break;
+                        case 3: statusTexto = "⚫ Falha Permanente"; break;
+                        default: statusTexto = "Desconhecido";
+                    }
+
+                    statusElement.textContent = statusTexto;
+                    statusElement.style.color =
+                        statusAtual === 1 ? '#2ecc71' :
+                        statusAtual === 0 ? '#f39c12' :
+                        '#e74c3c';
+
+                    this.statusAnterior[i] = statusAtual;
                 }
             }
         },
