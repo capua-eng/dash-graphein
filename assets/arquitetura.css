@@ -196,3 +196,12 @@ nav a {
     height: auto;
     display: block;
 }
+.overlay-item {
+    position: absolute;
+    color: white;
+    /* background-color: rgba(0, 0, 0, 0.6); */
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    transform: translate(-50%, -50%); /* Centraliza o ponto */
+}
