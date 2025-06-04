@@ -279,89 +279,97 @@ const HomePageModule = {
 
 // ========== MÓDULO DA PÁGINA DE INVERSORES ==========
 const InvertersPageModule = {
-    init: function() {
+    init: function () {
         if (!isInversoresPage) return;
-        this.setupDataService();
+        this.DataService.iniciar();
         this.setupCardClickHandlers();
     },
 
-    setupDataService: function() {
-        const DataService = {
-            dados: null,
-            intervalo: null,
-            modalAberto: null,
-            ultimaAtualizacao: null,
+    DataService: {
+        dados: null,
+        callbacks: [],
+        intervalo: null,
+        modalAberto: null,
+        ultimaAtualizacao: null,
 
-            atualizarDados: async function() {
-                try {
-                    const response = await fetch('http://192.168.0.252:8080/api/inversores');
-                    if (!response.ok) throw new Error('Erro na API');
-                    this.dados = await response.json();
-                    this.ultimaAtualizacao = new Date();
-                    this.atualizarModalAberto();
-                } catch (error) {
-                    console.error('Falha ao atualizar dados:', error);
-                }
-            },
+        atualizarDados: async function () {
+            try {
+                const response = await fetch('http://192.168.0.252:8080/api/inversores');
+                if (!response.ok) throw new Error('Erro na API');
+                this.dados = await response.json();
+                this.ultimaAtualizacao = new Date();
+                this.notificarTodos();
+            } catch (error) {
+                console.error('Falha ao atualizar dados:', error);
+            }
+        },
 
-            iniciar: function() {
-                this.atualizarDados();
-                this.intervalo = setInterval(() => this.atualizarDados(), 3000);
-            },
+        iniciar: function () {
+            this.atualizarDados();
+            this.intervalo = setInterval(() => this.atualizarDados(), 3000);
+        },
 
-            parar: function() {
-                clearInterval(this.intervalo);
-            },
+        parar: function () {
+            clearInterval(this.intervalo);
+        },
 
-            abrirModal: function(inversorNum) {
-                if (!this.dados) return;
+        notificarTodos: function () {
+            this.callbacks.forEach(cb => cb(this.dados));
+            this.atualizarCards();
+            this.atualizarModalAberto();
+        },
 
-                this.fecharModal();
+        atualizarCards: function () {
+            if (!this.dados) return;
 
-                const template = document.getElementById('modal-template');
-                const modalClone = template.cloneNode(true);
-                modalClone.id = `modal-inversor-${inversorNum}`;
-                modalClone.style.display = 'block';
+            for (let i = 1; i <= 18; i++) {
+                const inversorKey = `Inversor${i}`;
+                const dados = this.dados[inversorKey];
+                if (!dados) continue;
 
-                const inversorKey = `Inversor${inversorNum}`;
-                const inversorData = this.dados[inversorKey];
-                const modalElement = modalClone.querySelector('.modal-overlay');
+                const campos = {
+                    adc: dados.ADC,
+                    udc: dados.UDC,
+                    pdc: dados.PDC,
+                    aac: dados.AAC,
+                    uac: dados.UAC,
+                    pac: dados.PAC,
+                    gen_dia: dados.GEN_DIA,
+                    status: dados.Status || "-"
+                };
 
-                if (inversorData) {
-                    modalElement.querySelector('.inversor-number').textContent = inversorNum;
-                    if (this.ultimaAtualizacao) {
-                        modalElement.querySelector('.timestamp').textContent =
-                            `Atualizado em: ${this.ultimaAtualizacao.toLocaleTimeString()}`;
-                    }
-
-                    const mppts = inversorData.MPPTS;
-                    if (mppts) {
-                        for (let i = 1; i <= 12; i++) {
-                            const mpptKey = `MPPT${i}`;
-                            const mpptData = mppts[mpptKey];
-                            const mpptDiv = modalElement.querySelector(`.mppts[data-mppt="${i}"]`);
-                            if (mpptDiv && mpptData) {
-                                const vSpan = mpptDiv.querySelector('.value-v');
-                                const aSpan = mpptDiv.querySelector('.value-a');
-                                if (vSpan) vSpan.textContent = `${mpptData.V.toFixed(2)} V`;
-                                if (aSpan) aSpan.textContent = `${mpptData.A.toFixed(2)} A`;
-                            }
+                for (const [sufixo, valor] of Object.entries(campos)) {
+                    const span = document.getElementById(`inv${i}-${sufixo}`);
+                    if (span) {
+                        if (sufixo === 'status') {
+                            span.textContent = valor;
+                        } else {
+                            const unidade = sufixo.includes('p') ? 'kW' :
+                                            sufixo.includes('u') ? 'V' :
+                                            sufixo.includes('a') ? 'A' : 'kWh';
+                            span.textContent = `${valor?.toFixed(2) || '0.00'} ${unidade}`;
                         }
                     }
-
-                    modalElement.querySelector('.corrente-pa').textContent = `${inversorData.Corrente_Fase?.PA?.toFixed(2) || '0.00'} A`;
-                    modalElement.querySelector('.corrente-pb').textContent = `${inversorData.Corrente_Fase?.PB?.toFixed(2) || '0.00'} A`;
-                    modalElement.querySelector('.corrente-pc').textContent = `${inversorData.Corrente_Fase?.PC?.toFixed(2) || '0.00'} A`;
-                    modalElement.querySelector('.pac-value').textContent = `${inversorData.PAC?.toFixed(2) || '0.00'} kW`;
-                    modalElement.querySelector('.tensao-pab').textContent = `${inversorData.Tensao_Fase?.PAB?.toFixed(2) || '0.00'} V`;
-                    modalElement.querySelector('.tensao-pbc').textContent = `${inversorData.Tensao_Fase?.PBC?.toFixed(2) || '0.00'} V`;
-                    modalElement.querySelector('.tensao-pca').textContent = `${inversorData.Tensao_Fase?.PCA?.toFixed(2) || '0.00'} V`;
                 }
+            }
+        },
 
+        abrirModal: function (inversorNum) {
+            if (!this.dados) return;
+
+            const modalId = `modal-inversor-${inversorNum}`;
+            let modalClone = document.getElementById(modalId);
+
+            if (!modalClone) {
+                const template = document.getElementById('modal-template');
+                modalClone = template.cloneNode(true);
+                modalClone.id = modalId;
+                modalClone.style.display = 'block';
+
+                const modalElement = modalClone.querySelector('.modal-overlay');
                 modalElement.querySelector('.close-modal').addEventListener('click', () => {
                     this.fecharModal();
                 });
-
                 modalElement.addEventListener('click', (e) => {
                     if (e.target === modalElement) {
                         this.fecharModal();
@@ -370,37 +378,78 @@ const InvertersPageModule = {
 
                 document.body.appendChild(modalClone);
                 this.modalAberto = modalClone;
-            },
-
-            fecharModal: function() {
-                if (this.modalAberto) {
-                    this.modalAberto.remove();
-                    this.modalAberto = null;
-                }
-            },
-
-            atualizarModalAberto: function() {
-                if (!this.modalAberto || !this.dados) return;
-                const inversorNum = this.modalAberto.id.split('-')[2];
-                this.abrirModal(inversorNum);
             }
-        };
 
-        DataService.iniciar();
-        window.DataService = DataService;
+            this.preencherDadosModal(inversorNum);
+        },
+
+        preencherDadosModal: function (inversorNum) {
+            const modal = this.modalAberto;
+            if (!modal || !this.dados) return;
+
+            const inversorKey = `Inversor${inversorNum}`;
+            const inversorData = this.dados[inversorKey];
+            const modalElement = modal.querySelector('.modal-overlay');
+            if (!inversorData) return;
+
+            modalElement.querySelector('.inversor-number').textContent = inversorNum;
+            if (this.ultimaAtualizacao) {
+                modalElement.querySelector('.timestamp').textContent =
+                    `Atualizado em: ${this.ultimaAtualizacao.toLocaleTimeString()}`;
+            }
+
+            const mppts = inversorData.MPPTS;
+            if (mppts) {
+                for (let i = 1; i <= 12; i++) {
+                    const mpptKey = `MPPT${i}`;
+                    const mpptData = mppts[mpptKey];
+                    const mpptDiv = modalElement.querySelector(`.mppts[data-mppt="${i}"]`);
+                    if (mpptDiv && mpptData) {
+                        const vSpan = mpptDiv.querySelector('.value-v');
+                        const aSpan = mpptDiv.querySelector('.value-a');
+                        if (vSpan) vSpan.textContent = `${mpptData.V.toFixed(2)} V`;
+                        if (aSpan) aSpan.textContent = `${mpptData.A.toFixed(2)} A`;
+                    }
+                }
+            }
+
+            modalElement.querySelector('.corrente-pa').textContent = `${inversorData.Corrente_Fase?.PA?.toFixed(2) || '0.00'} A`;
+            modalElement.querySelector('.corrente-pb').textContent = `${inversorData.Corrente_Fase?.PB?.toFixed(2) || '0.00'} A`;
+            modalElement.querySelector('.corrente-pc').textContent = `${inversorData.Corrente_Fase?.PC?.toFixed(2) || '0.00'} A`;
+            modalElement.querySelector('.pac-value').textContent = `${inversorData.PAC?.toFixed(2) || '0.00'} kW`;
+            modalElement.querySelector('.tensao-pab').textContent = `${inversorData.Tensao_Fase?.PAB?.toFixed(2) || '0.00'} V`;
+            modalElement.querySelector('.tensao-pbc').textContent = `${inversorData.Tensao_Fase?.PBC?.toFixed(2) || '0.00'} V`;
+            modalElement.querySelector('.tensao-pca').textContent = `${inversorData.Tensao_Fase?.PCA?.toFixed(2) || '0.00'} V`;
+        },
+
+        fecharModal: function () {
+            if (this.modalAberto) {
+                this.modalAberto.remove();
+                this.modalAberto = null;
+            }
+        },
+
+        atualizarModalAberto: function () {
+            if (!this.modalAberto || !this.dados) return;
+            const inversorNum = this.modalAberto.id.split('-')[2];
+            this.preencherDadosModal(inversorNum);
+        }
     },
 
-    setupCardClickHandlers: function() {
+    setupCardClickHandlers: function () {
         document.querySelectorAll('[id^="card"]').forEach(card => {
-            card.addEventListener('click', function() {
+            card.addEventListener('click', function () {
                 const inversorNum = parseInt(this.id.replace('card', ''));
-                if (window.DataService && window.DataService.dados) {
-                    window.DataService.abrirModal(inversorNum);
+                if (!InvertersPageModule.DataService.dados) {
+                    console.warn("Dados ainda não carregados.");
+                    return;
                 }
+                InvertersPageModule.DataService.abrirModal(inversorNum);
             });
         });
     }
 };
+
 
 
 // ========== INICIALIZAÇÃO DOS MÓDULOS ==========
