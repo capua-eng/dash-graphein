@@ -4,6 +4,7 @@
     box-sizing: border-box;
 }
 
+/* PARTE PADRÃO DO HEADER */
 .header {
     display: flex;
     justify-content: space-between;

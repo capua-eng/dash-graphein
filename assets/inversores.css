@@ -4,13 +4,13 @@
     box-sizing: border-box;
 }
 
+/* PARTE PADRÃO DO HEADER */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 10px;
     background-color: #13354A;
-    /* ou sua cor desejada */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
