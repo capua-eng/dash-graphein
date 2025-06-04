@@ -221,10 +221,24 @@ const HomePageModule = {
 
     function showContextMenu(x, y) {
         const isActive = selectedAlarm.classList.contains('active');
-        document.getElementById('recognizeThisError').disabled = isActive;
+        const recognizeBtn = document.getElementById('recognizeThisError');
+        
+        recognizeBtn.disabled = isActive;
         contextMenu.style.display = 'block';
-        contextMenu.style.left = `${x}px`;
-        contextMenu.style.top = `${y}px`;
+        
+        // Ajustar posição para não sair da tela
+        const menuWidth = contextMenu.offsetWidth;
+        const menuHeight = contextMenu.offsetHeight;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        
+        // Se o menu sair à direita, ajusta para a esquerda
+        const left = x + menuWidth > windowWidth ? windowWidth - menuWidth - 5 : x;
+        // Se o menu sair embaixo, ajusta para cima
+        const top = y + menuHeight > windowHeight ? windowHeight - menuHeight - 5 : y;
+        
+        contextMenu.style.left = `${left}px`;
+        contextMenu.style.top = `${top}px`;
     }
 
     async function recognizeSelected() {
