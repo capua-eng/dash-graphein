@@ -259,7 +259,28 @@ const HomePageModule = {
 
     async function recognizeAll() {
         const resolved = currentAlarms.filter(a => !a.isActive && !a.originalData.Reconhecimento && a.originalData.Status_ !== 1);
-        for (const a of resolved) await sendToAPI(a);
+        if (resolved.length === 0) {
+            const temAtivos = currentAlarms.some(a => a.originalData.Status_ === 1 && !a.originalData.Reconhecimento);
+            if (temAtivos) {
+                alert("Existem alarmes ativos que não podem ser reconhecidos.");
+            } else {
+                alert("Todos os alarmes já foram reconhecidos ou não há larmes resolvidos.");
+            }
+            contextMenu.style.display = 'none';
+            return;
+        }
+        try {
+            for (const a of resolved) {
+                await sendToAPI(a);
+                a.originalData.Reconhecimento = 'Reconhecido';
+            }
+            renderAlarms();
+            alert(`${resolved.length} alarmes reconhecidos com sucesso!`);
+        } catch (error) {
+            console.error("Erro ao reconhecer alarmes:", error);
+            alert("Ocorreu um erro ao reconhecer os alarmes.")
+        }
+        // for (const a of resolved) await sendToAPI(a);
         renderAlarms();
         contextMenu.style.display = 'none';
     }
