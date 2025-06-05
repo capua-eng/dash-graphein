@@ -42,8 +42,9 @@
             </a>
             <a href="arquitetura.html" class="link-header">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M14 6a2 2 0 1 0-4 0a2 2 0 0 0 4 0M7 18a2 2 0 1 0-4 0a2 2 0 0 0 4 0m14 0a2 2 0 1 0-4 0a2 2 0 0 0 4 0M7 18h10m1-2l-5-8m-2 0l-5 8"/>
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M14 6a2 2 0 1 0-4 0a2 2 0 0 0 4 0M7 18a2 2 0 1 0-4 0a2 2 0 0 0 4 0m14 0a2 2 0 1 0-4 0a2 2 0 0 0 4 0M7 18h10m1-2l-5-8m-2 0l-5 8" />
                 </svg>
                 Arquitetura
             </a>
@@ -201,6 +202,28 @@
                     <div class="hotspot" style="top: 39%; left: 89.7%;" title="Quadro  A">3321A</div>
                     <div class="hotspot" style="top: 43%; left: 89.7%;" title="Quadro  B">9012kW</div>
                 </div>
+
+            </div>
+        </div>
+
+        <div id="modalRelatorio" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Selecionar Intervalo do Relatório</h2>
+
+                <label for="dataInicio">Data Início:</label>
+                <input type="date" id="dataInicio">
+
+                <label for="dataFim">Data Fim:</label>
+                <input type="date" id="dataFim">
+
+                <label for="intervalo">Intervalo:</label>
+                <select id="intervalo">
+                    <option value="dia">Resumo Diário</option>
+                    <option value="hora">Resumo por Hora</option>
+                </select>
+
+                <button id="gerarRelatorioBtn">Gerar Relatório</button>
 
             </div>
         </div>

@@ -97,6 +97,28 @@
         <div class="overlay-item" style="top: 84%; left: 85.9%;">🟢</div>
         <div class="overlay-item" style="top: 93.2%; left: 91.1%;">🟢</div>
     </div>
+
+    <div id="modalRelatorio" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Selecionar Intervalo do Relatório</h2>
+
+            <label for="dataInicio">Data Início:</label>
+            <input type="date" id="dataInicio">
+
+            <label for="dataFim">Data Fim:</label>
+            <input type="date" id="dataFim">
+
+            <label for="intervalo">Intervalo:</label>
+            <select id="intervalo">
+                <option value="dia">Resumo Diário</option>
+                <option value="hora">Resumo por Hora</option>
+            </select>
+
+            <button id="gerarRelatorioBtn">Gerar Relatório</button>
+
+        </div>
+    </div>
 </body>
 
 </html>

@@ -151,12 +151,17 @@ nav a {
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 10% auto;
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-    position: relative;
+  background-color: #fefefe;
+  margin: 12% auto;
+  background: white;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  transform: translateY(0);
+  transition: transform 0.3s ease-out;
+  padding: 20px;
 }
 
 .modal-content h2 {
