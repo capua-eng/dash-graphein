@@ -84,7 +84,7 @@ nav a {
     display: none;
     position: absolute;
     background-color: white;
-    min-width: 200px;
+    min-width: 150px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     border-radius: 5px;
