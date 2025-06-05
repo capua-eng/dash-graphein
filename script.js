@@ -198,9 +198,13 @@ const HomePageModule = {
             const el = document.createElement('div');
             el.className = `alarm-item ${alarm.isActive ? 'active' : 'resolved'}`;
             el.dataset.id = alarm.id;
+
             el.innerHTML = `
-                <div class="message">${alarm.message}</div>
                 <div class="datetime">${alarm.datetimeIn}</div>
+                <div class="datetime_out"></div>
+                <div class="operator"></div>
+                <div class="tag"></div>
+                <div class="message">${alarm.message}</div>
             `;
             alarmsList.appendChild(el);
         });
