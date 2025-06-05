@@ -11,6 +11,8 @@ const GeneralModule = {
         this.setupDropdowns();
         this.setupModals();
         this.setupDatePickers();
+
+        this.setupReportGeneration();
     },
 
     setupDropdowns: function() {
