@@ -1,8 +1,8 @@
 // ========== VERIFICAÇÃO DE PÁGINA ATIVA ==========
 const currentPage = window.location.pathname;
 
-const isIndexPage = currentPage.includes("index.html") || currentPage === "/" || currentPage === "/index";
-const isInversoresPage = currentPage.includes("inversores.html");
+const isIndexPage = currentPage === "/";
+const isInversoresPage = currentPage === "/inversores";
 
 
 // ========== MÓDULO DE FUNÇÕES GERAIS (compartilhadas) ==========
@@ -127,7 +127,7 @@ const HomePageModule = {
 
     async function fetchAndUpdateAll() {
         try {
-            const response = await fetch('http://192.168.0.252:8080/api/tela_inicial');
+            const response = await fetch('/api/tela_inicial');
             if (!response.ok) {
                 alert("Falha ao conectar à API.");
                 throw new Error('Erro na API');
@@ -198,13 +198,9 @@ const HomePageModule = {
             const el = document.createElement('div');
             el.className = `alarm-item ${alarm.isActive ? 'active' : 'resolved'}`;
             el.dataset.id = alarm.id;
-
             el.innerHTML = `
-                <div class="datetime">${alarm.datetimeIn}</div>
-                <div class="datetime_out"></div>
-                <div class="operator"></div>
-                <div class="tag"></div>
                 <div class="message">${alarm.message}</div>
+                <div class="datetime">${alarm.datetimeIn}</div>
             `;
             alarmsList.appendChild(el);
         });
@@ -298,7 +294,7 @@ const HomePageModule = {
                 Equipamento: alarm.equipment,
                 DataErroIni: new Date(alarm.originalData.DataErroIni)
             };
-            const resp = await fetch('http://192.168.0.252:8080/api/recAlarmes', {
+            const resp = await fetch('/api/recAlarmes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
