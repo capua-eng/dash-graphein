@@ -681,6 +681,7 @@ nav button {
 
 .message {
   width: 50%;
+  padding-left: 100px;
 }
 
 /* Lista de Alarmes */
@@ -710,8 +711,8 @@ nav button {
 
 .alarm-item > div {
   /* padding: 0 10px; */
-  padding-top: 13px;
-  padding-left: 5px;
+  /* padding-top: 13px; */
+  /* padding-left: 55px; */
   display: flex;
   align-items: center;
   justify-content: left;
@@ -736,6 +737,11 @@ nav button {
   background-color: #ffc400;
   /* Amarelo claro */
   border-left: 4px solid #ffc107;
+}
+
+.alarm-item.active, .alarm-item.resolved .datetime{
+  padding-left: 1%;
+  font-weight: 600;
 }
 
 .alarm-item.active .message {
