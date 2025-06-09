@@ -61,16 +61,22 @@ def obter_potencia_com_meteo():
         # Dados da estação meteorológica
         query_meteo = """
             SELECT TOP 1
-                VelocidadeVento,
-                DirecaoVento,
-                IrrSInclin,
-                IrrSHoriz,
-                UmidRelAr,
-                TempAmb,
-                TempPlac
-            FROM
-        CentralMet
-            ORDER BY last_refresh_time DESC
+                cm.VelocidadeVento,
+                cm.DirecaoVento,
+                cm.IrrSInclin,
+                cm.IrrSHoriz,
+                cm.UmidRelAr,
+                cm.TempAmb,
+                cm.TempPlac,
+                es.EnergiaDiariaUsina,
+                es.EnergiaMensalUsina,
+                es.MGE_1_ENER AS Instantanea,
+                es.MGE_1_EP AS Consumida,
+                es.MGE_1_EC AS Fornecida
+            FROM 
+                CentralMet cm
+                JOIN Estatisticos es ON cm.last_refresh_time = es.last_refresh_time
+            ORDER BY cm.last_refresh_time DESC
         """
         cursor.execute(query_meteo)
         row = cursor.fetchone()
@@ -241,3 +247,9 @@ def recAlarmes(alarme: ReconhecimentoAlarme):
     except Exception as e:
         logging.exception("Erro inesperado ao processar alarme:")
         raise HTTPException(status_code=400, detail=f"Erro inesperado: {str(e)}")
+    
+@app.get("/api/unifilar")
+def dados_unifilar():
+    mge_cub = {
+        mge_cub: {}
+    }
