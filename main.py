@@ -248,39 +248,40 @@ def recAlarmes(alarme: ReconhecimentoAlarme):
         logging.exception("Erro inesperado ao processar alarme:")
         raise HTTPException(status_code=400, detail=f"Erro inesperado: {str(e)}")
     
-@app.get("/api/unifilar")
-def dados_unifilar():
-    try:
-        conn = banco.connection
-        cursor = conn.cursor()
-        unifilar = {}
+# @app.get("/api/unifilar")
+# def dados_unifilar():
+#     try:
+#         conn = banco.connection
+#         cursor = conn.cursor()
+#         unifilar = {}
         
-        cursor.execute("""
-                SELECT TOP 1 * FROM Instantaneos
-                ORDER BY last_refresh_time DESC
-            """)
-        row = cursor.fetchone()
+#         cursor.execute("""
+#                 SELECT TOP 1 * FROM Instantaneos
+#                 ORDER BY last_refresh_time DESC
+#             """)
+#         row = cursor.fetchone()
         
-        if not row:
-            return {"erro": "Nenhum dado encontrado na tabela Instantaneos"}
+#         if not row:
+#             return {"erro": "Nenhum dado encontrado na tabela Instantaneos"}
         
-        colunas = [col[0] for col in cursor.description]
-        linha = dict(zip(colunas, row))
+#         colunas = [col[0] for col in cursor.description]
+#         linha = dict(zip(colunas, row))
         
-        last_refresh = linha.get("last_refresh_time")
-        if isinstance(last_refresh, (datetime.date, datetime.datetime)):
-            last_refresh = last_refresh.isoformat()
+#         last_refresh = linha.get("last_refresh_time")
+#         if isinstance(last_refresh, (datetime.date, datetime.datetime)):
+#             last_refresh = last_refresh.isoformat()
             
-        unifilar["last_refresh_time"] = last_refresh
-        unifilar["PAC_Usina"] = linha.get("PAC_Usina")
-        unifilar["PDC_Usina"] = linha.get("PDC_Usina")
-        unifilar["ISI"] = linha.get("ISI")
-        unifilar["ISH"] = linha.get("ISH")
+#         unifilar["last_refresh_time"] = last_refresh
+#         unifilar["PAC_Usina"] = linha.get("PAC_Usina")
+#         unifilar["PDC_Usina"] = linha.get("PDC_Usina")
+#         unifilar["ISI"] = linha.get("ISI")
+#         unifilar["ISH"] = linha.get("ISH")
         
-        for mge_num in range(1, 4):
-            prefixo = f"UAC_MGE_{mge_num}_"
-            mge_key = f"MGE_{mge_num}"
+#         for mge_num in range(1, 4):
+#             prefixo = f"UAC_MGE_{mge_num}_"
+#             mge_key = f"MGE_{mge_num}"
             
-            unifilar[mge_key] = {
-                "Tensoes_entre_fases"
-            }
+#             unifilar[mge_key] = {
+#                 "Tensoes_entre_fases"
+#             }
+    
