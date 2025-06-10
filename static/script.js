@@ -169,6 +169,10 @@ const HomePageModule = {
                 document.getElementById('umidade-ar').textContent = `${met.UmidRelAr.toFixed(1)}%`;
                 document.getElementById('temperatura-ambiente').textContent = `${met.TempAmb.toFixed(1)} °C`;
                 document.getElementById('temperatura-placa').textContent = `${met.TempPlac.toFixed(1)} °C`;
+                document.getElementById('energia-diaria-usina').textContent = `${met.EnergiaDiariaUsina.toFixed(1)} kwh`;
+                document.getElementById('energia-mensal-usina').textContent = `${met.EnergiaMensalUsina.toFixed(1)} kwh`;
+                document.getElementById('energia-instantanea-usina').textContent = `${met.Instantanea.toFixed(1)} kW`;
+                
             }
 
             // === Atualizar alarmes ===
