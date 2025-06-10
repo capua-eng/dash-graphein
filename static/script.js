@@ -3,6 +3,7 @@ const currentPage = window.location.pathname;
 
 const isIndexPage = currentPage === "/";
 const isInversoresPage = currentPage === "/inversores";
+const isUnifilarPage = currentPage === "/unifilar";
 
 
 // ========== MÓDULO DE FUNÇÕES GERAIS (compartilhadas) ==========
@@ -339,7 +340,7 @@ const InvertersPageModule = {
 
         atualizarDados: async function () {
             try {
-                const response = await fetch('http://192.168.0.252:8080/api/inversores');
+                const response = await fetch('api/inversores');
                 if (!response.ok) throw new Error('Erro na API');
                 this.dados = await response.json();
                 this.ultimaAtualizacao = new Date();
@@ -513,6 +514,57 @@ const InvertersPageModule = {
     }
 };
 
+// ========== MÓDULO UNIFILAR ==========
+const UnifilarPageModule = {
+    init: function () {
+        if (!isUnifilarPage) return;
+        this.atualizarUnifilar();
+        setInterval(() => this.atualizarUnifilar(), 3000);
+    },
+
+    async atualizarUnifilar() {
+        try {
+            const response = await fetch("/api/unifilar");
+            if (!response.ok) throw new Error("Erro na API /api/unifilar");
+
+            const data = await response.json();
+
+            // === Atualiza MGEs ===
+            for (let i = 1; i <= 3; i++) {
+                const mge = data.MGE[`MGE_${i}`];
+                if (!mge) continue;
+
+                const fases = mge.Tensoes.Entre_fases;
+                const fasesInd = mge.Tensoes.De_fase;
+                const pot = mge.Potencias;
+
+                document.getElementById(`mge${i}-fab`).textContent = `${fases.FAB.toFixed(1)} V`;
+                document.getElementById(`mge${i}-fbc`).textContent = `${fases.FBC.toFixed(1)} V`;
+                document.getElementById(`mge${i}-fca`).textContent = `${fases.FCA.toFixed(1)} V`;
+                document.getElementById(`mge${i}-fa`).textContent = `${fasesInd.FA.toFixed(1)} V`;
+                document.getElementById(`mge${i}-fb`).textContent = `${fasesInd.FB.toFixed(1)} V`;
+                document.getElementById(`mge${i}-fc`).textContent = `${fasesInd.FC.toFixed(1)} V`;
+
+                document.getElementById(`mge${i}-ativa`).textContent = `${pot.Ativa.toFixed(1)} kW`;
+                document.getElementById(`mge${i}-reativa`).textContent = `${pot.Reativa.toFixed(1)} kVAR`;
+            }
+
+            // === Atualiza Inversores ===
+            const inversores = data.Inversores;
+            for (let i = 1; i <= 8; i++) {
+                const inv = inversores[`Inversor${i}`];
+                if (!inv) continue;
+
+                document.getElementById(`inv${i}-tensao`).textContent = `${inv.Tensao.toFixed(1)} V`;
+                document.getElementById(`inv${i}-corrente`).textContent = `${inv.Corrente.toFixed(1)} A`;
+                document.getElementById(`inv${i}-potencia`).textContent = `${inv.Potencia.toFixed(1)} kW`;
+            }
+
+        } catch (error) {
+            console.error("Erro ao atualizar unifilar:", error);
+        }
+    }
+};
 
 
 // ========== INICIALIZAÇÃO DOS MÓDULOS ==========
@@ -525,3 +577,4 @@ const InvertersPageModule = {
 GeneralModule.init();
 HomePageModule.init();
 InvertersPageModule.init();
+UnifilarPageModule.init();

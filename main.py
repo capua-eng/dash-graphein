@@ -249,38 +249,105 @@ def recAlarmes(alarme: ReconhecimentoAlarme):
         raise HTTPException(status_code=400, detail=f"Erro inesperado: {str(e)}")
     
 @app.get("/api/unifilar")
-def dados_unifilar():
+def dados_unifilar_completo():
     try:
         conn = banco.connection
         cursor = conn.cursor()
-        unifilar = {}
+        resultado = {"MGE": {}, "Inversores": {}}
         
         cursor.execute("""
-                SELECT TOP 1 * FROM Instantaneos
-                ORDER BY last_refresh_time DESC
-            """)
-        row = cursor.fetchone()
+            SELECT TOP 1 
+                last_refresh_time,
+                UAC_MGE_1_FA, UAC_MGE_1_FB, UAC_MGE_1_FC,
+                UAC_MGE_1_FAB, UAC_MGE_1_FBC, UAC_MGE_1_FCA,
+                PAAC_MGE_1, PRAC_MGE_1,
+                UAC_MGE_2_FA, UAC_MGE_2_FB, UAC_MGE_2_FC,
+                UAC_MGE_2_FAB, UAC_MGE_2_FBC, UAC_MGE_2_FCA,
+                PAAC_MGE_2, PRAC_MGE_2,
+                UAC_MGE_3_FA, UAC_MGE_3_FB, UAC_MGE_3_FC,
+                UAC_MGE_3_FAB, UAC_MGE_3_FBC, UAC_MGE_3_FCA,
+                PAAC_MGE_3, PRAC_MGE_3
+            FROM Instantaneos
+            ORDER BY last_refresh_time DESC
+        """)
         
-        if not row:
-            return {"erro": "Nenhum dado encontrado na tabela Instantaneos"}
+        row_mge = cursor.fetchone()
         
-        colunas = [col[0] for col in cursor.description]
-        linha = dict(zip(colunas, row))
-        
-        last_refresh = linha.get("last_refresh_time")
-        if isinstance(last_refresh, (datetime.date, datetime.datetime)):
-            last_refresh = last_refresh.isoformat()
+        if row_mge:
+            colunas_mge = [col[0] for col in cursor.description]
+            linha_mge = {col: val for col, val in zip(colunas_mge, row_mge) if val is not None}
             
-        unifilar["last_refresh_time"] = last_refresh
-        unifilar["PAC_Usina"] = linha.get("PAC_Usina")
-        unifilar["PDC_Usina"] = linha.get("PDC_Usina")
-        unifilar["ISI"] = linha.get("ISI")
-        unifilar["ISH"] = linha.get("ISH")
-        
-        for mge_num in range(1, 4):
-            prefixo = f"UAC_MGE_{mge_num}_"
-            mge_key = f"MGE_{mge_num}"
+            resultado["last_refresh_time"] = (
+                linha_mge["last_refresh_time"].isoformat() 
+                if isinstance(linha_mge.get("last_refresh_time"), (datetime.date, datetime.datetime))
+                else None
+            )
             
-            unifilar[mge_key] = {
-                "Tensoes_entre_fases"
-            }
+            for mge_num in range(1, 4):
+                prefixo = f"UAC_MGE_{mge_num}_"
+                mge_key = f"MGE_{mge_num}"
+                
+                resultado["MGE"][mge_key] = {
+                    "Tensoes": {
+                        "Entre_fases": {
+                            "FAB": linha_mge.get(f"{prefixo}FAB"),
+                            "FBC": linha_mge.get(f"{prefixo}FBC"),
+                            "FCA": linha_mge.get(f"{prefixo}FCA")
+                        },
+                        "De_fase": {
+                            "FA": linha_mge.get(f"{prefixo}FA"),
+                            "FB": linha_mge.get(f"{prefixo}FB"),
+                            "FC": linha_mge.get(f"{prefixo}FC")
+                        }
+                    },
+                    "Potencias": {
+                        "Ativa": linha_mge.get(f"PAAC_MGE_{mge_num}"),
+                        "Reativa": linha_mge.get(f"PRAC_MGE_{mge_num}")
+                    }
+                }
+        
+        # 2. Consulta para cada inversor (1-18)
+        for i in range(1, 19):
+            nome_tabela = f"Inversor{i}"
+            try:
+                cursor.execute(f"""
+                    SELECT TOP 1 
+                        INV{i}_AC_PAB_V AS Tensao,
+                        (INV{i}_ADC_MPPT1 + INV{i}_ADC_MPPT2 + INV{i}_ADC_MPPT3 + 
+                         INV{i}_ADC_MPPT4 + INV{i}_ADC_MPPT5 + INV{i}_ADC_MPPT6 + 
+                         INV{i}_ADC_MPPT7 + INV{i}_ADC_MPPT8 + INV{i}_ADC_MPPT9 + 
+                         INV{i}_ADC_MPPT10 + INV{i}_ADC_MPPT11 + INV{i}_ADC_MPPT12) AS Corrente,
+                        INV{i}_PAC AS Potencia,
+                        last_refresh_time
+                    FROM {nome_tabela}
+                    ORDER BY last_refresh_time DESC
+                """)
+                
+                row_inv = cursor.fetchone()
+                
+                if row_inv:
+                    inversor_data = {
+                        "Tensao": row_inv.Tensao,
+                        "Corrente": row_inv.Corrente,
+                        "Potencia": row_inv.Potencia,
+                        "last_refresh_time": (
+                            row_inv.last_refresh_time.isoformat()
+                            if isinstance(row_inv.last_refresh_time, (datetime.date, datetime.datetime))
+                            else None
+                        )
+                    }
+                    resultado["Inversores"][f"Inversor{i}"] = inversor_data
+                    
+            except Exception as inv_error:
+                print(f"Erro ao processar {nome_tabela}: {str(inv_error)}")
+                continue
+        
+        return resultado
+        
+    except Exception as e:
+        print(f"Erro geral: {str(e)}")
+        return {"erro": "Ocorreu um erro ao processar os dados"}
+    
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
