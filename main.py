@@ -97,7 +97,7 @@ def obter_potencia_com_meteo():
             Status_,
             Erro,
             BITS
-        FROM teste_AlarmesErros
+        FROM AlarmesHistorico
         WHERE Reconhecimento IS NULL
 		OR DataErroRec IS NULL
         OR Status_ = 1
@@ -226,7 +226,7 @@ def recAlarmes(alarme: ReconhecimentoAlarme):
         conn = banco.connection
         cursor = conn.cursor()
         query_update = """
-        UPDATE teste_AlarmesErros
+        UPDATE AlarmesHistorico
         SET Operador = 'Reconhecido',
             Reconhecimento = 'Sim',
             DataErroRec = GETDATE()
@@ -250,6 +250,37 @@ def recAlarmes(alarme: ReconhecimentoAlarme):
     
 @app.get("/api/unifilar")
 def dados_unifilar():
-    mge_cub = {
-        mge_cub: {}
-    }
+    try:
+        conn = banco.connection
+        cursor = conn.cursor()
+        unifilar = {}
+        
+        cursor.execute("""
+                SELECT TOP 1 * FROM Instantaneos
+                ORDER BY last_refresh_time DESC
+            """)
+        row = cursor.fetchone()
+        
+        if not row:
+            return {"erro": "Nenhum dado encontrado na tabela Instantaneos"}
+        
+        colunas = [col[0] for col in cursor.description]
+        linha = dict(zip(colunas, row))
+        
+        last_refresh = linha.get("last_refresh_time")
+        if isinstance(last_refresh, (datetime.date, datetime.datetime)):
+            last_refresh = last_refresh.isoformat()
+            
+        unifilar["last_refresh_time"] = last_refresh
+        unifilar["PAC_Usina"] = linha.get("PAC_Usina")
+        unifilar["PDC_Usina"] = linha.get("PDC_Usina")
+        unifilar["ISI"] = linha.get("ISI")
+        unifilar["ISH"] = linha.get("ISH")
+        
+        for mge_num in range(1, 4):
+            prefixo = f"UAC_MGE_{mge_num}_"
+            mge_key = f"MGE_{mge_num}"
+            
+            unifilar[mge_key] = {
+                "Tensoes_entre_fases"
+            }
