@@ -541,7 +541,7 @@ const UnifilarPageModule = {
                 const fasesInd = mge.Tensoes.De_fase;
                 const pot = mge.Potencias;
 
-                document.getElementById(`mge${i}-fab`).textContent = `${fases.FAB.toFixed(1)} V`;
+                document.getElementById(`mge${i}-fab`).textContent = `Tensão ${fases.FAB.toFixed(1)} V`;
                 document.getElementById(`mge${i}-fbc`).textContent = `${fases.FBC.toFixed(1)} V`;
                 document.getElementById(`mge${i}-fca`).textContent = `${fases.FCA.toFixed(1)} V`;
                 document.getElementById(`mge${i}-fa`).textContent = `${fasesInd.FA.toFixed(1)} V`;
