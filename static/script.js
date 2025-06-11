@@ -541,15 +541,15 @@ const UnifilarPageModule = {
                 const fasesInd = mge.Tensoes.De_fase;
                 const pot = mge.Potencias;
 
-                document.getElementById(`mge${i}-fab`).textContent = `Tensão ${fases.FAB.toFixed(1)} V`;
-                document.getElementById(`mge${i}-fbc`).textContent = `${fases.FBC.toFixed(1)} V`;
-                document.getElementById(`mge${i}-fca`).textContent = `${fases.FCA.toFixed(1)} V`;
-                document.getElementById(`mge${i}-fa`).textContent = `${fasesInd.FA.toFixed(1)} V`;
-                document.getElementById(`mge${i}-fb`).textContent = `${fasesInd.FB.toFixed(1)} V`;
-                document.getElementById(`mge${i}-fc`).textContent = `${fasesInd.FC.toFixed(1)} V`;
+                document.getElementById(`mge${i}-fab`).textContent = `Tensão entre fases AB ${fases.FAB.toFixed(1)} V`;
+                document.getElementById(`mge${i}-fbc`).textContent = `Tensão entre fases BC ${fases.FBC.toFixed(1)} V`;
+                document.getElementById(`mge${i}-fca`).textContent = `Tensão entre fases CA ${fases.FCA.toFixed(1)} V`;
+                document.getElementById(`mge${i}-fa`).textContent = `Tensão Fase-Neutro AN ${fasesInd.FA.toFixed(1)} V`;
+                document.getElementById(`mge${i}-fb`).textContent = `Tensão Fase-Neutro BN ${fasesInd.FB.toFixed(1)} V`;
+                document.getElementById(`mge${i}-fc`).textContent = `Tensão Fase-Neutro CN ${fasesInd.FC.toFixed(1)} V`;
 
-                document.getElementById(`mge${i}-ativa`).textContent = `${pot.Ativa.toFixed(1)} kW`;
-                document.getElementById(`mge${i}-reativa`).textContent = `${pot.Reativa.toFixed(1)} kVAR`;
+                document.getElementById(`mge${i}-ativa`).textContent = `Potência ${pot.Ativa.toFixed(1)} kW`;
+                // document.getElementById(`mge${i}-reativa`).textContent = `${pot.Reativa.toFixed(1)} kVAR`;
             }
 
             // === Atualiza Inversores ===
