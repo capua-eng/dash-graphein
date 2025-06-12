@@ -152,8 +152,8 @@ const HomePageModule = {
                     arrow.className = 'arrow-icon';
                     arrow.classList.add(`status-${status}`);
                     label.textContent = `Inversor ${num}`;
-                    pac.textContent = `${inv[`INV${num}_PAC`]?.toFixed(1) ?? '0.00'}`;
-                    pdc.textContent = `${inv[`INV${num}_PDC`]?.toFixed(1) ?? '0.00'}`;
+                    pac.textContent = `${inv[`INV${num}_PAC`]?.toFixed(1) ?? '0.00'} kW`;
+                    pdc.textContent = `${inv[`INV${num}_PDC`]?.toFixed(1) ?? '0.00'} kW`;
                     temp.textContent = `${inv[`INV${num}_TI`]?.toFixed(1) ?? '0.0'}°C`;
                 } else {
                     arrow.className = 'arrow-icon status--1';
@@ -567,15 +567,54 @@ const UnifilarPageModule = {
             }
 
             // === Atualiza Inversores ===
-            const inversores = data.Inversores;
-            for (let i = 1; i <= 8; i++) {
-                const inv = inversores[`Inversor${i}`];
-                if (!inv) continue;
+            // const inversores = data.Inversores;
+            // for (let i = 1; i <= 8; i++) {
+            //     const inv = inversores[`Inversor${i}`];
+            //     if (!inv) continue;
 
-                document.getElementById(`inv${i}-tensao`).textContent = `${inv.Tensao.toFixed(1)} V`;
-                document.getElementById(`inv${i}-corrente`).textContent = `${inv.Corrente.toFixed(1)} A`;
-                document.getElementById(`inv${i}-potencia`).textContent = `${inv.Potencia.toFixed(1)} kW`;
+            //     document.getElementById(`inv${i}-tensao`).textContent = `${inv.Tensao.toFixed(1)} V`;
+            //     document.getElementById(`inv${i}-corrente`).textContent = `${inv.Corrente.toFixed(1)} A`;
+            //     document.getElementById(`inv${i}-potencia`).textContent = `${inv.Potencia.toFixed(1)} kW`;
+            // }
+
+            const inversores = data?.Inversores ?? {};
+
+            // Atualiza Modal 1 (Inversores 1 a 9)
+            const modal1Hotspots = document.querySelectorAll('#modal-unifilar-qgbt1 .hotspot');
+            let index1 = 0;
+
+            for (let i = 1; i <= 9; i++) {
+                const inv = inversores[`Inversor${i}`];
+                if (!inv) {
+                    index1 += 3;
+                    continue;
+                }
+
+                if (modal1Hotspots[index1]) modal1Hotspots[index1].textContent = `${(inv.Tensao ?? 0).toFixed(1)} V`;
+                if (modal1Hotspots[index1 + 1]) modal1Hotspots[index1 + 1].textContent = `${(inv.Corrente ?? 0).toFixed(1)} A`;
+                if (modal1Hotspots[index1 + 2]) modal1Hotspots[index1 + 2].textContent = `${(inv.Potencia ?? 0).toFixed(1)} kW`;
+
+                index1 += 3;
             }
+
+            // Atualiza Modal 2 (Inversores 10 a 16)
+            const modal2Hotspots = document.querySelectorAll('#modal-unifilar-qgbt2 .hotspot');
+            let index2 = 0;
+
+            for (let i = 10; i <= 16; i++) {
+                const inv = inversores[`Inversor${i}`];
+                if (!inv) {
+                    index2 += 3;
+                    continue;
+                }
+
+                if (modal2Hotspots[index2]) modal2Hotspots[index2].textContent = `${(inv.Tensao ?? 0).toFixed(1)} V`;
+                if (modal2Hotspots[index2 + 1]) modal2Hotspots[index2 + 1].textContent = `${(inv.Corrente ?? 0).toFixed(1)} A`;
+                if (modal2Hotspots[index2 + 2]) modal2Hotspots[index2 + 2].textContent = `${(inv.Potencia ?? 0).toFixed(1)} kW`;
+
+                index2 += 3;
+            }
+
 
         } catch (error) {
             console.error("Erro ao atualizar unifilar:", error);
