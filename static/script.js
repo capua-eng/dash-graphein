@@ -160,6 +160,21 @@ const HomePageModule = {
                 }
             });
 
+            // === Atualizar valores pac e paac ===
+            const pac = data.central_meteorologica?.pac_Instantanea;
+            const paac = data.central_meteorologica?.paac_Instantanea;
+
+            const pacDiv = document.querySelector('.pac-usina');
+            if (pacDiv && pac !== undefined) {
+                pacDiv.textContent = `${pac.toFixed(1)} kW`;
+            }
+
+            const paacDiv = document.querySelector('.paac-usina');
+            if (paacDiv && paac !== undefined) {
+                paacDiv.textContent = `${paac.toFixed(1)} kW`;
+            }
+            
+
             // === Atualizar meteorologia ===
             const met = data.central_meteorologica;
             if (met) {
@@ -172,8 +187,7 @@ const HomePageModule = {
                 document.getElementById('temperatura-placa').textContent = `${met.TempPlac.toFixed(1)} °C`;
                 document.getElementById('energia-diaria-usina').textContent = `${met.EnergiaDiariaUsina.toFixed(1)} kWh`;
                 document.getElementById('energia-mensal-usina').textContent = `${met.EnergiaMensalUsina.toFixed(1)} kWh`;
-                document.getElementById('energia-instantanea-usina').textContent = `${met.Instantanea.toFixed(1)} kW`;
-                document.getElementById('energia-instantanea-usina').textContent = `${met.Instantanea.toFixed(1)} kW`;
+                document.getElementById('energia-instantanea-usina').textContent = `${met.pac_Instantanea.toFixed(1)} kW`;
                 document.getElementById('energia-consumida').textContent = `${met.Consumida.toFixed(1)} kWh`;
                 document.getElementById('energia-fornecida').textContent = `${met.Fornecida.toFixed(1)} kWh`;
                 

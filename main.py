@@ -72,10 +72,13 @@ def obter_potencia_com_meteo():
                 es.EnergiaMensalUsina,
                 es.MGE_1_ENER AS Instantanea,
                 es.MGE_1_EP AS Consumida,
-                es.MGE_1_EC AS Fornecida
+                es.MGE_1_EC AS Fornecida,
+                tt.PAC_Usina AS pac_Instantanea,
+                tt.PAAC_MGE_1 AS paac_Instantanea
             FROM 
                 CentralMet cm
                 JOIN Estatisticos es ON cm.last_refresh_time = es.last_refresh_time
+                JOIN Instantaneos tt ON tt.last_refresh_time = cm.last_refresh_time
             ORDER BY cm.last_refresh_time DESC
         """
         cursor.execute(query_meteo)
