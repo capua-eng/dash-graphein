@@ -197,6 +197,7 @@ const HomePageModule = {
             currentAlarms = (data.alarmes_erros || []).map((a, i) => ({
                 id: i + 1,
                 datetimeIn: new Date(a.DataErroIni).toLocaleString('pt-BR'),
+                // datetimeOut: a.DataErroFim ? new Date(a.DataErroFim).toLocaleString('pt-BR').replace('T', ' ').split('.')[0] : 'Ativo',
                 equipment: a.Equipamento,
                 message: `${a.Equipamento}: ${a.Erro}`,
                 isActive: a.DataErroFim === null,
@@ -228,7 +229,8 @@ const HomePageModule = {
                 <div class="message">${alarm.message}</div>
             `;
             alarmsList.appendChild(el);
-        });
+        }); 
+        // <div class="datetime_out">${alarm.isActive ? '' : alarm.datetimeOut}</div>
     }
 
     function setupAlarmEvents() {
@@ -567,16 +569,6 @@ const UnifilarPageModule = {
             }
 
             // === Atualiza Inversores ===
-            // const inversores = data.Inversores;
-            // for (let i = 1; i <= 8; i++) {
-            //     const inv = inversores[`Inversor${i}`];
-            //     if (!inv) continue;
-
-            //     document.getElementById(`inv${i}-tensao`).textContent = `${inv.Tensao.toFixed(1)} V`;
-            //     document.getElementById(`inv${i}-corrente`).textContent = `${inv.Corrente.toFixed(1)} A`;
-            //     document.getElementById(`inv${i}-potencia`).textContent = `${inv.Potencia.toFixed(1)} kW`;
-            // }
-
             const inversores = data?.Inversores ?? {};
 
             // Atualiza Modal 1 (Inversores 1 a 9)
@@ -597,11 +589,11 @@ const UnifilarPageModule = {
                 index1 += 3;
             }
 
-            // Atualiza Modal 2 (Inversores 10 a 16)
+            // Atualiza Modal 2 (Inversores 10 a 16 por enquanto)
             const modal2Hotspots = document.querySelectorAll('#modal-unifilar-qgbt2 .hotspot');
             let index2 = 0;
 
-            for (let i = 10; i <= 16; i++) {
+            for (let i = 10; i <= 16; i++) { // depois que tiverem os 18 inversores mudar a lógica aqui
                 const inv = inversores[`Inversor${i}`];
                 if (!inv) {
                     index2 += 3;
@@ -614,7 +606,6 @@ const UnifilarPageModule = {
 
                 index2 += 3;
             }
-
 
         } catch (error) {
             console.error("Erro ao atualizar unifilar:", error);

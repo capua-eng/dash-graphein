@@ -558,6 +558,14 @@ nav button {
   align-items: center;
   justify-content: center;
 }
+.pac-usina {
+  left: 72%;
+  top: 59%
+}
+.paac-usina{
+  left: 78%;
+  top: 59%;
+}
 .energ {
   display: flex;
   /* gap: 100px; Espaço entre ícones */
