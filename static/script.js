@@ -568,41 +568,40 @@ const UnifilarPageModule = {
                 // document.getElementById(`mge${i}-reativa`).textContent = `${pot.Reativa.toFixed(1)} kVAR`;
             }
 
-            // === Atualiza Inversores ===
+
+            // === função auxiliar para formatar valores, caso fiquem vazios ===
+            function formatarValor(valor, unidade) {
+                return (valor != null && !isNaN(valor)) ? `${valor.toFixed(1)} ${unidade}` : "--";
+            }
+
+            // === Atualiza Inversores (MODAIS) ===
             const inversores = data?.Inversores ?? {};
 
-            // Atualiza Modal 1 (Inversores 1 a 9)
+            // atualiza Modal 1 (Inversores 1 a 9)
             const modal1Hotspots = document.querySelectorAll('#modal-unifilar-qgbt1 .hotspot');
             let index1 = 0;
 
             for (let i = 1; i <= 9; i++) {
                 const inv = inversores[`Inversor${i}`];
-                if (!inv) {
-                    index1 += 3;
-                    continue;
-                }
-
-                if (modal1Hotspots[index1]) modal1Hotspots[index1].textContent = `${(inv.Tensao ?? 0).toFixed(1)} V`;
-                if (modal1Hotspots[index1 + 1]) modal1Hotspots[index1 + 1].textContent = `${(inv.Corrente ?? 0).toFixed(1)} A`;
-                if (modal1Hotspots[index1 + 2]) modal1Hotspots[index1 + 2].textContent = `${(inv.Potencia ?? 0).toFixed(1)} kW`;
+                
+                if (modal1Hotspots[index1]) modal1Hotspots[index1].textContent = formatarValor(inv?.Tensao, "V");
+                if (modal1Hotspots[index1 + 1]) modal1Hotspots[index1 + 1].textContent = formatarValor(inv?.Corrente, "A");
+                if (modal1Hotspots[index1 + 2]) modal1Hotspots[index1 + 2].textContent = formatarValor(inv?.Potencia, "kW");
 
                 index1 += 3;
             }
 
-            // Atualiza Modal 2 (Inversores 10 a 16 por enquanto)
+
+            // atualiza Modal 2 (Inversores 10 a 12 por enquanto)
             const modal2Hotspots = document.querySelectorAll('#modal-unifilar-qgbt2 .hotspot');
             let index2 = 0;
 
-            for (let i = 10; i <= 16; i++) { // depois que tiverem os 18 inversores mudar a lógica aqui
+            for (let i = 10; i <= 18; i++) {
                 const inv = inversores[`Inversor${i}`];
-                if (!inv) {
-                    index2 += 3;
-                    continue;
-                }
 
-                if (modal2Hotspots[index2]) modal2Hotspots[index2].textContent = `${(inv.Tensao ?? 0).toFixed(1)} V`;
-                if (modal2Hotspots[index2 + 1]) modal2Hotspots[index2 + 1].textContent = `${(inv.Corrente ?? 0).toFixed(1)} A`;
-                if (modal2Hotspots[index2 + 2]) modal2Hotspots[index2 + 2].textContent = `${(inv.Potencia ?? 0).toFixed(1)} kW`;
+                if (modal2Hotspots[index2]) modal2Hotspots[index2].textContent = formatarValor(inv?.Tensao, "V");
+                if (modal2Hotspots[index2 + 1]) modal2Hotspots[index2 + 1].textContent = formatarValor(inv?.Corrente, "A");
+                if (modal2Hotspots[index2 + 2]) modal2Hotspots[index2 + 2].textContent = formatarValor(inv?.Potencia, "kW");
 
                 index2 += 3;
             }
