@@ -192,36 +192,82 @@ nav a {
 
 .container-fluid {
   /* border: 1px solid red; */
-  height: 400px;
-  max-width: 90%;
-  min-width: 80%;
   display: flex;
-  gap: 10%;
+  gap: 80px;
+  justify-content: center;
+  align-items: stretch;  /* Faz todos os cards terem a mesma altura */
+  padding: 1px;
+  max-width: 1300px;
+  max-height: 420px;
+  margin: 0 auto;
 }
 
 .bloco {
-  /* border: 1px solid blue; */
-  height: 100%;
   width: 30%;
-  text-align: center;
-  padding: 20px;
-  line-height: 0.6;
+  min-height: 370px;
+  background: white;
+  border-radius: 6px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
+  padding: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #13354a;
+  overflow: hidden;
 }
+.bloco > p {  
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #13354a;
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  padding: 6px 0;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0;
+}  
 
 .dados {
-  border: 2px solid #13354a;
+  /* border: 1px solid #13354a; */
   height: auto;
   width: auto;
+  flex-grow: 1;
+  padding: 1px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 10px;
-  line-height: 0.7;
-  border-radius: 4px;
+  padding-top: 4px;
+  gap: 2px;
+}
+.dados p {  
+  margin: 0;
+  width: 100%;
+  text-align: left;
+  font-size: 0.95rem;
+  color: #333;
+  padding: 9px 0;
+  border-bottom: 1px dashed #e0e0e0;
+  position: relative;
+}  
+
+.btn-unifilar {
+  margin: 10px 0;
+  padding: 8px 24px;
+  background: #13354a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.btn-unifilar:hover {
+  opacity: 0.7;
+  background: #1a4a66;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(19, 53, 74, 0.2);
 }
 
 /* Reutilizável para todos os modais */
@@ -287,19 +333,6 @@ nav a {
   color: #000;
 }
 
-.btn-unifilar {
-  margin-bottom: 10px;
-  text-align: center;
-  padding: 10px;
-  border-radius: 4px;
-  border: none;
-  background-color: #13354a;
-  color: white;
-  transition: all ease-in-out 0.3s;
-}
-.btn-unifilar:hover {
-  opacity: 0.7;
-}
 
 /* Responsivo para telas menores */
 @media (max-width: 992px) {

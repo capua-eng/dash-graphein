@@ -606,6 +606,7 @@ const UnifilarPageModule = {
                 index2 += 3;
             }
 
+            // data/hora da última atualização dos dados
             const lastRefreshGlobal = data?.last_refresh_time;
             if (lastRefreshGlobal) {
                 const formattedDate = new Date(lastRefreshGlobal).toLocaleString();
