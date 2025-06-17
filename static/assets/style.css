@@ -278,9 +278,10 @@ nav button {
 }
 .value p {
   border: 1px solid #13354a;
-  /* width: 90%; */
+  width: 90%;
   text-align: center;
   border-radius: 4px;
+  padding: 3px;
 }
 .box-producao {
   padding: 5px;
@@ -559,11 +560,11 @@ nav button {
   justify-content: center;
 }
 .pac-usina {
-  left: 72%;
+  left: 76%;
   top: 59%
 }
 .paac-usina{
-  left: 78%;
+  left: 82%;
   top: 59%;
 }
 .energ {
