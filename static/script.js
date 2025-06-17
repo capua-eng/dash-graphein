@@ -606,6 +606,14 @@ const UnifilarPageModule = {
                 index2 += 3;
             }
 
+            const lastRefreshGlobal = data?.last_refresh_time;
+            if (lastRefreshGlobal) {
+                const formattedDate = new Date(lastRefreshGlobal).toLocaleString();
+                document.querySelectorAll(".last-refresh").forEach(el => {
+                    el.textContent = `Última atualização: ${formattedDate}`;
+                });
+            }
+
         } catch (error) {
             console.error("Erro ao atualizar unifilar:", error);
         }
