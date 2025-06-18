@@ -197,7 +197,7 @@ const HomePageModule = {
             currentAlarms = (data.alarmes_erros || []).map((a, i) => ({
                 id: i + 1,
                 datetimeIn: new Date(a.DataErroIni).toLocaleString('pt-BR'),
-                // datetimeOut: a.DataErroFim ? new Date(a.DataErroFim).toLocaleString('pt-BR').replace('T', ' ').split('.')[0] : 'Ativo',
+                datetimeOut: a.DataErroFim ? new Date(a.DataErroFim).toLocaleString('pt-BR').replace('T', ' ').split('.')[0] : 'Ativo',
                 equipment: a.Equipamento,
                 message: `${a.Equipamento}: ${a.Erro}`,
                 isActive: a.DataErroFim === null,
@@ -223,14 +223,12 @@ const HomePageModule = {
             el.dataset.id = alarm.id;
             el.innerHTML = `
                 <div class="datetime">${alarm.datetimeIn}</div>
-                <div class="datetime_out"></div>
-                <div class="operator"></div>
+                <div class="datetimeout">${alarm.isActive ? '' : alarm.datetimeOut}</div>
                 <div class="tag"></div>
                 <div class="message">${alarm.message}</div>
             `;
             alarmsList.appendChild(el);
-        }); 
-        // <div class="datetime_out">${alarm.isActive ? '' : alarm.datetimeOut}</div>
+        });
     }
 
     function setupAlarmEvents() {
