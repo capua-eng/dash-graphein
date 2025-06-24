@@ -360,8 +360,8 @@ def dados_unifilar_completo():
                 0: 37, 1: 37, 2: 37,   # TRIP 37
                 3: 67, 4: 67, 5: 67, 6: 67,  # TRIP 67
                 7: 0, # Reserva
-                8: 133,   # Bandeirola TRIP GS
-                9: 157,   # Bandeirola TRIP Q
+                8: 133,   # Bandeirola TRIP GS 133
+                9: 157,   # Bandeirola TRIP Q 157
                 10: 81, # TRIP 81
                 11: 59, 12: 59, 13: 59, 14: 59,  # TRIP 59
                 15: 27  # TRIP 27-0
@@ -381,7 +381,7 @@ def dados_unifilar_completo():
             ah.Equipamento,
             ah.BITS 
         FROM AlarmesHistorico ah
-        WHERE ah.Status_ != 1
+        WHERE ah.Status_ != 0
         AND ah.Equipamento IN ('PEXTRON1', 'PEXTRON2', 'PEXTRON3')
         ORDER BY DataErroIni DESC
         '''

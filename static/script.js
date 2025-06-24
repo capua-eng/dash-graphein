@@ -589,7 +589,6 @@ const UnifilarPageModule = {
                 index1 += 3;
             }
 
-
             // atualiza Modal 2 (Inversores 10 a 12 por enquanto)
             const modal2Hotspots = document.querySelectorAll('#modal-unifilar-qgbt2 .hotspot');
             let index2 = 0;
@@ -604,6 +603,36 @@ const UnifilarPageModule = {
                 index2 += 3;
             }
 
+            const tripsAtivos = data.trips_ativos || [];
+            const tripElements = document.querySelectorAll('.bolinhas p');
+
+            // Mapeamento de números para identificadores no HTML
+            const tripTextMap = {
+                133: 'GS',
+                157: 'Q',
+                100: 'Falha Bobina'
+                // Adicione outros mapeamentos especiais aqui se necessário
+            };
+
+            // Reset all indicators
+            tripElements.forEach(el => {
+                el.innerHTML = '⚪ ' + el.textContent.split(' ')[1];
+            });
+
+            // Update active trips
+            tripsAtivos.forEach(trip => {
+                tripElements.forEach(el => {
+                    const tripText = el.textContent.split(' ')[1]; // Pega o número/texto após o emoji
+                    const tripValue = el.getAttribute('data-trip');
+                    
+                    // Verifica se é um trip especial (GS/Q) ou numérico
+                    if ((trip in tripTextMap && tripTextMap[trip] === tripValue) || 
+                        (trip.toString() === tripValue)) {
+                        el.innerHTML = '🔴 ' + tripText;
+                    }
+                });
+            });
+
             // data/hora da última atualização dos dados
             const lastRefreshGlobal = data?.last_refresh_time;
             if (lastRefreshGlobal) {
@@ -612,21 +641,6 @@ const UnifilarPageModule = {
                     el.textContent = `Última atualização: ${formattedDate}`;
                 });
             }
-        
-            const lista_trips = [trip27, trip32, trip37, trip47, trip59, trip51, trip59_1,
-                trip67, trip78, trip81, trip86, tripgs
-            ]
-
-            // if(data.alarmes_erros.BITS === 1 || data.alarmes_erros.BITS === 1 || data.alarmes_erros.BITS === 1){
-            //     trip27 = 1;
-            //     alert(1);
-            // };
-            // for (let trip of data.trip_alarmes) {
-            //     alert(trip);
-            // }
-            data.trip_alarmes.forEach((trip, index) => {
-            console.log(`Item ${index}: BITS = ${trip.BITS}`);
-            });
             
         } catch (error) {
             console.error("Erro ao atualizar unifilar:", error);
