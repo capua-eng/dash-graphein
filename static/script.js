@@ -82,7 +82,7 @@ const GeneralModule = {
                 const endDate = document.getElementById('dataFim').value;
                 const groupBy = document.getElementById('intervalo').value;
 
-                const url = `http://192.168.0.252:1880/gerar-relatorio?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&groupBy=${groupBy}`;
+                const url = `http://100.68.206.104:1880/gerar-relatorio?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&groupBy=${groupBy}`;
 
                 fetch(url)
                     .then(response => {
@@ -612,7 +612,22 @@ const UnifilarPageModule = {
                     el.textContent = `Última atualização: ${formattedDate}`;
                 });
             }
+        
+            const lista_trips = [trip27, trip32, trip37, trip47, trip59, trip51, trip59_1,
+                trip67, trip78, trip81, trip86, tripgs
+            ]
 
+            // if(data.alarmes_erros.BITS === 1 || data.alarmes_erros.BITS === 1 || data.alarmes_erros.BITS === 1){
+            //     trip27 = 1;
+            //     alert(1);
+            // };
+            // for (let trip of data.trip_alarmes) {
+            //     alert(trip);
+            // }
+            data.trip_alarmes.forEach((trip, index) => {
+            console.log(`Item ${index}: BITS = ${trip.BITS}`);
+            });
+            
         } catch (error) {
             console.error("Erro ao atualizar unifilar:", error);
         }

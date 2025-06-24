@@ -345,6 +345,28 @@ def dados_unifilar_completo():
                 print(f"Erro ao processar {nome_tabela}: {str(inv_error)}")
                 continue
         
+        # Dados dos alarmes
+        query_alarmes = '''
+        SELECT
+            Equipamento,
+            Status_,
+            BITS
+        FROM AlarmesHistorico
+        WHERE Equipamento IN ('PEXTRON1', 'PEXTRON2', 'PEXTRON3')
+        ORDER BY DataErroIni DESC
+        '''
+        cursor.execute(query_alarmes)
+        row_alarmes = cursor.fetchall()
+        if row_alarmes:
+            colunas_alarmes = [col[0] for col in cursor.description]
+            resultado["trip_alarmes"] = [
+                {
+                    col: (val.isoformat() if isinstance(val, (datetime.datetime, datetime.date)) else val)
+                    for col, val in zip(colunas_alarmes, row)
+                }
+                for row in row_alarmes
+            ]
+
         return resultado
         
     except Exception as e:
