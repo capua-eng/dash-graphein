@@ -122,8 +122,6 @@ const HomePageModule = {
     let currentAlarms = [];
     const alarmsList = document.getElementById('alarmsList');
     const contextMenu = document.getElementById('contextMenu');
-    const recognitionModal = document.getElementById('recognitionModal');
-    const modalErrorDetails = document.getElementById('modalErrorDetails');
     let selectedAlarm = null;
 
     async function fetchAndUpdateAll() {
