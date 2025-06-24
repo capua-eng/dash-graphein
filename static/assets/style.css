@@ -214,11 +214,11 @@ nav button {
   z-index: 1;
 }
 
-.link-header:hover{
+.link-header:hover {
   opacity: 0.7;
 }
 
-.home-btn:hover{
+.home-btn:hover {
   opacity: 0.7;
 }
 
@@ -267,7 +267,7 @@ nav button {
   flex-direction: column;
   font-size: 13px;
 }
-.linha_ali{
+.linha_ali {
   /* border: 1px solid red; */
   display: flex;
   justify-content: center;
@@ -284,47 +284,73 @@ nav button {
   padding: 3px;
 }
 .box-producao {
-  padding: 5px;
   border: none;
   border: 1px dashed rgb(194, 194, 194);
   display: flex;
   flex-direction: column;
-  height: auto;
-  height: 100px;
+  height: 100%; /* Use height 100% para garantir que ocupe toda a altura disponível */
 }
+
 .title_prod {
-  /* border: 1px solid red; */
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 20px;
-  padding-top: 20px;
-  margin-bottom: 15px;
+  height: 30px; /* Deixei um pouco maior para não apertar o texto */
+  margin-top: 5px;
 }
+
 .values_prod {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 10px;
+  /* Define um espaçamento melhor quando as divs quebrarem */
 }
+
 .value_prod_usina {
-  /* border: 1px solid red; */
-  width: 30%;
+  flex: 1 1 30%; /* Flexível, mas com largura mínima de 30% */
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  line-height: 0.1;
+  line-height: 1.1;
+  word-wrap: break-word;
+  box-sizing: border-box; /* Adiciona melhor controle de padding e borda */
+}
+
+.value_prod_usina p {
+  text-align: center;
+  margin: 0;
+  font-size: 1rem;
+  word-wrap: break-word; /* Quebra palavras longas */
+}
+
+@media (max-width: 768px) {
+  .value_prod_usina {
+    flex: 1 1 45%; /* Quando a tela for menor, aumenta a flexibilidade */
+  }
+}
+
+@media (max-width: 480px) {
+  .value_prod_usina {
+    flex: 1 1 100%; /* No mobile, cada item ocupa a linha inteira */
+  }
+}
+
+@media (max-width: 320px) {
+  .value_prod_usina p {
+    font-size: 0.9rem; /* Ajuste o tamanho da fonte em telas menores */
+  }
 }
 .box-concessionaria {
-  padding: 5px;
+  /* padding: 5px; */
   border: none;
   border: 1px dashed rgb(194, 194, 194);
   display: flex;
   flex-direction: column;
   height: auto;
-  height: 100px;
+  height: 100%;
 }
 .box-concessionaria .values_prod {
   /* border: 1px solid red; */
@@ -541,32 +567,95 @@ nav button {
   display: flex;
   justify-content: center;
   width: auto;
-  /* margin: -10px 0; Ajuste fino de posição */
-  /* border: 1px solid black; */
 }
-.pac-usina, 
+.pac-usina,
 .paac-usina {
   position: absolute;
   width: 100px;
   height: 20px;
-  background-color: rgba(255, 254, 254);
-  /* border: 2px solid #000000; */
+  /* background-color:red; */
   border-radius: 4px;
-  border-radius: 4px;
-  transition: transform 0.2s;
+  transition: transform 0.2s ease-in-out;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 5px; 
 }
+
 .pac-usina {
-  left: 76%;
-  top: 59%
+  left: 76vw;
+  top: 59vh; 
 }
-.paac-usina{
-  left: 82%;
-  top: 59%;
+
+.paac-usina {
+  left: 82vw; 
+  top: 59vh;
 }
+
+@media (min-width: 1200px) {
+  .pac-usina {
+    left: 78%;
+    top: 59%;
+  }
+
+  .paac-usina {
+    left: 85%;
+    top: 59%;
+  }
+}
+
+
+@media (max-width: 1199px) and (min-width: 992px) {
+  .pac-usina {
+    left: 80%;
+    top: 70%;
+  }
+
+  .paac-usina {
+    left: 87%;
+    top: 70%;
+  }
+}
+
+@media (max-width: 991px) {
+  .pac-usina {
+    left: 75%;
+    top: 70%;
+  }
+
+  .paac-usina {
+    left: 81%;
+    top: 70%;
+  }
+}
+
+
+@media (max-width: 767px) {
+  .pac-usina {
+    left: 75%;
+    top: 70%;
+  }
+
+  .paac-usina {
+    left: 81%;
+    top: 70%;
+  }
+}
+
+
+@media (max-width: 575px) {
+  .pac-usina {
+    left: 75%;
+    top: 70%;
+  }
+
+  .paac-usina {
+    left: 81%;
+    top: 70%;
+  }
+}
+
 .energ {
   display: flex;
   /* gap: 100px; Espaço entre ícones */
@@ -674,7 +763,6 @@ nav button {
   }
 }
 
-
 /* ALARMES (header) */
 .alarm-header {
   display: flex;
@@ -756,11 +844,12 @@ nav button {
   border-left: 4px solid #d19d02;
 }
 
-.alarm-item.active, .alarm-item.resolved .datetime{
+.alarm-item.active,
+.alarm-item.resolved .datetime {
   padding-left: 1%;
   font-weight: 600;
 }
-.alarm-item.active .datetime{
+.alarm-item.active .datetime {
   color: #ebebeb;
 }
 
@@ -825,7 +914,6 @@ nav button {
     padding-left: 6%;
   }
 }
-
 
 /* Menu de Contexto */
 .context-menu {
@@ -1000,7 +1088,6 @@ nav button {
 .btn-cancel:hover {
   background: #95a5a6;
 }
-
 
 /* Animações */
 @keyframes fadeIn {
