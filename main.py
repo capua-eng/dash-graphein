@@ -345,27 +345,62 @@ def dados_unifilar_completo():
                 print(f"Erro ao processar {nome_tabela}: {str(inv_error)}")
                 continue
         
-        # Dados dos alarmes
+        # Função para extrair o tipo base do trip (ex: "TRIP 27")
+        # Mapeamento direto de bit para número do trip (apenas o número)
+        trip_mapping = {
+            'PEXTRON1': {
+                0: 27, 1: 27, 2: 27,   # TRIP 27 (todas as fases)
+                3: 51, 4: 51, 5: 51, 6: 51,  # TRIP 51
+                7: 100, # Falha na bobina de abertura
+                8: 32, 9: 32, 10: 32,  # TRIP 32
+                11: 50, 12: 50, 13: 50, 14: 50,  # TRIP 50
+                15: 0 # Reserva
+            },
+            'PEXTRON2': {
+                0: 37, 1: 37, 2: 37,   # TRIP 37
+                3: 67, 4: 67, 5: 67, 6: 67,  # TRIP 67
+                7: 0, # Reserva
+                8: 133,   # Bandeirola TRIP GS
+                9: 157,   # Bandeirola TRIP Q
+                10: 81, # TRIP 81
+                11: 59, 12: 59, 13: 59, 14: 59,  # TRIP 59
+                15: 27  # TRIP 27-0
+            },
+            'PEXTRON3': {
+                0: 78,  # TRIP 78
+                1: 86,  # TRIP 86
+                2: 47,  # TRIP 47
+                3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0  # RESERVA
+            }
+        }
+
+        # Seu código atual com a modificação
         query_alarmes = '''
         SELECT
-            Equipamento,
-            Status_,
-            BITS
-        FROM AlarmesHistorico
-        WHERE Equipamento IN ('PEXTRON1', 'PEXTRON2', 'PEXTRON3')
+            ah.Status_,
+            ah.Equipamento,
+            ah.BITS 
+        FROM AlarmesHistorico ah
+        WHERE ah.Status_ != 1
+        AND ah.Equipamento IN ('PEXTRON1', 'PEXTRON2', 'PEXTRON3')
         ORDER BY DataErroIni DESC
         '''
         cursor.execute(query_alarmes)
         row_alarmes = cursor.fetchall()
-        if row_alarmes:
-            colunas_alarmes = [col[0] for col in cursor.description]
-            resultado["trip_alarmes"] = [
-                {
-                    col: (val.isoformat() if isinstance(val, (datetime.datetime, datetime.date)) else val)
-                    for col, val in zip(colunas_alarmes, row)
-                }
-                for row in row_alarmes
-            ]
+
+        # Conjunto para armazenar os números dos trips ativos (sem duplicatas)
+        trips_ativos = set()
+        for trip in row_alarmes:
+            equipamento = trip[1]
+            bit = trip[2]
+            
+            if equipamento in trip_mapping and bit in trip_mapping[equipamento]:
+                trip_num = trip_mapping[equipamento][bit]
+                if trip_num != 0:
+                    trips_ativos.add(trip_num)
+
+        # Converte para lista ordenada
+        resultado["trips_ativos"] = sorted(list(trips_ativos))
 
         return resultado
         
