@@ -69,6 +69,7 @@
             </div>
         </nav>
     </header>
+
     <div class="container-fluid">
         <div class="bloco">
             <p style="font-weight: bold;">MGE Cubículo</p>
@@ -155,7 +156,6 @@
                     <div class="hotspot" style="top: 40%; left: 88.3%;" title="Quadro  B"></div>
                     <!-- ----------------------------------------------------------------------------------- -->
                 </div>
-
             </div>
         </div>
 
@@ -206,29 +206,8 @@
                 </div>
             </div>
         </div>
-
-        <div id="modalRelatorio" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Selecionar Intervalo do Relatório</h2>
-
-                <label for="dataInicio">Data Início:</label>
-                <input type="date" id="dataInicio">
-
-                <label for="dataFim">Data Fim:</label>
-                <input type="date" id="dataFim">
-
-                <label for="intervalo">Intervalo:</label>
-                <select id="intervalo">
-                    <option value="dia">Resumo Diário</option>
-                    <option value="hora">Resumo por Hora</option>
-                </select>
-
-                <button id="gerarRelatorioBtn">Gerar Relatório</button>
-
-            </div>
-        </div>
     </div>
+
     <div class="container">
         <div class="sinalizador">
             <div class="balls">
@@ -262,7 +241,7 @@
                     <p data-trip="Falha Bobina">⚪ Bobina</p>
                 </div>
                 <!-- ---------------------------------- -->
-                <div class="menu"> 
+                <div class="menu">
                     <p style="font-weight: bold; padding-top: 10px;">Sinalização disjuntor</p>
                     <div class="btn-menu">
                         <button>ABRE</button>
@@ -271,7 +250,33 @@
                     </div>
                 </div>
             </div>
-            
+        </div>
+    </div>
+
+    <!-- ----------------------------------------------------- -->
+    <!-- MODAL DO RELATÓRIO -->
+    <div id="modalRelatorio" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Selecionar Intervalo do Relatório</h2>
+
+            <label for="dataInicio">Data Início:</label>
+            <input type="date" id="dataInicio">
+
+            <label for="dataFim">Data Fim:</label>
+            <input type="date" id="dataFim">
+
+            <label for="intervalo">Intervalo:</label>
+            <select id="intervalo">
+                <option value="dia">Resumo Diário</option>
+                <option value="hora">Resumo por Hora</option>
+            </select>
+
+            <button id="gerarRelatorioBtn">Gerar Relatório</button>
+
+            <div id="loadingSpinner" style="display: none;">
+                <i class="fas fa-spinner fa-spin fa-2x"></i>
+            </div>
         </div>
     </div>
 

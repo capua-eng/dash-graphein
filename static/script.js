@@ -7,6 +7,14 @@ const isUnifilarPage = currentPage === "/unifilar";
 
 
 // ========== MÓDULO DE FUNÇÕES GERAIS (compartilhadas) ==========
+
+// nomes para as urls de gerar relatório
+const relatorioMap = {
+    "Irradiação": "irradiancia",
+    "IDGT": "idgti",
+    "Energia": "energia"
+};
+
 const GeneralModule = {
     init: function() {
         this.setupDropdowns();
@@ -16,6 +24,7 @@ const GeneralModule = {
         this.setupReportGeneration();
     },
 
+    // RELATÓRIOS
     setupDropdowns: function() {
         const dropdownBtn = document.getElementById('relatorioDropdown');
         const dropdown = dropdownBtn?.closest('.dropdown');
@@ -45,6 +54,14 @@ const GeneralModule = {
             relatorioLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
+                    const nome = link.textContent.trim();
+                    relatorioSelecionado = relatorioMap[nome]; // pega o tipo do relatório específico pelo nome do
+
+                    if (!relatorioSelecionado) {
+                        alert("Tipo de relatório não reconhecido: " + nome);
+                        return;
+                    }
+
                     modal.style.display = 'block';
                 });
             });
@@ -82,7 +99,13 @@ const GeneralModule = {
                 const endDate = document.getElementById('dataFim').value;
                 const groupBy = document.getElementById('intervalo').value;
 
-                const url = `http://100.68.206.104:1880/gerar-relatorio?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&groupBy=${groupBy}`;
+                if (!relatorioSelecionado) {
+                    alert('Tipo de relatório não definido!');
+                    if (spinner) spinner.style.display = 'none';
+                    return;
+                }
+
+                const url = `http://100.68.206.104:1880/${relatorioSelecionado}?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&groupBy=${groupBy}`;
 
                 fetch(url)
                     .then(response => {
@@ -95,7 +118,7 @@ const GeneralModule = {
                         const url = window.URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = url;
-                        a.download = 'relatorio.pdf';
+                        a.download = `relatorio-${relatorioSelecionado}.pdf`;
                         document.body.appendChild(a);
                         a.click();
                         a.remove();
