@@ -594,92 +594,10 @@ nav button {
 }
 .pac-usina,
 .paac-usina {
-  position: absolute;
-  width: 100px;
-  height: 20px;
-  /* background-color:red; */
-  border-radius: 4px;
-  transition: transform 0.2s ease-in-out;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 5px; 
+  /* border: 1px solid red; */
+  width: auto;
+  font-size: 15px;
 }
-
-.pac-usina {
-  left: 76vw;
-  top: 59vh; 
-}
-
-.paac-usina {
-  left: 82vw; 
-  top: 59vh;
-}
-
-@media (min-width: 1200px) {
-  .pac-usina {
-    left: 78%;
-    top: 59%;
-  }
-
-  .paac-usina {
-    left: 85%;
-    top: 59%;
-  }
-}
-
-
-@media (max-width: 1199px) and (min-width: 992px) {
-  .pac-usina {
-    left: 80%;
-    top: 70%;
-  }
-
-  .paac-usina {
-    left: 87%;
-    top: 70%;
-  }
-}
-
-@media (max-width: 991px) {
-  .pac-usina {
-    left: 75%;
-    top: 70%;
-  }
-
-  .paac-usina {
-    left: 81%;
-    top: 70%;
-  }
-}
-
-
-@media (max-width: 767px) {
-  .pac-usina {
-    left: 75%;
-    top: 70%;
-  }
-
-  .paac-usina {
-    left: 81%;
-    top: 70%;
-  }
-}
-
-
-@media (max-width: 575px) {
-  .pac-usina {
-    left: 75%;
-    top: 70%;
-  }
-
-  .paac-usina {
-    left: 81%;
-    top: 70%;
-  }
-}
-
 .energ {
   display: flex;
   /* gap: 100px; Espaço entre ícones */
