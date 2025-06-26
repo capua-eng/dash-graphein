@@ -558,6 +558,114 @@ const UnifilarPageModule = {
         if (!isUnifilarPage) return;
         this.atualizarUnifilar();
         setInterval(() => this.atualizarUnifilar(), 3000);
+        this.setupDisjuntorButtons();
+    },
+
+    setupDisjuntorButtons: function() {
+        const btnAbrir = document.getElementById('btnAbrir');
+        const btnFechar = document.getElementById('btnFechar');
+        const btnRearme = document.getElementById('btnRearme');
+
+        if (btnAbrir) btnAbrir.addEventListener('click', () => this.confirmarAcao('abrir'));
+        if (btnFechar) btnFechar.addEventListener('click', () => this.confirmarAcao('fechar'));
+        if (btnRearme) btnRearme.addEventListener('click', () => this.confirmarAcao('rearme'))
+    },
+
+    confirmarAcao: function(acao) {
+        // Traduções para exibição
+        const traducoes = {
+            'abrir': { titulo: 'ABERTURA DO DISJUNTOR', mensagem: 'Isso desligará a energia!', cor: '#ff4444' },
+            'fechar': { titulo: 'FECHAMENTO DO DISJUNTOR', mensagem: 'Isso ligará a energia!', cor: '#44ff44' },
+            'rearme': { titulo: 'REARME DO DISJUNTOR', mensagem: 'Isso resetará o disjuntor!', cor: '#4444ff' }
+        };
+
+        // Cria o modal de confirmação
+        const modalId = 'modalConfirmacaoDisjuntor';
+        let modal = document.getElementById(modalId);
+
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = modalId;
+            modal.innerHTML = `
+                <div class="modal-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;z-index:1000;">
+                    <div class="modal-content" style="background:white;padding:30px;border-radius:8px;max-width:400px;width:100%;">
+                        <h3 style="color:${traducoes[acao].cor};margin-top:0;">CONFIRMAR ${traducoes[acao].titulo}</h3>
+                        <p>${traducoes[acao].mensagem}</p>
+                        <p>Tem certeza que deseja continuar?</p>
+                        <div style="display:flex;justify-content:space-between;margin-top:20px;">
+                            <button id="confirmarAcaoBtn" style="background:${traducoes[acao].cor};color:white;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">CONFIRMAR</button>
+                            <button id="cancelarAcaoBtn" style="background:#ccc;color:#333;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">CANCELAR</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        } else {
+            modal.querySelector('h3').textContent = `CONFIRMAR ${traducoes[acao].titulo}`;
+            modal.querySelector('h3').style.color = traducoes[acao].cor;
+            modal.querySelector('p').textContent = traducoes[acao].mensagem;
+            modal.querySelector('#confirmarAcaoBtn').style.background = traducoes[acao].cor;
+        }
+
+        // Mostra o modal
+        modal.style.display = 'block';
+
+        // Configura os eventos dos botões do modal
+        document.getElementById('confirmarAcaoBtn').onclick = () => {
+            this.executarAcaoDisjuntor(acao);
+            modal.style.display = 'none';
+        };
+
+        document.getElementById('cancelarAcaoBtn').onclick = () => {
+            modal.style.display = 'none';
+        };
+    },
+
+    executarAcaoDisjuntor: function(acao) {
+        // Desabilita os botões durante a operação
+        const botoes = document.querySelectorAll('.btn-menu button');
+        botoes.forEach(btn => btn.disabled = true);
+
+        console.log(`[SIMULAÇÃO] Enviando comando: ${acao}`)
+
+        // URL do seu endpoint Node-RED
+        const endpoint = 'http://100.68.206.104:1880/disjuntor';
+        // const url = window.location.href = 'https://g1.globo.com/';
+
+        
+        
+        // Dados da requisição
+        const dados = {
+            acao: acao,
+            timestamp: new Date().toISOString(),
+        };
+
+        // Opções da requisição
+        const opcoes = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dados)
+        };
+
+        // Envia a requisição
+        fetch(endpoint, opcoes)
+            .then(response => {
+                if (!response.ok) throw new Error('Erro na resposta');
+                return response.json();
+            })
+            .then(data => {
+                alert(`Comando de ${acao} executado com sucesso!`);
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert(`Falha ao executar ${acao}: ${error.message}`);
+            })
+            .finally(() => {
+                // Reabilita os botões
+                botoes.forEach(btn => btn.disabled = false);
+            });
     },
 
     async atualizarUnifilar() {
