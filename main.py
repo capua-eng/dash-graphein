@@ -97,7 +97,6 @@ def obter_potencia_com_meteo():
         SELECT
             DataErroIni,
             DataErroFim,
-            Operador,
             Equipamento,
             Status_,
             Erro,
@@ -237,8 +236,7 @@ def recAlarmes(alarme: ReconhecimentoAlarme):
         cursor = conn.cursor()
         query_update = """
         UPDATE AlarmesHistorico
-        SET Operador = 'Reconhecido',
-            Reconhecimento = 'Sim',
+        SET Reconhecimento = 'Sim',
             DataErroRec = GETDATE()
         WHERE Equipamento = ?
         AND BITS = ?
@@ -257,7 +255,7 @@ def recAlarmes(alarme: ReconhecimentoAlarme):
     except Exception as e:
         logging.exception("Erro inesperado ao processar alarme:")
         raise HTTPException(status_code=400, detail=f"Erro inesperado: {str(e)}")
-    
+
 
 # ROTA UNIFILAR
 @app.get("/api/unifilar")
@@ -326,9 +324,9 @@ def dados_unifilar_completo():
                     SELECT TOP 1 
                         INV{i}_AC_PAB_V AS Tensao,
                         (INV{i}_ADC_MPPT1 + INV{i}_ADC_MPPT2 + INV{i}_ADC_MPPT3 + 
-                         INV{i}_ADC_MPPT4 + INV{i}_ADC_MPPT5 + INV{i}_ADC_MPPT6 + 
-                         INV{i}_ADC_MPPT7 + INV{i}_ADC_MPPT8 + INV{i}_ADC_MPPT9 + 
-                         INV{i}_ADC_MPPT10 + INV{i}_ADC_MPPT11 + INV{i}_ADC_MPPT12) AS Corrente,
+                        INV{i}_ADC_MPPT4 + INV{i}_ADC_MPPT5 + INV{i}_ADC_MPPT6 + 
+                        INV{i}_ADC_MPPT7 + INV{i}_ADC_MPPT8 + INV{i}_ADC_MPPT9 + 
+                        INV{i}_ADC_MPPT10 + INV{i}_ADC_MPPT11 + INV{i}_ADC_MPPT12) AS Corrente,
                         INV{i}_PAC AS Potencia,
                         last_refresh_time
                     FROM {nome_tabela}
@@ -384,7 +382,6 @@ def dados_unifilar_completo():
             }
         }
 
-        # Seu código atual com a modificação
         query_alarmes = '''
         SELECT
             ah.Status_,
@@ -392,7 +389,7 @@ def dados_unifilar_completo():
             ah.BITS 
         FROM AlarmesHistorico ah
         WHERE ah.Status_ != 0
-        AND ah.Equipamento IN ('PEXTRON1', 'PEXTRON2', 'PEXTRON3')
+            AND ah.Equipamento IN ('PEXTRON1', 'PEXTRON2', 'PEXTRON3')
         ORDER BY DataErroIni DESC
         '''
         cursor.execute(query_alarmes)
@@ -417,37 +414,29 @@ def dados_unifilar_completo():
     except Exception as e:
         print(f"Erro geral: {str(e)}")
         return {"erro": "Ocorreu um erro ao processar os dados"}
-    
+
 
 # ROTA ARQUITETURA
 @app.get("/api/arquitetura")
 def dados_arquitetura():
-    resultado = {
-        "comunicacao": {}
-    }
-
     try:
         conn = banco.connection
         cursor = conn.cursor()
 
         query_arquitetura = '''
-            SELECT
+        SELECT
             Status_,
-            Equipamento,
             BITS
-        FROM AlarmesHistorico ah
+        FROM AlarmesHistorico
         WHERE Status_ != 0
-        AND Equipamento 'DIAG'
+            AND Equipamento = 'DIAG'
         ORDER BY DataErroIni DESC
         '''
         cursor.execute(query_arquitetura)
-        row = cursor.fetchone()
-        if row:
-            colunas = [col[0] for col in cursor.description]
-            resultado["comunicacao"] = {
-                col: (val.isoformat() if isinstance(val, (datetime.datetime, datetime.date)) else val)
-                for col, val in zip(colunas, row)
-            }
+        rows = cursor.fetchall()
+        dados = {bit: int(status) for status, bit in rows}
+
+        return {"status_diag": dados}
             
     finally:
         if 'cursor' in locals():

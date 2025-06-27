@@ -4,6 +4,7 @@ const currentPage = window.location.pathname;
 const isIndexPage = currentPage === "/";
 const isInversoresPage = currentPage === "/inversores";
 const isUnifilarPage = currentPage === "/unifilar";
+const isArquiteturaPage = currentPage === "/arquitetura";
 
 
 // ========== MÓDULO DE FUNÇÕES GERAIS (compartilhadas) ==========
@@ -294,9 +295,9 @@ const HomePageModule = {
         const alarm = currentAlarms.find(a => a.id === id);
         if(!alarm) return;
         if (alarm.originalData.Status_ === 1) {
-          alert("Este alarme está ativo e não pode ser reconhecido.");
-          contextMenu.style.display = "none";
-          return;
+            alert("Este alarme está ativo e não pode ser reconhecido.");
+            contextMenu.style.display = "none";
+            return;
         }
         if (alarm && await sendToAPI(alarm)) {
             alarm.originalData.Reconhecimento = 'Reconhecido';
@@ -356,8 +357,6 @@ const HomePageModule = {
     setupAlarmEvents();
     setInterval(fetchAndUpdateAll, 3000);
 }
-
-
 };
 
 // ========== MÓDULO DA PÁGINA DE INVERSORES ==========
@@ -777,6 +776,42 @@ const UnifilarPageModule = {
     }
 };
 
+// ========== MÓDULO DA PÁGINA DE ARQUITETURA ==========
+const ArquiteturaPageModule = {
+    init: function() {
+        if (!isArquiteturaPage) return;
+        this.setupTopologyData();
+    },
+
+    setupTopologyData: function() {
+        async function fetchAndUpdateTopology() {
+            try {
+                const response = await fetch('/api/arquitetura');
+                if (!response.ok) throw new Error('Erro na API');
+                
+                const { status_diag } = await response.json();
+                
+                // atualiza comunicação DIAG
+                if (status_diag) {
+                    Object.entries(status_diag).forEach(([bit, status]) => {
+                        const element = document.querySelector(`[data-bit="${bit}"]`);
+                        if (element) {
+                            element.textContent = status === 1 ? "🔴" : "🟢";
+                            element.classList.toggle('status-falha', status === 1);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao atualizar topologia:', error);
+            }
+        }
+
+        // inicializa a atualização
+        fetchAndUpdateTopology();
+        setInterval(fetchAndUpdateTopology, 3000);  // atualiza a cada 3 segundos
+    }
+};
+
 
 // ========== INICIALIZAÇÃO DOS MÓDULOS ==========
 // document.addEventListener('DOMContentLoaded', function() {
@@ -789,3 +824,4 @@ GeneralModule.init();
 HomePageModule.init();
 InvertersPageModule.init();
 UnifilarPageModule.init();
+ArquiteturaPageModule.init();
