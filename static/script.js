@@ -565,16 +565,16 @@ const UnifilarPageModule = {
         const btnFechar = document.getElementById('btnFechar');
         const btnRearme = document.getElementById('btnRearme');
 
-        if (btnAbrir) btnAbrir.addEventListener('click', () => this.confirmarAcao('abrir'));
-        if (btnFechar) btnFechar.addEventListener('click', () => this.confirmarAcao('fechar'));
+        if (btnAbrir) btnAbrir.addEventListener('click', () => this.confirmarAcao('abre'));
+        if (btnFechar) btnFechar.addEventListener('click', () => this.confirmarAcao('fecha'));
         if (btnRearme) btnRearme.addEventListener('click', () => this.confirmarAcao('rearme'))
     },
 
     confirmarAcao: function(acao) {
         // Traduções para exibição
         const traducoes = {
-            'abrir': { titulo: 'ABERTURA DO DISJUNTOR', mensagem: 'Isso desligará a energia!', cor: '#ff4444' },
-            'fechar': { titulo: 'FECHAMENTO DO DISJUNTOR', mensagem: 'Isso ligará a energia!', cor: '#44ff44' },
+            'abre': { titulo: 'ABERTURA DO DISJUNTOR', mensagem: 'Isso desligará a energia!', cor: '#ff4444' },
+            'fecha': { titulo: 'FECHAMENTO DO DISJUNTOR', mensagem: 'Isso ligará a energia!', cor: '#44ff44' },
             'rearme': { titulo: 'REARME DO DISJUNTOR', mensagem: 'Isso resetará o disjuntor!', cor: '#4444ff' }
         };
 
@@ -628,38 +628,24 @@ const UnifilarPageModule = {
         console.log(`[SIMULAÇÃO] Enviando comando: ${acao}`)
 
         // URL do seu endpoint Node-RED
-        const endpoint = 'http://100.68.206.104:1880/disjuntor';
+        // const endpoint = `http://100.68.206.104:1880/disjuntor/?acao=${acao}`;
+        const endpoint = `http://192.168.0.252:1880/disjuntor/?acao=${acao}`;
         // const url = window.location.href = 'https://g1.globo.com/';
-
-        
-        
-        // Dados da requisição
-        const dados = {
-            acao: acao,
-            timestamp: new Date().toISOString(),
-        };
-
-        // Opções da requisição
-        const opcoes = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(dados)
-        };
+        const controller = new AbortController();
+        setTimeout(() => controller.abort(), 10000);
 
         // Envia a requisição
-        fetch(endpoint, opcoes)
+        fetch(endpoint, {signal: controller.signal })
+        fetch(endpoint)
             .then(response => {
                 if (!response.ok) throw new Error('Erro na resposta');
-                return response.json();
+                return response.text();
             })
-            .then(data => {
-                alert(`Comando de ${acao} executado com sucesso!`);
+            .then(result => {
+                alert(`Comando de ${acao} executado com sucesso! ${result}`);
             })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert(`Falha ao executar ${acao}: ${error.message}`);
+            .catch(e => {
+                alert(e.name === 'Abort' ? `Falha ao executar ${acao}` : `Erro: ${e}`)
             })
             .finally(() => {
                 // Reabilita os botões
@@ -686,9 +672,9 @@ const UnifilarPageModule = {
                 document.getElementById(`mge${i}-fab`).textContent = `Tensão entre fases AB - ${fases.FAB.toFixed(1)} V`;
                 document.getElementById(`mge${i}-fbc`).textContent = `Tensão entre fases BC - ${fases.FBC.toFixed(1)} V`;
                 document.getElementById(`mge${i}-fca`).textContent = `Tensão entre fases CA - ${fases.FCA.toFixed(1)} V`;
-                document.getElementById(`mge${i}-fa`).textContent = `Tensão Fase-Neutro AN - ${fasesInd.FA.toFixed(1)} V`;
-                document.getElementById(`mge${i}-fb`).textContent = `Tensão Fase-Neutro BN - ${fasesInd.FB.toFixed(1)} V`;
-                document.getElementById(`mge${i}-fc`).textContent = `Tensão Fase-Neutro CN - ${fasesInd.FC.toFixed(1)} V`;
+                document.getElementById(`mge${i}-fa`).textContent = `Tensão Fase-Neutro AN - ${fasesInd.FA.toFixed(1)} kV`;
+                document.getElementById(`mge${i}-fb`).textContent = `Tensão Fase-Neutro BN - ${fasesInd.FB.toFixed(1)} kV`;
+                document.getElementById(`mge${i}-fc`).textContent = `Tensão Fase-Neutro CN - ${fasesInd.FC.toFixed(1)} kV`;
 
                 document.getElementById(`mge${i}-ativa`).textContent = `Potência - ${pot.Ativa.toFixed(1)} kW`;
                 // document.getElementById(`mge${i}-reativa`).textContent = `${pot.Reativa.toFixed(1)} kVAR`;
