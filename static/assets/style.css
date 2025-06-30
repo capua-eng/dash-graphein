@@ -525,6 +525,7 @@ nav button {
   display: flex;
   justify-content: center;
   padding-top: 15px;
+  /* margin-top: 1px; */
   border-top: 2px solid #ca1205; /* Linha divisória */
 }
 /* Cada inversor individual */
@@ -615,6 +616,8 @@ nav button {
 .energ {
   display: flex;
   /* gap: 100px; Espaço entre ícones */
+  padding-top: 1px;
+  margin-top: 1px;
   transform: translateY(49%);
   border-top: 2px solid #ca1205;
   /* width: 400px; */

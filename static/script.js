@@ -628,7 +628,6 @@ const UnifilarPageModule = {
         console.log(`[SIMULAÇÃO] Enviando comando: ${acao}`)
 
         // URL do seu endpoint Node-RED
-        // const endpoint = `http://100.68.206.104:1880/disjuntor/?acao=${acao}`;
         const endpoint = `http://192.168.0.252:1880/disjuntor/?acao=${acao}`;
         // const url = window.location.href = 'https://g1.globo.com/';
         const controller = new AbortController();
