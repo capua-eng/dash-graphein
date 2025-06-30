@@ -642,7 +642,7 @@ nav button {
 .energ {
   position: relative;
   display: flex;
-  transform: translateY(49%);
+  transform: translateY(49.2%);
   border-top: 2px solid #ca1205;
   /* width: 400px; */
   padding-left: 40px;

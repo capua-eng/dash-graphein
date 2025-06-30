@@ -17,7 +17,7 @@ const relatorioMap = {
 };
 
 const GeneralModule = {
-    init: function() {
+    init: function () {
         this.setupDropdowns();
         this.setupModals();
         this.setupDatePickers();
@@ -26,34 +26,34 @@ const GeneralModule = {
     },
 
     // RELATÓRIOS
-    setupDropdowns: function() {
+    setupDropdowns: function () {
         const dropdownBtn = document.getElementById('relatorioDropdown');
         const dropdown = dropdownBtn?.closest('.dropdown');
 
         if (dropdownBtn && dropdown) {
-            dropdownBtn.addEventListener('click', function(e) {
+            dropdownBtn.addEventListener('click', function (e) {
                 e.stopPropagation();
                 dropdown.classList.toggle('active');
             });
 
-            document.addEventListener('click', function() {
+            document.addEventListener('click', function () {
                 dropdown.classList.remove('active');
             });
 
-            dropdown.querySelector('.dropdown-content')?.addEventListener('click', function(e) {
+            dropdown.querySelector('.dropdown-content')?.addEventListener('click', function (e) {
                 e.stopPropagation();
             });
         }
     },
 
-    setupModals: function() {
+    setupModals: function () {
         const modal = document.getElementById('modalRelatorio');
         const closeModal = document.querySelector('.modal .close');
         const relatorioLinks = document.querySelectorAll('.dropdown-content a');
 
         if (modal && closeModal) {
             relatorioLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
+                link.addEventListener('click', function (e) {
                     e.preventDefault();
                     const nome = link.textContent.trim();
                     relatorioSelecionado = relatorioMap[nome]; // pega o tipo do relatório específico pelo nome do
@@ -67,11 +67,11 @@ const GeneralModule = {
                 });
             });
 
-            closeModal.addEventListener('click', function() {
+            closeModal.addEventListener('click', function () {
                 modal.style.display = 'none';
             });
 
-            window.addEventListener('click', function(e) {
+            window.addEventListener('click', function (e) {
                 if (e.target == modal) {
                     modal.style.display = 'none';
                 }
@@ -79,7 +79,7 @@ const GeneralModule = {
         }
     },
 
-    setupDatePickers: function() {
+    setupDatePickers: function () {
         document.querySelectorAll('label[for="dataInicio"], label[for="dataFim"]').forEach(label => {
             label.addEventListener('click', () => {
                 const input = document.getElementById(label.getAttribute('for'));
@@ -88,11 +88,11 @@ const GeneralModule = {
         });
     },
 
-    setupReportGeneration: function() {
+    setupReportGeneration: function () {
         const gerarRelatorioBtn = document.getElementById('gerarRelatorioBtn');
 
         if (gerarRelatorioBtn) {
-            gerarRelatorioBtn.addEventListener('click', function() {
+            gerarRelatorioBtn.addEventListener('click', function () {
                 const spinner = document.getElementById('loadingSpinner');
                 if (spinner) spinner.style.display = 'block';
 
@@ -136,227 +136,227 @@ const GeneralModule = {
 
 // ========== MÓDULO DA TELA INICIAL ==========
 const HomePageModule = {
-    init: function() {
+    init: function () {
         if (!isIndexPage) return;
-        
+
         this.setupHomeData();
     },
 
     setupHomeData: function () {
-    let currentAlarms = [];
-    const alarmsList = document.getElementById('alarmsList');
-    const contextMenu = document.getElementById('contextMenu');
-    let selectedAlarm = null;
+        let currentAlarms = [];
+        const alarmsList = document.getElementById('alarmsList');
+        const contextMenu = document.getElementById('contextMenu');
+        let selectedAlarm = null;
 
-    async function fetchAndUpdateAll() {
-        try {
-            const response = await fetch('/api/tela_inicial');
-            if (!response.ok) {
-                alert("Falha ao conectar à API.");
-                throw new Error('Erro na API');
-            }
-            const data = await response.json();
-
-
-            // === Atualizar inversores ===
-            document.querySelectorAll('.inversor-item').forEach((item, index) => {
-                const num = index + 1;
-                const invKey = `Inversor${num}`;
-                const inv = data[invKey];
-                const arrow = item.querySelector('.arrow-icon');
-                const label = item.querySelector('.inversor-label');
-                const pac = item.querySelector('.value-pac');
-                const pdc = item.querySelector('.value-pdc');
-                const temp = item.querySelector('.temp-int');
-
-                if (inv) {
-                    const status = inv._Status ?? -1;
-                    arrow.className = 'arrow-icon';
-                    arrow.classList.add(`status-${status}`);
-                    label.textContent = `Inversor ${num}`;
-                    pac.textContent = `${inv[`INV${num}_PAC`]?.toFixed(1) ?? '0.00'} kW`;
-                    pdc.textContent = `${inv[`INV${num}_PDC`]?.toFixed(1) ?? '0.00'} kW`;
-                    temp.textContent = `${inv[`INV${num}_TI`]?.toFixed(1) ?? '0.0'}°C`;
-                } else {
-                    arrow.className = 'arrow-icon status--1';
+        async function fetchAndUpdateAll() {
+            try {
+                const response = await fetch('/api/tela_inicial');
+                if (!response.ok) {
+                    alert("Falha ao conectar à API.");
+                    throw new Error('Erro na API');
                 }
-            });
+                const data = await response.json();
 
-            // === Atualizar valores pac e paac ===
-            const pac = data.central_meteorologica?.pac_Instantanea;
-            const paac = data.central_meteorologica?.paac_Instantanea;
 
-            const pacDiv = document.querySelector('.pac-usina');
-            if (pacDiv && pac !== undefined) {
-                pacDiv.textContent = `${pac.toFixed(1)} kW`;
+                // === Atualizar inversores ===
+                document.querySelectorAll('.inversor-item').forEach((item, index) => {
+                    const num = index + 1;
+                    const invKey = `Inversor${num}`;
+                    const inv = data[invKey];
+                    const arrow = item.querySelector('.arrow-icon');
+                    const label = item.querySelector('.inversor-label');
+                    const pac = item.querySelector('.value-pac');
+                    const pdc = item.querySelector('.value-pdc');
+                    const temp = item.querySelector('.temp-int');
+
+                    if (inv) {
+                        const status = inv._Status ?? -1;
+                        arrow.className = 'arrow-icon';
+                        arrow.classList.add(`status-${status}`);
+                        label.textContent = `Inversor ${num}`;
+                        pac.textContent = `${inv[`INV${num}_PAC`]?.toFixed(1) ?? '0.00'} kW`;
+                        pdc.textContent = `${inv[`INV${num}_PDC`]?.toFixed(1) ?? '0.00'} kW`;
+                        temp.textContent = `${inv[`INV${num}_TI`]?.toFixed(1) ?? '0.0'}°C`;
+                    } else {
+                        arrow.className = 'arrow-icon status--1';
+                    }
+                });
+
+                // === Atualizar valores pac e paac ===
+                const pac = data.central_meteorologica?.pac_Instantanea;
+                const paac = data.central_meteorologica?.paac_Instantanea;
+
+                const pacDiv = document.querySelector('.pac-usina');
+                if (pacDiv && pac !== undefined) {
+                    pacDiv.textContent = `${pac.toFixed(1)} kW`;
+                }
+
+                const paacDiv = document.querySelector('.paac-usina');
+                if (paacDiv && paac !== undefined) {
+                    paacDiv.textContent = `${paac.toFixed(1)} kW`;
+                }
+
+
+                // === Atualizar meteorologia ===
+                const met = data.central_meteorologica;
+                if (met) {
+                    document.getElementById('velocidade-vento').textContent = `${met.VelocidadeVento.toFixed(1)} m/s`;
+                    document.getElementById('direcao-vento').textContent = `${met.DirecaoVento.toFixed(1)}°`;
+                    document.getElementById('irradiancia-inclinada').textContent = `${met.IrrSInclin.toFixed(1)} W/m²`;
+                    document.getElementById('irradiancia-horizontal').textContent = `${met.IrrSHoriz.toFixed(1)} W/m²`;
+                    document.getElementById('umidade-ar').textContent = `${met.UmidRelAr.toFixed(1)}%`;
+                    document.getElementById('temperatura-ambiente').textContent = `${met.TempAmb.toFixed(1)} °C`;
+                    document.getElementById('temperatura-placa').textContent = `${met.TempPlac.toFixed(1)} °C`;
+                    document.getElementById('energia-diaria-usina').textContent = `${met.EnergiaDiariaUsina.toFixed(1)} kWh`;
+                    document.getElementById('energia-mensal-usina').textContent = `${met.EnergiaMensalUsina.toFixed(1)} kWh`;
+                    document.getElementById('energia-instantanea-usina').textContent = `${met.pac_Instantanea.toFixed(1)} kW`;
+                    document.getElementById('energia-consumida').textContent = `${met.Consumida.toFixed(1)} kWh`;
+                    document.getElementById('energia-fornecida').textContent = `${met.Fornecida.toFixed(1)} kWh`;
+
+                }
+
+                // === Atualizar alarmes ===
+                currentAlarms = (data.alarmes_erros || []).map((a, i) => ({
+                    id: i + 1,
+                    datetimeIn: new Date(a.DataErroIni).toLocaleString('pt-BR'),
+                    datetimeOut: a.DataErroFim ? new Date(a.DataErroFim).toLocaleString('pt-BR').replace('T', ' ').split('.')[0] : 'Ativo',
+                    equipment: a.Equipamento,
+                    message: `${a.Equipamento}: ${a.Erro}`,
+                    isActive: a.DataErroFim === null,
+                    bits: a.BITS,
+                    originalData: a
+                }));
+
+                renderAlarms();
+
+            } catch (err) {
+                console.error('Erro ao buscar/atualizar dados:', err);
             }
-
-            const paacDiv = document.querySelector('.paac-usina');
-            if (paacDiv && paac !== undefined) {
-                paacDiv.textContent = `${paac.toFixed(1)} kW`;
-            }
-            
-
-            // === Atualizar meteorologia ===
-            const met = data.central_meteorologica;
-            if (met) {
-                document.getElementById('velocidade-vento').textContent = `${met.VelocidadeVento.toFixed(1)} m/s`;
-                document.getElementById('direcao-vento').textContent = `${met.DirecaoVento.toFixed(1)}°`;
-                document.getElementById('irradiancia-inclinada').textContent = `${met.IrrSInclin.toFixed(1)} W/m²`;
-                document.getElementById('irradiancia-horizontal').textContent = `${met.IrrSHoriz.toFixed(1)} W/m²`;
-                document.getElementById('umidade-ar').textContent = `${met.UmidRelAr.toFixed(1)}%`;
-                document.getElementById('temperatura-ambiente').textContent = `${met.TempAmb.toFixed(1)} °C`;
-                document.getElementById('temperatura-placa').textContent = `${met.TempPlac.toFixed(1)} °C`;
-                document.getElementById('energia-diaria-usina').textContent = `${met.EnergiaDiariaUsina.toFixed(1)} kWh`;
-                document.getElementById('energia-mensal-usina').textContent = `${met.EnergiaMensalUsina.toFixed(1)} kWh`;
-                document.getElementById('energia-instantanea-usina').textContent = `${met.pac_Instantanea.toFixed(1)} kW`;
-                document.getElementById('energia-consumida').textContent = `${met.Consumida.toFixed(1)} kWh`;
-                document.getElementById('energia-fornecida').textContent = `${met.Fornecida.toFixed(1)} kWh`;
-                
-            }
-
-            // === Atualizar alarmes ===
-            currentAlarms = (data.alarmes_erros || []).map((a, i) => ({
-                id: i + 1,
-                datetimeIn: new Date(a.DataErroIni).toLocaleString('pt-BR'),
-                datetimeOut: a.DataErroFim ? new Date(a.DataErroFim).toLocaleString('pt-BR').replace('T', ' ').split('.')[0] : 'Ativo',
-                equipment: a.Equipamento,
-                message: `${a.Equipamento}: ${a.Erro}`,
-                isActive: a.DataErroFim === null,
-                bits: a.BITS,
-                originalData: a
-            }));
-
-            renderAlarms();
-
-        } catch (err) {
-            console.error('Erro ao buscar/atualizar dados:', err);
         }
-    }
 
-    function renderAlarms() {
-        if (!alarmsList) return;
-        alarmsList.innerHTML = '';
-        currentAlarms.forEach(alarm => {
-            if (!alarm.isActive && alarm.originalData.Reconhecimento === 'Reconhecido') return;
-            // if (alarm.originalData.Status_ === 1) return;
-            const el = document.createElement('div');
-            el.className = `alarm-item ${alarm.isActive ? 'active' : 'resolved'}`;
-            el.dataset.id = alarm.id;
-            el.innerHTML = `
+        function renderAlarms() {
+            if (!alarmsList) return;
+            alarmsList.innerHTML = '';
+            currentAlarms.forEach(alarm => {
+                if (!alarm.isActive && alarm.originalData.Reconhecimento === 'Reconhecido') return;
+                // if (alarm.originalData.Status_ === 1) return;
+                const el = document.createElement('div');
+                el.className = `alarm-item ${alarm.isActive ? 'active' : 'resolved'}`;
+                el.dataset.id = alarm.id;
+                el.innerHTML = `
                 <div class="datetime">${alarm.datetimeIn}</div>
                 <div class="datetimeout">${alarm.isActive ? '' : alarm.datetimeOut}</div>
                 <div class="tag"></div>
                 <div class="message">${alarm.message}</div>
             `;
-            alarmsList.appendChild(el);
-        });
-    }
+                alarmsList.appendChild(el);
+            });
+        }
 
-    function setupAlarmEvents() {
-        alarmsList.addEventListener('contextmenu', function (e) {
-            if (e.target.closest('.alarm-item')) {
-                e.preventDefault();
-                selectedAlarm = e.target.closest('.alarm-item');
-                showContextMenu(e.clientX, e.clientY);
+        function setupAlarmEvents() {
+            alarmsList.addEventListener('contextmenu', function (e) {
+                if (e.target.closest('.alarm-item')) {
+                    e.preventDefault();
+                    selectedAlarm = e.target.closest('.alarm-item');
+                    showContextMenu(e.clientX, e.clientY);
+                }
+            });
+
+            document.addEventListener('click', () => contextMenu.style.display = 'none');
+
+            document.getElementById('recognizeThisError').addEventListener('click', recognizeSelected);
+            document.getElementById('recognizeAllErrors').addEventListener('click', recognizeAll);
+        }
+
+        function showContextMenu(x, y) {
+            const isActive = selectedAlarm.classList.contains('active');
+            const recognizeBtn = document.getElementById('recognizeThisError');
+
+            recognizeBtn.disabled = isActive;
+            contextMenu.style.display = 'block';
+
+            // Ajustar posição para não sair da tela
+            const menuWidth = contextMenu.offsetWidth;
+            const menuHeight = contextMenu.offsetHeight;
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            // Se o menu sair à direita, ajusta para a esquerda
+            const left = x + menuWidth > windowWidth ? windowWidth - menuWidth - 5 : x;
+            // Se o menu sair embaixo, ajusta para cima
+            const top = y + menuHeight > windowHeight ? windowHeight - menuHeight - 5 : y;
+
+            contextMenu.style.left = `${left}px`;
+            contextMenu.style.top = `${top}px`;
+        }
+
+        async function recognizeSelected() {
+            const id = parseInt(selectedAlarm.dataset.id);
+            const alarm = currentAlarms.find(a => a.id === id);
+            if (!alarm) return;
+            if (alarm.originalData.Status_ === 1) {
+                alert("Este alarme está ativo e não pode ser reconhecido.");
+                contextMenu.style.display = "none";
+                return;
             }
-        });
-
-        document.addEventListener('click', () => contextMenu.style.display = 'none');
-
-        document.getElementById('recognizeThisError').addEventListener('click', recognizeSelected);
-        document.getElementById('recognizeAllErrors').addEventListener('click', recognizeAll);
-    }
-
-    function showContextMenu(x, y) {
-        const isActive = selectedAlarm.classList.contains('active');
-        const recognizeBtn = document.getElementById('recognizeThisError');
-        
-        recognizeBtn.disabled = isActive;
-        contextMenu.style.display = 'block';
-        
-        // Ajustar posição para não sair da tela
-        const menuWidth = contextMenu.offsetWidth;
-        const menuHeight = contextMenu.offsetHeight;
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-        
-        // Se o menu sair à direita, ajusta para a esquerda
-        const left = x + menuWidth > windowWidth ? windowWidth - menuWidth - 5 : x;
-        // Se o menu sair embaixo, ajusta para cima
-        const top = y + menuHeight > windowHeight ? windowHeight - menuHeight - 5 : y;
-        
-        contextMenu.style.left = `${left}px`;
-        contextMenu.style.top = `${top}px`;
-    }
-
-    async function recognizeSelected() {
-        const id = parseInt(selectedAlarm.dataset.id);
-        const alarm = currentAlarms.find(a => a.id === id);
-        if(!alarm) return;
-        if (alarm.originalData.Status_ === 1) {
-            alert("Este alarme está ativo e não pode ser reconhecido.");
-            contextMenu.style.display = "none";
-            return;
-        }
-        if (alarm && await sendToAPI(alarm)) {
-            alarm.originalData.Reconhecimento = 'Reconhecido';
-            renderAlarms();
-        }
-        contextMenu.style.display = 'none';
-    }
-
-    async function recognizeAll() {
-        const resolved = currentAlarms.filter(a => !a.isActive && !a.originalData.Reconhecimento && a.originalData.Status_ !== 1);
-        if (resolved.length === 0) {
-            const temAtivos = currentAlarms.some(a => a.originalData.Status_ === 1 && !a.originalData.Reconhecimento);
-            if (temAtivos) {
-                alert("Existem alarmes ativos que não podem ser reconhecidos.");
-            } else {
-                alert("Todos os alarmes já foram reconhecidos ou não há larmes resolvidos.");
+            if (alarm && await sendToAPI(alarm)) {
+                alarm.originalData.Reconhecimento = 'Reconhecido';
+                renderAlarms();
             }
             contextMenu.style.display = 'none';
-            return;
         }
-        try {
-            for (const a of resolved) {
-                await sendToAPI(a);
-                a.originalData.Reconhecimento = 'Reconhecido';
+
+        async function recognizeAll() {
+            const resolved = currentAlarms.filter(a => !a.isActive && !a.originalData.Reconhecimento && a.originalData.Status_ !== 1);
+            if (resolved.length === 0) {
+                const temAtivos = currentAlarms.some(a => a.originalData.Status_ === 1 && !a.originalData.Reconhecimento);
+                if (temAtivos) {
+                    alert("Existem alarmes ativos que não podem ser reconhecidos.");
+                } else {
+                    alert("Todos os alarmes já foram reconhecidos ou não há larmes resolvidos.");
+                }
+                contextMenu.style.display = 'none';
+                return;
             }
+            try {
+                for (const a of resolved) {
+                    await sendToAPI(a);
+                    a.originalData.Reconhecimento = 'Reconhecido';
+                }
+                renderAlarms();
+                alert(`${resolved.length} alarmes reconhecidos com sucesso!`);
+            } catch (error) {
+                console.error("Erro ao reconhecer alarmes:", error);
+                alert("Ocorreu um erro ao reconhecer os alarmes.")
+            }
+            // for (const a of resolved) await sendToAPI(a);
             renderAlarms();
-            alert(`${resolved.length} alarmes reconhecidos com sucesso!`);
-        } catch (error) {
-            console.error("Erro ao reconhecer alarmes:", error);
-            alert("Ocorreu um erro ao reconhecer os alarmes.")
+            contextMenu.style.display = 'none';
         }
-        // for (const a of resolved) await sendToAPI(a);
-        renderAlarms();
-        contextMenu.style.display = 'none';
-    }
 
-    async function sendToAPI(alarm) {
-        try {
-            const payload = {
-                BITS: Number(alarm.bits),
-                Equipamento: alarm.equipment,
-                DataErroIni: new Date(alarm.originalData.DataErroIni)
-            };
-            const resp = await fetch('/api/recAlarmes', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            return resp.ok;
-        } catch (e) {
-            console.error('Erro ao enviar reconhecimento:', e);
-            return false;
+        async function sendToAPI(alarm) {
+            try {
+                const payload = {
+                    BITS: Number(alarm.bits),
+                    Equipamento: alarm.equipment,
+                    DataErroIni: new Date(alarm.originalData.DataErroIni)
+                };
+                const resp = await fetch('/api/recAlarmes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                return resp.ok;
+            } catch (e) {
+                console.error('Erro ao enviar reconhecimento:', e);
+                return false;
+            }
         }
-    }
 
-    fetchAndUpdateAll();
-    setupAlarmEvents();
-    setInterval(fetchAndUpdateAll, 3000);
-}
+        fetchAndUpdateAll();
+        setupAlarmEvents();
+        setInterval(fetchAndUpdateAll, 3000);
+    }
 };
 
 // ========== MÓDULO DA PÁGINA DE INVERSORES ==========
@@ -425,8 +425,8 @@ const InvertersPageModule = {
                     const span = document.getElementById(`inv${i}-${sufixo}`);
                     if (span) {
                         const unidade = sufixo.includes('p') ? 'kW' :
-                                        sufixo.includes('u') ? 'V' :
-                                        sufixo.includes('a') ? 'A' : 'kWh';
+                            sufixo.includes('u') ? 'V' :
+                                sufixo.includes('a') ? 'A' : 'kWh';
                         span.textContent = `${valor?.toFixed(2) || '0.00'} ${unidade}`;
                     }
                 }
@@ -447,8 +447,8 @@ const InvertersPageModule = {
                     statusElement.textContent = statusTexto;
                     statusElement.style.color =
                         statusAtual === 1 ? '#2ecc71' :
-                        statusAtual === 0 ? '#f39c12' :
-                        '#e74c3c';
+                            statusAtual === 0 ? '#f39c12' :
+                                '#e74c3c';
 
                     this.statusAnterior[i] = statusAtual;
                 }
@@ -560,7 +560,7 @@ const UnifilarPageModule = {
         this.setupDisjuntorButtons();
     },
 
-    setupDisjuntorButtons: function() {
+    setupDisjuntorButtons: function () {
         const btnAbrir = document.getElementById('btnAbrir');
         const btnFechar = document.getElementById('btnFechar');
         const btnRearme = document.getElementById('btnRearme');
@@ -570,11 +570,11 @@ const UnifilarPageModule = {
         if (btnRearme) btnRearme.addEventListener('click', () => this.confirmarAcao('rearme'))
     },
 
-    confirmarAcao: function(acao) {
+    confirmarAcao: function (acao) {
         // Traduções para exibição
         const traducoes = {
-            'abre': { titulo: 'ABERTURA DO DISJUNTOR', mensagem: 'Isso desligará a energia!', cor: '#ff4444' },
-            'fecha': { titulo: 'FECHAMENTO DO DISJUNTOR', mensagem: 'Isso ligará a energia!', cor: '#44ff44' },
+            'abre': { titulo: 'ABERTURA DO DISJUNTOR', mensagem: 'Isso desligará a energia!', cor: '#ff0000' },
+            'fecha': { titulo: 'FECHAMENTO DO DISJUNTOR', mensagem: 'Isso ligará a energia!', cor: '#ff0000' },
             'rearme': { titulo: 'REARME DO DISJUNTOR', mensagem: 'Isso resetará o disjuntor!', cor: '#4444ff' }
         };
 
@@ -592,8 +592,8 @@ const UnifilarPageModule = {
                         <p>${traducoes[acao].mensagem}</p>
                         <p>Tem certeza que deseja continuar?</p>
                         <div style="display:flex;justify-content:space-between;margin-top:20px;">
-                            <button id="confirmarAcaoBtn" style="background:${traducoes[acao].cor};color:white;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">CONFIRMAR</button>
                             <button id="cancelarAcaoBtn" style="background:#ccc;color:#333;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">CANCELAR</button>
+                            <button id="confirmarAcaoBtn" style="background:${traducoes[acao].cor};color:white;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">CONFIRMAR</button>
                         </div>
                     </div>
                 </div>
@@ -620,7 +620,7 @@ const UnifilarPageModule = {
         };
     },
 
-    executarAcaoDisjuntor: function(acao) {
+    executarAcaoDisjuntor: function (acao) {
         // Desabilita os botões durante a operação
         const botoes = document.querySelectorAll('.btn-menu button');
         botoes.forEach(btn => btn.disabled = true);
@@ -634,7 +634,7 @@ const UnifilarPageModule = {
         setTimeout(() => controller.abort(), 10000);
 
         // Envia a requisição
-        fetch(endpoint, {signal: controller.signal })
+        fetch(endpoint, { signal: controller.signal })
         fetch(endpoint)
             .then(response => {
                 if (!response.ok) throw new Error('Erro na resposta');
@@ -668,14 +668,24 @@ const UnifilarPageModule = {
                 const fasesInd = mge.Tensoes.De_fase;
                 const pot = mge.Potencias;
 
-                document.getElementById(`mge${i}-fab`).textContent = `Tensão entre fases AB - ${fases.FAB.toFixed(1)} V`;
-                document.getElementById(`mge${i}-fbc`).textContent = `Tensão entre fases BC - ${fases.FBC.toFixed(1)} V`;
-                document.getElementById(`mge${i}-fca`).textContent = `Tensão entre fases CA - ${fases.FCA.toFixed(1)} V`;
-                document.getElementById(`mge${i}-fa`).textContent = `Tensão Fase-Neutro AN - ${fasesInd.FA.toFixed(1)} kV`;
-                document.getElementById(`mge${i}-fb`).textContent = `Tensão Fase-Neutro BN - ${fasesInd.FB.toFixed(1)} kV`;
-                document.getElementById(`mge${i}-fc`).textContent = `Tensão Fase-Neutro CN - ${fasesInd.FC.toFixed(1)} kV`;
+                // dados dos cards MGE unifilar →
+                document.getElementById(`mge${i}-fab-valor`).textContent = `${fases.FAB.toFixed(1)} kV`;
+                document.getElementById(`mge${i}-fbc-valor`).textContent = `${fases.FBC.toFixed(1)} kV`;
+                document.getElementById(`mge${i}-fca-valor`).textContent = `${fases.FCA.toFixed(1)} kV`;
+                document.getElementById(`mge${i}-fa-valor`).textContent = `${fasesInd.FA.toFixed(1)} kV`;
+                document.getElementById(`mge${i}-fb-valor`).textContent = `${fasesInd.FB.toFixed(1)} kV`;
+                document.getElementById(`mge${i}-fc-valor`).textContent = `${fasesInd.FC.toFixed(1)} kV`;
+                document.getElementById(`mge${i}-ativa-valor`).textContent = `${pot.Ativa.toFixed(1)} kW`;
 
-                document.getElementById(`mge${i}-ativa`).textContent = `Potência - ${pot.Ativa.toFixed(1)} kW`;
+
+                // document.getElementById(`mge${i}-fab`).textContent = `Tensão entre fases AB - ${fases.FAB.toFixed(1)} V`;
+                // document.getElementById(`mge${i}-fbc`).textContent = `Tensão entre fases BC - ${fases.FBC.toFixed(1)} V`;
+                // document.getElementById(`mge${i}-fca`).textContent = `Tensão entre fases CA - ${fases.FCA.toFixed(1)} V`;
+                // document.getElementById(`mge${i}-fa`).textContent = `Tensão Fase-Neutro AN - ${fasesInd.FA.toFixed(1)} kV`;
+                // document.getElementById(`mge${i}-fb`).textContent = `Tensão Fase-Neutro BN - ${fasesInd.FB.toFixed(1)} kV`;
+                // document.getElementById(`mge${i}-fc`).textContent = `Tensão Fase-Neutro CN - ${fasesInd.FC.toFixed(1)} kV`;
+
+                // document.getElementById(`mge${i}-ativa`).textContent = `Potência - ${pot.Ativa.toFixed(1)} kW`;
                 // document.getElementById(`mge${i}-reativa`).textContent = `${pot.Reativa.toFixed(1)} kVAR`;
             }
 
@@ -694,7 +704,7 @@ const UnifilarPageModule = {
 
             for (let i = 1; i <= 9; i++) {
                 const inv = inversores[`Inversor${i}`];
-                
+
                 if (modal1Hotspots[index1]) modal1Hotspots[index1].textContent = formatarValor(inv?.Tensao, "V");
                 if (modal1Hotspots[index1 + 1]) modal1Hotspots[index1 + 1].textContent = formatarValor(inv?.Corrente, "A");
                 if (modal1Hotspots[index1 + 2]) modal1Hotspots[index1 + 2].textContent = formatarValor(inv?.Potencia, "kW");
@@ -737,9 +747,9 @@ const UnifilarPageModule = {
                 tripElements.forEach(el => {
                     const tripText = el.textContent.split(' ')[1]; // Pega o número/texto após o emoji
                     const tripValue = el.getAttribute('data-trip');
-                    
+
                     // Verifica se é um trip especial (GS/Q) ou numérico
-                    if ((trip in tripTextMap && tripTextMap[trip] === tripValue) || 
+                    if ((trip in tripTextMap && tripTextMap[trip] === tripValue) ||
                         (trip.toString() === tripValue)) {
                         el.innerHTML = '🔴 ' + tripText;
                     }
@@ -754,7 +764,7 @@ const UnifilarPageModule = {
                     el.textContent = `Última atualização: ${formattedDate}`;
                 });
             }
-            
+
         } catch (error) {
             console.error("Erro ao atualizar unifilar:", error);
         }
@@ -763,19 +773,19 @@ const UnifilarPageModule = {
 
 // ========== MÓDULO DA PÁGINA DE ARQUITETURA ==========
 const ArquiteturaPageModule = {
-    init: function() {
+    init: function () {
         if (!isArquiteturaPage) return;
         this.setupTopologyData();
     },
 
-    setupTopologyData: function() {
+    setupTopologyData: function () {
         async function fetchAndUpdateTopology() {
             try {
                 const response = await fetch('/api/arquitetura');
                 if (!response.ok) throw new Error('Erro na API');
-                
+
                 const { status_diag } = await response.json();
-                
+
                 // atualiza comunicação DIAG
                 if (status_diag) {
                     Object.entries(status_diag).forEach(([bit, status]) => {
