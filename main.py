@@ -47,7 +47,9 @@ def arquitetura(request: Request):
 def favicon():
     return FileResponse("static/assets/images/favicon.ico")
 
+
 # API
+# ROTA TELA INICIAL
 @app.get("/api/tela_inicial")
 def obter_potencia_com_meteo():
     resultado = {
@@ -142,6 +144,8 @@ def obter_potencia_com_meteo():
     except Exception as e:
         return {"erro": str(e)}
 
+
+# ROTA INVERSORES
 @app.get("/api/inversores")
 def dados_detalhados():
     try:
@@ -214,12 +218,15 @@ def dados_detalhados():
     except Exception as e:
         return {"erro": str(e)}
 
+
+# RECONHECIMENTO DE ALARMES
 class ReconhecimentoAlarme(BaseModel):
     BITS: int
     Equipamento: str
     DataErroIni: datetime.datetime
     class Config:
         arbitrary_types_allowed = True
+
 @app.post("/api/recAlarmes")
 def recAlarmes(alarme: ReconhecimentoAlarme):
     try:
@@ -248,7 +255,9 @@ def recAlarmes(alarme: ReconhecimentoAlarme):
     except Exception as e:
         logging.exception("Erro inesperado ao processar alarme:")
         raise HTTPException(status_code=400, detail=f"Erro inesperado: {str(e)}")
-    
+
+
+# ROTA UNIFILAR
 @app.get("/api/unifilar")
 def dados_unifilar_completo():
     try:
@@ -343,7 +352,7 @@ def dados_unifilar_completo():
                 print(f"Erro ao processar {nome_tabela}: {str(inv_error)}")
                 continue
         
-        # Função para extrair o tipo base do trip (ex: "TRIP 27")
+        # Função para extrair o tipo base do trip
         # Mapeamento direto de bit para número do trip (apenas o número)
         trip_mapping = {
             'PEXTRON1': {

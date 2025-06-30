@@ -215,34 +215,34 @@ nav button {
 }
 
 #loadingSpinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 999;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    display: none;
-    text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  display: none;
+  text-align: center;
 }
 
 /* btn de fechar */
 .close {
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
-    position: absolute;
-    top: 12px;
-    right: 22px;
-    cursor: pointer;
-    transition: all 0.2s;
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  position: absolute;
+  top: 12px;
+  right: 22px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 .close:hover {
-    color: red;
-    text-decoration: none;
-    transform: rotate(10deg);
+  color: red;
+  text-decoration: none;
+  transform: rotate(10deg);
 }
 /* ---------------------------------------------------------------------- */
 
@@ -601,28 +601,53 @@ nav button {
   background: #ca1205;
 }
 
-/* Seção da carga e rede no meio */
+/* Seção da carga pac e paac */
 .interligation {
   display: flex;
   justify-content: center;
   width: auto;
 }
-.pac-usina,
-.paac-usina {
-  /* border: 1px solid red; */
-  width: auto;
-  font-size: 15px;
-}
-.energ {
+.energ-wrapper {
+  position: relative;
   display: flex;
-  /* gap: 100px; Espaço entre ícones */
-  padding-top: 1px;
-  margin-top: 1px;
+  flex-direction: column;
+  align-items: center;
+  /* border: 1px solid black; */
+}
+
+/* Container do título */
+.titulo-container {
+  position: absolute;
+  top: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px; /* espaço entre os dois <p> */
+  background: white;
+  padding: 0 10px;
+  z-index: 2;
+  /* border: 1px solid blue; */
+  padding-left: 30px;
+}
+
+#titulo-linha {
+  font-weight: bold;
+  color: black;
+  font-size: 14px;
+  width: 100px;
+  /* border: 1px solid black; */
+  text-align: center;
+}
+
+.energ {
+  position: relative;
+  display: flex;
   transform: translateY(49%);
   border-top: 2px solid #ca1205;
   /* width: 400px; */
   padding-left: 40px;
   gap: 50px;
+  z-index: 1;
 }
 
 .carga,
