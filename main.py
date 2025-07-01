@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from config import Banco
+# from datetime import datetime as dt, timedelta
 import datetime
 import logging
 
@@ -212,6 +213,75 @@ def dados_detalhados():
 
             inversor["MPPTS"] = mppts
             dados_final[f"Inversor{i}"] = inversor
+
+
+        # # DADOS IDGT - TABELA ESTATISTICOS
+        # cursor.execute(f"""
+        #     SELECT TOP 1 * FROM Estatisticos
+        #     ORDER BY last_refresh_time DESC
+        # """)
+        # row = cursor.fetchone()
+
+        # if row:
+        #     colunas = [col[0] for col in cursor.description]
+        #     linha = dict(zip(colunas, row))
+
+        #     for i in range(1, 19):  # Inversor1 até Inversor18
+        #         invs = f"Inversor{i}"
+        #         prefixo_ = f"EnergiaDiariaINV{i}"
+
+        #         if invs in dados_final and prefixo_ in linha:
+        #             dados_final[invs]["IDGT"] = linha[prefixo_]
+
+        # DADOS IDGT C/ CALCULO
+                # DADOS IDGT - TABELA ESTATISTICOS
+
+        # Monta intervalo do mês com base na data atual
+        
+        # agora = dt.now()
+        # data_inicial = agora.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        # if data_inicial.month == 12:
+        #     data_final = data_inicial.replace(year=data_inicial.year + 1, month=1)
+        # else:
+        #     data_final = data_inicial.replace(month=data_inicial.month + 1)
+
+        # cursor.execute(f"""
+        #     SELECT 
+        #         SUM(MAX(EnergiaDiariaINV1)) OVER() AS EM1, 
+        #         SUM(MAX(EnergiaDiariaINV2)) OVER() AS EM2,
+        #         SUM(MAX(EnergiaDiariaINV3)) OVER() AS EM3,
+        #         SUM(MAX(EnergiaDiariaINV4)) OVER() AS EM4,
+        #         SUM(MAX(EnergiaDiariaINV5)) OVER() AS EM5,
+        #         SUM(MAX(EnergiaDiariaINV6)) OVER() AS EM6,
+        #         SUM(MAX(EnergiaDiariaINV7)) OVER() AS EM7,
+        #         SUM(MAX(EnergiaDiariaINV8)) OVER() AS EM8,
+        #         SUM(MAX(EnergiaDiariaINV9)) OVER() AS EM9,
+        #         SUM(MAX(EnergiaDiariaINV10)) OVER() AS EM10,
+        #         SUM(MAX(EnergiaDiariaINV11)) OVER() AS EM11,
+        #         SUM(MAX(EnergiaDiariaINV12)) OVER() AS EM12,
+        #         SUM(PI_ENER) AS PI_ENER
+        #     FROM Estatisticos
+        #     WHERE last_refresh_time >= ? AND last_refresh_time < ?
+        #     GROUP BY CAST(FLOOR(CAST(last_refresh_time as float)) as datetime)
+        # """, data_inicial, data_final)
+
+        # row = cursor.fetchone()
+
+        # if row:
+        #     colunas = [col[0] for col in cursor.description]
+        #     linha = dict(zip(colunas, row))
+
+        #     # Adiciona cálculo do IDGT para cada inversor presente na consulta
+        #     for i in range(1, 13):  # EnergiaDiariaINV1 até 12
+        #         invs = f"Inversor{i}"
+        #         prefixo_ = f"EM{i}"
+
+        #         if invs in dados_final and prefixo_ in linha:
+        #             em = linha[prefixo_]
+        #             pi_ener = linha.get("PI_ENER")  # evita divisão por zero
+
+        #             idgt = ((em / (3600 / 8)) * (1000 / pi_ener)) * 100
+        #             dados_final[invs]["IDGT"] = round(idgt, 2)
 
         return dados_final
 
