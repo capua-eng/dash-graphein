@@ -96,6 +96,7 @@ def obter_potencia_com_meteo():
         # Dados dos alarmes
         query_alarmes = '''
         SELECT
+            ID,
             DataErroIni,
             DataErroFim,
             Equipamento,
@@ -291,6 +292,7 @@ def dados_detalhados():
 
 # RECONHECIMENTO DE ALARMES
 class ReconhecimentoAlarme(BaseModel):
+    ID: int
     BITS: int
     Equipamento: str
     DataErroIni: datetime.datetime
@@ -300,19 +302,19 @@ class ReconhecimentoAlarme(BaseModel):
 @app.post("/api/recAlarmes")
 def recAlarmes(alarme: ReconhecimentoAlarme):
     try:
-        logging.debug(f"Recebido: BITS={alarme.BITS}, Equipamento={alarme.Equipamento}, DataErroIni={alarme.DataErroIni}")
-
+        logging.debug(f"Recebido: ID{alarme.ID}, BITS={alarme.BITS}, Equipamento={alarme.Equipamento}, DataErroIni={alarme.DataErroIni}")
         conn = banco.connection
         cursor = conn.cursor()
         query_update = """
         UPDATE AlarmesHistorico
         SET Reconhecimento = 'Sim',
             DataErroRec = GETDATE()
-        WHERE Equipamento = ?
+        WHERE id = ?
+        AND Equipamento = ?
         AND BITS = ?
         """
         logging.debug("Executando UPDATE...")
-        cursor.execute(query_update, (alarme.Equipamento, alarme.BITS))
+        cursor.execute(query_update, (alarme.ID ,alarme.Equipamento, alarme.BITS))
 
         logging.debug(f"Linhas afetadas: {cursor.rowcount}")
         if cursor.rowcount == 0:

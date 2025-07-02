@@ -218,6 +218,7 @@ const HomePageModule = {
                 // === Atualizar alarmes ===
                 currentAlarms = (data.alarmes_erros || []).map((a, i) => ({
                     id: i + 1,
+                    id_alarm: a.ID,
                     datetimeIn: new Date(a.DataErroIni).toLocaleString('pt-BR'),
                     datetimeOut: a.DataErroFim ? new Date(a.DataErroFim).toLocaleString('pt-BR').replace('T', ' ').split('.')[0] : 'Ativo',
                     equipment: a.Equipamento,
@@ -337,10 +338,12 @@ const HomePageModule = {
         async function sendToAPI(alarm) {
             try {
                 const payload = {
+                    ID: Number(alarm.id_alarm),
                     BITS: Number(alarm.bits),
                     Equipamento: alarm.equipment,
                     DataErroIni: new Date(alarm.originalData.DataErroIni)
                 };
+                console.log(`${alarm.id_alarm}, ${alarm.bits}, ${alarm.equipment}, ${alarm.originalData.DataErroIni}`)
                 const resp = await fetch('/api/recAlarmes', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
