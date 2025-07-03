@@ -429,7 +429,7 @@ const InvertersPageModule = {
                     if (span) {
                         const unidade = sufixo.includes('p') ? 'kW' :
                             sufixo.includes('u') ? 'V' :
-                                sufixo.includes('a') ? 'A' : 'kWh';
+                                sufixo.includes('a') ? 'kWh' : 'kWh';
                         span.textContent = `${valor?.toFixed(2) || '0.00'} ${unidade}`;
                     }
                 }
